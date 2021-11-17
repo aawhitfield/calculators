@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
+  final String? labelText;
+
   const MyTextField({
+    this.labelText,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.all(8.0),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
       child: TextField(
         decoration: InputDecoration(
-          labelText: 'Street Address',
-          border: OutlineInputBorder(),
+          labelText: labelText,
+          border: const OutlineInputBorder(
+            borderRadius: BorderRadius.all(Radius.circular(12)),
+          ),
         ),
       ),
     );
