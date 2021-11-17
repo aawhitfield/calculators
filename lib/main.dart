@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: buildThemeData(),
+      theme: buildThemeData(context),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
