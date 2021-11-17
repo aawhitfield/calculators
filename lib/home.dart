@@ -1,3 +1,4 @@
+import 'package:calculators/my_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,10 +13,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -27,28 +26,46 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: SafeArea(
-        child: ListView(
-          shrinkWrap: true,
-          children: <Widget>[
-            const Text('Residential REI'),
-            SvgPicture.asset('images/house_searching.svg'),
-            const Text('Let\'s first find the property'),
-            const Text('Where is the property located?'),
-            const TextField(),
-            const TextField(),
-            const TextField(),
-            const TextField(),
-            const TextField(),
-            const TextField(),
-            ElevatedButton(
-              onPressed: () {  },
-              child: null,
-            ),
-          ],
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: ListView(
+            shrinkWrap: true,
+            children: <Widget>[
+              Text(
+                'Residential REI',
+                style: Theme.of(context).textTheme.headline3,
+              ),
+              const SizedBox(height: 32),
+              SvgPicture.asset(
+                'images/house_searching.svg',
+                width: MediaQuery.of(context).size.width * 0.5,
+              ),
+              const SizedBox(height: 32),
+              Text(
+                'Let\'s first find the property',
+                style: Theme.of(context).textTheme.headline4,
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Where is the property located?',
+                style: Theme.of(context).textTheme.headline5,
+                textAlign: TextAlign.center,
+              ),
+              const MyTextField(),
+              const MyTextField(),
+              const MyTextField(),
+              const MyTextField(),
+              const MyTextField(),
+              const MyTextField(),
+              ElevatedButton(
+                onPressed: () {},
+                child: null,
+              ),
+            ],
+          ),
         ),
       ),
-
-
     );
   }
 }
