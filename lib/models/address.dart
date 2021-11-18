@@ -38,7 +38,7 @@ class Address extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateSqrt(int newSqft) {
+  void updateSqft(int newSqft) {
     sqft = newSqft;
     notifyListeners();
   }

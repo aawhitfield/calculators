@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 
 class MyTextField extends StatelessWidget {
   final String? labelText;
+  final Function(String)? onChanged;
 
   const MyTextField({
     this.labelText,
+    this.onChanged,
     Key? key,
   }) : super(key: key);
 
@@ -19,6 +21,10 @@ class MyTextField extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(12)),
           ),
         ),
+        onChanged: (newString) {
+          if(onChanged != null) {
+            onChanged!(newString);
+          }},
       ),
     );
   }
