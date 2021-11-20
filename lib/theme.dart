@@ -6,6 +6,12 @@ ThemeData buildThemeData(BuildContext context) {
     primarySwatch: Colors.green,
     textTheme: GoogleFonts.latoTextTheme(
       Theme.of(context).textTheme,
-    )
+    ),
+    inputDecorationTheme: InputDecorationTheme(
+      labelStyle: TextStyle(color: Colors.green.shade900),
+      border: const OutlineInputBorder(
+    borderRadius: BorderRadius.all(Radius.circular(12)),
+  ),
+    ),
   );
 }
