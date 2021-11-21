@@ -1,4 +1,6 @@
+import 'package:calculators/renovations.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class MyElevatedButton extends StatelessWidget {
   const MyElevatedButton({
@@ -18,7 +20,7 @@ class MyElevatedButton extends StatelessWidget {
           style: ButtonStyle(
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)))),
-          onPressed: () {},
+          onPressed: () => Get.to(() => Renovations()),
           child: const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(
