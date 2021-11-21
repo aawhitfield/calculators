@@ -3,6 +3,7 @@ import 'package:calculators/models/property.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 final addressProvider = ChangeNotifierProvider<Address>(
         (ref) => Address(street: '', line2: '', city: '', state: '',
@@ -16,13 +17,15 @@ final propertyProvider = ChangeNotifierProvider<Property>(
 class AddressForm extends ConsumerWidget {
   const AddressForm({
     Key? key,
-    required this.width,
   }) : super(key: key);
 
-  final double width;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double width = context.isTablet
+        ? MediaQuery.of(context).size.width * 0.5
+        : MediaQuery.of(context).size.width;
+
     return Align(
       alignment: Alignment.center,
       child: SizedBox(
