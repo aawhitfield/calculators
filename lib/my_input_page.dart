@@ -46,7 +46,6 @@ class MyInputPage extends StatelessWidget {
         : Theme.of(context).textTheme.headline5;
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -62,6 +61,10 @@ class MyInputPage extends StatelessWidget {
           statusBarColor: Colors.green.shade500,
           statusBarIconBrightness: Brightness.light,
         ),
+        title: LinearProgressIndicator(
+          value: position / totalQuestions,
+        ),
+        centerTitle: true,
       ),
       body: SafeArea(
         top: false,
