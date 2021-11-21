@@ -1,18 +1,8 @@
-import 'package:calculators/models/address.dart';
-import 'package:calculators/models/property.dart';
+import 'package:calculators/providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-
-final addressProvider = ChangeNotifierProvider<Address>(
-        (ref) => Address(street: '', line2: '', city: '', state: '',
-            zip: ''));
-
-final propertyProvider = ChangeNotifierProvider<Property>(
-    (ref) => Property(address: Address(street: '', line2: '', city: '', state: '',
-        zip: ''), listPrice: 0, )
-);
 
 class AddressForm extends ConsumerWidget {
   const AddressForm({
@@ -101,7 +91,7 @@ class AddressForm extends ConsumerWidget {
                 onChanged: (String newSqft) {
                   int? squareFeet = int.tryParse(newSqft);
                   if (squareFeet != null) {
-                    ref.read(addressProvider).updateSqft(squareFeet);
+                    ref.read(propertyProvider).updateSqft(squareFeet);
                   }
                 }
               ),

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MyElevatedButton extends StatelessWidget {
-  final Widget goTo;
+  final VoidCallback onPressed;
 
   const MyElevatedButton({
     Key? key,
-    required this.width, required this.goTo,
+    required this.width, required this.onPressed,
   }) : super(key: key);
 
   final double width;
@@ -21,7 +20,7 @@ class MyElevatedButton extends StatelessWidget {
           style: ButtonStyle(
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)))),
-          onPressed: () => Get.to(() => goTo),
+          onPressed: onPressed,
           child: const Padding(
             padding: EdgeInsets.all(16.0),
             child: Text(

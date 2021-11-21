@@ -6,8 +6,9 @@ import 'package:flutter/material.dart';
 class Property extends ChangeNotifier{
   Address address;
   double listPrice;
+  int? sqft;
 
-  Property({required this.address, required this.listPrice});
+  Property({required this.address, required this.listPrice, this.sqft});
 
   void updateAddress(Address newAddress) {
     address = newAddress;
@@ -16,6 +17,11 @@ class Property extends ChangeNotifier{
 
   void updateListPrice(double newListPrice) {
     listPrice = newListPrice;
+    notifyListeners();
+  }
+
+  void updateSqft(int newSqft) {
+    sqft = newSqft;
     notifyListeners();
   }
 }

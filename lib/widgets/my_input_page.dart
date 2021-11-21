@@ -1,4 +1,4 @@
-import 'package:calculators/my_elevated_button.dart';
+import 'package:calculators/widgets/my_elevated_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +11,7 @@ class MyInputPage extends StatelessWidget {
   final String headerText;
   final String subheadText;
   final Widget child;
-  final Widget goTo;
+  final VoidCallback onSubmit;
   final int position;
   final int totalQuestions;
 
@@ -22,7 +22,7 @@ class MyInputPage extends StatelessWidget {
     required this.headerText,
     required this.subheadText,
     required this.child,
-    required this.goTo,
+    required this.onSubmit,
     required this.position,
     required this.totalQuestions,
   }) : super(key: key);
@@ -98,7 +98,7 @@ class MyInputPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               child,
-              MyElevatedButton(width: width, goTo: goTo,),
+              MyElevatedButton(width: width, onPressed: onSubmit),
               const SizedBox(height: 16),
             ],
           ),
