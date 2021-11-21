@@ -1,3 +1,4 @@
+import 'package:calculators/globals.dart';
 import 'package:calculators/my_input_page.dart';
 import 'package:calculators/renovations.dart';
 import 'package:flutter/material.dart';
@@ -11,10 +12,12 @@ class Location extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MyInputPage(headlineText: 'Residential REI', imageUri: 'images/house_searching.svg',
+    return MyInputPage(headlineText: 'Residential REI', imageUri: 'images/house_searching.svg',
       headerText: 'Let\'s first find the property', subheadText: 'Where is the property located?',
-      child: AddressForm(),
-      goTo: Renovations(),
+      child: const AddressForm(),
+      goTo: const Renovations(),
+      position: 1,
+      totalQuestions: kResidentialREIQuestions.length,
     );
   }
 }

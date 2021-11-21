@@ -1,4 +1,5 @@
 import 'package:calculators/my_elevated_button.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,6 +12,8 @@ class MyInputPage extends StatelessWidget {
   final String subheadText;
   final Widget child;
   final Widget goTo;
+  final int position;
+  final int totalQuestions;
 
   const MyInputPage({
     Key? key,
@@ -20,6 +23,8 @@ class MyInputPage extends StatelessWidget {
     required this.subheadText,
     required this.child,
     required this.goTo,
+    required this.position,
+    required this.totalQuestions,
   }) : super(key: key);
 
   @override
@@ -45,6 +50,13 @@ class MyInputPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
+        iconTheme: const IconThemeData(
+          color: Colors.black,
+        ),
+        leading: (position != 1) ? IconButton(
+          icon: Icon(GetPlatform.isIOS ? Icons.arrow_back : CupertinoIcons.back),
+          onPressed: () => Get.back(),
+        ) : Container(),
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.green.shade500,
