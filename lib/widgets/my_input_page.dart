@@ -53,7 +53,7 @@ class MyInputPage extends StatelessWidget {
           color: Colors.black,
         ),
         leading: (position != 1) ? IconButton(
-          icon: Icon(GetPlatform.isIOS ? Icons.arrow_back : CupertinoIcons.back),
+          icon: Icon(GetPlatform.isAndroid ? Icons.arrow_back : CupertinoIcons.back),
           onPressed: () => Get.back(),
         ) : Container(),
         systemOverlayStyle: SystemUiOverlayStyle(
@@ -98,7 +98,8 @@ class MyInputPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               child,
-              MyElevatedButton(width: width, onPressed: onSubmit),
+              MyElevatedButton(width: width, onPressed: onSubmit,
+                label: (position == totalQuestions) ? 'Calculate' : 'Continue',),
               const SizedBox(height: 16),
             ],
           ),

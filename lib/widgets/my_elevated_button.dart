@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 class MyElevatedButton extends StatelessWidget {
+  final String label;
   final VoidCallback onPressed;
 
   const MyElevatedButton({
     Key? key,
+    required this.label,
     required this.width, required this.onPressed,
   }) : super(key: key);
 
@@ -21,11 +23,11 @@ class MyElevatedButton extends StatelessWidget {
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12)))),
           onPressed: onPressed,
-          child: const Padding(
-            padding: EdgeInsets.all(16.0),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
             child: Text(
-              'Continue',
-              style: TextStyle(fontSize: 20),
+              label,
+              style: const TextStyle(fontSize: 20),
             ),
           ),
         ),
