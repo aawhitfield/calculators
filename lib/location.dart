@@ -27,7 +27,7 @@ class Location extends ConsumerWidget {
             state: address.state, zip: address.zip,
         )
       );
-        Get.to(() => const Renovations());
+        Get.to(() => const RenovationsCalculator());
       },
       position: 1,
       totalQuestions: kResidentialREIQuestions.length,

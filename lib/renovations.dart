@@ -4,14 +4,14 @@ import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 
-class Renovations extends StatefulWidget {
-  const Renovations({Key? key}) : super(key: key);
+class RenovationsCalculator extends StatefulWidget {
+  const RenovationsCalculator({Key? key}) : super(key: key);
 
   @override
-  State<Renovations> createState() => _RenovationsState();
+  State<RenovationsCalculator> createState() => _RenovationsCalculatorState();
 }
 
-class _RenovationsState extends State<Renovations> {
+class _RenovationsCalculatorState extends State<RenovationsCalculator> {
   bool enterTotal = true;
 
   @override
