@@ -34,4 +34,109 @@ class Renovation extends ChangeNotifier{
     total = newTotal;
     notifyListeners();
   }
+
+  double calculateTotal() {
+    total = foundation + roof + airConditioner + paintingPatching + kitchen
+        + windows + plumbing + flooring + bathrooms + appliances + electrical
+        + yard + cleaning + baseboards + exterior + demo + elevators + build28Units
+        + other;
+    notifyListeners();
+    return total;
+  }
+
+  void updateFoundation(double newFoundation) {
+    foundation = newFoundation;
+    notifyListeners();
+  }
+
+  void updateRoof(double newRoof) {
+    roof = newRoof;
+    notifyListeners();
+  }
+
+  void updateAirConditioner(double newAirConditioner) {
+    airConditioner = newAirConditioner;
+    notifyListeners();
+  }
+
+  void updatePaintingPatching (double newPainting) {
+    paintingPatching = newPainting;
+    notifyListeners();
+  }
+
+  void updateKitchen(double newKitchen) {
+    kitchen = newKitchen;
+    notifyListeners();
+  }
+
+  void updateWindows (double newWindows) {
+    windows = newWindows;
+    notifyListeners();
+  }
+
+  void updatePlumbing(double newPlumbing) {
+    plumbing = newPlumbing;
+    notifyListeners();
+  }
+
+  void updateFlooring(double newFlooring) {
+    flooring = newFlooring;
+    notifyListeners();
+  }
+
+  void updateBathrooms(double newBathrooms) {
+    bathrooms = newBathrooms;
+    notifyListeners();
+  }
+
+  void updateAppliances(double newAppliances) {
+    appliances = newAppliances;
+    notifyListeners();
+  }
+
+  void updateElectrical(double newElectrical) {
+    electrical = newElectrical;
+    notifyListeners();
+  }
+
+  void updateYard(double newYard) {
+    yard = newYard;
+    notifyListeners();
+  }
+
+  void updateCleaning(double newCleaning) {
+    cleaning = newCleaning;
+    notifyListeners();
+  }
+
+  void updateBaseboards(double newBaseboards) {
+    baseboards = newBaseboards;
+    notifyListeners();
+  }
+
+  void updateExterior(double newExterior) {
+    exterior = newExterior;
+    notifyListeners();
+  }
+
+  void updateDemo(double newDemo) {
+    demo = newDemo;
+    notifyListeners();
+  }
+
+  void updateElevators(double newElevators) {
+    elevators = newElevators;
+    notifyListeners();
+  }
+
+  void updateBuildUnits(double newBuildUnits) {
+    build28Units = newBuildUnits;
+    notifyListeners();
+  }
+
+  void updateOther(double newOther) {
+    other = newOther;
+    notifyListeners();
+  }
+
 }

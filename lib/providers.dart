@@ -1,3 +1,4 @@
+import 'package:calculators/models/renovations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'models/address.dart';
@@ -10,4 +11,8 @@ final addressProvider = ChangeNotifierProvider<Address>(
 final propertyProvider = ChangeNotifierProvider<Property>(
         (ref) => Property(address: Address(street: '', line2: '', city: '', state: '',
         zip: ''), listPrice: 0, )
+);
+
+final renovationsProvider = ChangeNotifierProvider<Renovation>(
+    (ref) => Renovation(),
 );
