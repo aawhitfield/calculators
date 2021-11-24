@@ -82,7 +82,8 @@ class MyInputPage extends StatelessWidget {
               const SizedBox(height: 32),
               SvgPicture.asset(
                 imageUri,
-                width: MediaQuery.of(context).size.width * 0.5,
+                width: MediaQuery.of(context).size.width * 0.4,
+                height: MediaQuery.of(context).size.height * 0.4,
               ),
               const SizedBox(height: 32),
               Text(
