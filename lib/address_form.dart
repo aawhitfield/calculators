@@ -1,4 +1,5 @@
 import 'package:calculators/providers.dart';
+import 'package:calculators/widgets/money_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +9,6 @@ class AddressForm extends ConsumerWidget {
   const AddressForm({
     Key? key,
   }) : super(key: key);
-
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,8 +26,8 @@ class AddressForm extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: const InputDecoration(
-                labelText: 'Street Address',
-        ),
+                  labelText: 'Street Address',
+                ),
                 textCapitalization: TextCapitalization.words,
                 onChanged: (String newStreet) =>
                     ref.read(addressProvider).updateStreet(newStreet),
@@ -37,7 +37,7 @@ class AddressForm extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: const InputDecoration(
-                labelText: 'Apt, Suite, Bldg #',
+                  labelText: 'Apt, Suite, Bldg #',
                 ),
                 textCapitalization: TextCapitalization.words,
                 onChanged: (String newLine2) =>
@@ -48,7 +48,7 @@ class AddressForm extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: const InputDecoration(
-                labelText: 'City',
+                  labelText: 'City',
                 ),
                 textCapitalization: TextCapitalization.words,
                 onChanged: (String newCity) =>
@@ -59,7 +59,7 @@ class AddressForm extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: const InputDecoration(
-                labelText: 'State',
+                  labelText: 'State',
                 ),
                 textCapitalization: TextCapitalization.characters,
                 onChanged: (String newState) =>
@@ -70,7 +70,7 @@ class AddressForm extends ConsumerWidget {
               padding: const EdgeInsets.all(8.0),
               child: TextField(
                 decoration: const InputDecoration(
-                labelText: 'ZIP',
+                  labelText: 'ZIP',
                 ),
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 keyboardType: TextInputType.number,
@@ -83,43 +83,29 @@ class AddressForm extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
-                decoration: const InputDecoration(
-                labelText: 'Square Feet',
-                ),
-                inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                keyboardType: TextInputType.number,
-                onChanged: (String newSqft) {
-                  int? squareFeet = int.tryParse(newSqft);
-                  if (squareFeet != null) {
-                    ref.read(propertyProvider).updateSqft(squareFeet);
-                  }
-                }
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Row(
-                children: [
-                  const Text('\$'),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: TextField(
-                        decoration: const InputDecoration(
-                          labelText: 'List Price',
-                        ),
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        keyboardType: TextInputType.number,
-                        onChanged: (String newListPrice) {
-                          double? listPrice = double.tryParse(newListPrice);
-                          if (listPrice != null) {
-                            ref.read(propertyProvider).updateListPrice(listPrice);
-                          }
-                        }
-                    ),
+                  decoration: const InputDecoration(
+                    labelText: 'Square Feet',
                   ),
-                ],
-              ),
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                  keyboardType: TextInputType.number,
+                  onChanged: (String newSqft) {
+                    int? squareFeet = int.tryParse(newSqft);
+                    if (squareFeet != null) {
+                      ref.read(propertyProvider).updateSqft(squareFeet);
+                    }
+                  }),
             ),
+            MoneyTextField(
+                labelText: 'List Price',
+                onChanged: (String newListPrice) {
+                  newListPrice = newListPrice.replaceAll(',', '');
+                  double? listPrice = double.tryParse(newListPrice);
+                  if (listPrice != null) {
+                    ref
+                        .read(propertyProvider)
+                        .updateListPrice(listPrice);
+                  }
+                }),
             const SizedBox(height: 16),
           ],
         ),

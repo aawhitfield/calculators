@@ -1,10 +1,12 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/property_costs.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class RenovationsCalculator extends StatefulWidget {
   const RenovationsCalculator({Key? key}) : super(key: key);
@@ -28,6 +30,7 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
           if(!enterTotal) {
             ref.read(renovationsProvider).calculateTotal();
           }
+          Get.to(() => PropertyCosts());
         },
         position: 2,
         totalQuestions: kResidentialREIQuestions.length,
