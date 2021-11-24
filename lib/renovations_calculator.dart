@@ -24,7 +24,11 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
         imageUri: 'images/construction.svg',
         headerText: 'Renovations',
         subheadText: 'How much will it take to renovate the property?',
-        onSubmit: () {},
+        onSubmit: () {
+          if(!enterTotal) {
+            ref.read(renovationsProvider).calculateTotal();
+          }
+        },
         position: 2,
         totalQuestions: kResidentialREIQuestions.length,
         child: ResponsiveLayout(
@@ -33,6 +37,7 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
                   MoneyTextField(labelText: 'Total cost',
                   onChanged:
                   (String newTotal) {
+                    newTotal = newTotal.replaceAll(',', '');
                     double? total = double.tryParse(newTotal);
                     if (total != null) {
                       ref.read(renovationsProvider).updateTotal(total);
@@ -69,6 +74,7 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Foundation',
               onChanged:
                   (String newFoundation) {
+                newFoundation = newFoundation.replaceAll(',', '');
                 double? foundation = double.tryParse(newFoundation);
                 if (foundation != null) {
                   ref.read(renovationsProvider).updateFoundation(foundation);
@@ -77,6 +83,7 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Roof',
               onChanged:
                   (String newRoof) {
+                newRoof = newRoof.replaceAll(',', '');
                 double? roof = double.tryParse(newRoof);
                 if (roof != null) {
                   ref.read(renovationsProvider).updateRoof(roof);
@@ -85,7 +92,8 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Air Conditioner',
               onChanged:
                   (String newAirConditioner) {
-                double? airConditioner = double.tryParse(newAirConditioner);
+                    newAirConditioner = newAirConditioner.replaceAll(',', '');
+                    double? airConditioner = double.tryParse(newAirConditioner);
                 if (airConditioner != null) {
                   ref.read(renovationsProvider).updateAirConditioner(airConditioner);
                 }
@@ -93,7 +101,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Painting/Patching',
               onChanged:
                   (String newPainting) {
-                double? painting = double.tryParse(newPainting);
+                    newPainting = newPainting.replaceAll(',', '');
+
+                    double? painting = double.tryParse(newPainting);
                 if (painting != null) {
                   ref.read(renovationsProvider).updatePaintingPatching(painting);
                 }
@@ -101,7 +111,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Kitchen',
               onChanged:
                   (String newKitchen) {
-                double? kitchen = double.tryParse(newKitchen);
+                    newKitchen = newKitchen.replaceAll(',', '');
+
+                    double? kitchen = double.tryParse(newKitchen);
                 if (kitchen != null) {
                   ref.read(renovationsProvider).updateKitchen(kitchen);
                 }
@@ -109,7 +121,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Windows',
               onChanged:
                   (String newWindows) {
-                double? windows = double.tryParse(newWindows);
+                    newWindows = newWindows.replaceAll(',', '');
+
+                    double? windows = double.tryParse(newWindows);
                 if (windows != null) {
                   ref.read(renovationsProvider).updateWindows(windows);
                 }
@@ -117,7 +131,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Plumbing',
               onChanged:
                   (String newPlumbing) {
-                double? plumbing = double.tryParse(newPlumbing);
+                    newPlumbing = newPlumbing.replaceAll(',', '');
+
+                    double? plumbing = double.tryParse(newPlumbing);
                 if (plumbing != null) {
                   ref.read(renovationsProvider).updatePlumbing(plumbing);
                 }
@@ -125,7 +141,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Flooring',
               onChanged:
                   (String newFlooring) {
-                double? flooring = double.tryParse(newFlooring);
+                    newFlooring = newFlooring.replaceAll(',', '');
+
+                    double? flooring = double.tryParse(newFlooring);
                 if (flooring != null) {
                   ref.read(renovationsProvider).updateFlooring(flooring);
                 }
@@ -133,7 +151,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Bathrooms',
               onChanged:
                   (String newBathrooms) {
-                double? bathrooms = double.tryParse(newBathrooms);
+                    newBathrooms = newBathrooms.replaceAll(',', '');
+
+                    double? bathrooms = double.tryParse(newBathrooms);
                 if (bathrooms != null) {
                   ref.read(renovationsProvider).updateBathrooms(bathrooms);
                 }
@@ -141,7 +161,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Appliances',
               onChanged:
                   (String newAppliances) {
-                double? appliances = double.tryParse(newAppliances);
+                    newAppliances = newAppliances.replaceAll(',', '');
+
+                    double? appliances = double.tryParse(newAppliances);
                 if (appliances != null) {
                   ref.read(renovationsProvider).updateAppliances(appliances);
                 }
@@ -149,7 +171,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Electrical',
               onChanged:
                   (String newElectrical) {
-                double? electrical = double.tryParse(newElectrical);
+                    newElectrical = newElectrical.replaceAll(',', '');
+
+                    double? electrical = double.tryParse(newElectrical);
                 if (electrical != null) {
                   ref.read(renovationsProvider).updateElectrical(electrical);
                 }
@@ -157,7 +181,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Yard',
               onChanged:
                   (String newYard) {
-                double? yard = double.tryParse(newYard);
+                    newYard = newYard.replaceAll(',', '');
+
+                    double? yard = double.tryParse(newYard);
                 if (yard != null) {
                   ref.read(renovationsProvider).updateYard(yard);
                 }
@@ -165,7 +191,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Cleaning',
               onChanged:
                   (String newCleaning) {
-                double? cleaning = double.tryParse(newCleaning);
+                    newCleaning = newCleaning.replaceAll(',', '');
+
+                    double? cleaning = double.tryParse(newCleaning);
                 if (cleaning != null) {
                   ref.read(renovationsProvider).updateCleaning(cleaning);
                 }
@@ -173,7 +201,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Baseboards',
               onChanged:
                   (String newBaseboards) {
-                double? baseboards = double.tryParse(newBaseboards);
+                    newBaseboards = newBaseboards.replaceAll(',', '');
+
+                    double? baseboards = double.tryParse(newBaseboards);
                 if (baseboards != null) {
                   ref.read(renovationsProvider).updateBaseboards(baseboards);
                 }
@@ -181,7 +211,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Exterior',
               onChanged:
                   (String newExterior) {
-                double? exterior = double.tryParse(newExterior);
+                    newExterior = newExterior.replaceAll(',', '');
+
+                    double? exterior = double.tryParse(newExterior);
                 if (exterior != null) {
                   ref.read(renovationsProvider).updateExterior(exterior);
                 }
@@ -189,7 +221,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Demo',
               onChanged:
                   (String newDemo) {
-                double? demo = double.tryParse(newDemo);
+                    newDemo = newDemo.replaceAll(',', '');
+
+                    double? demo = double.tryParse(newDemo);
                 if (demo != null) {
                   ref.read(renovationsProvider).updateDemo(demo);
                 }
@@ -197,7 +231,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Elevators',
               onChanged:
                   (String newElevators) {
-                double? elevators = double.tryParse(newElevators);
+                    newElevators = newElevators.replaceAll(',', '');
+
+                    double? elevators = double.tryParse(newElevators);
                 if (elevators != null) {
                   ref.read(renovationsProvider).updateElevators(elevators);
                 }
@@ -205,7 +241,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Build 28 units',
               onChanged:
                   (String newBuildUnits) {
-                double? buildUnits = double.tryParse(newBuildUnits);
+                    newBuildUnits = newBuildUnits.replaceAll(',', '');
+
+                    double? buildUnits = double.tryParse(newBuildUnits);
                 if (buildUnits != null) {
                   ref.read(renovationsProvider).updateBuildUnits(buildUnits);
                 }
@@ -213,7 +251,9 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
             MoneyTextField(labelText: 'Other',
               onChanged:
                   (String newOther) {
-                double? other = double.tryParse(newOther);
+                    newOther = newOther.replaceAll(',', '');
+
+                    double? other = double.tryParse(newOther);
                 if (other != null) {
                   ref.read(renovationsProvider).updateOther(other);
                 }
