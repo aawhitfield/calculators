@@ -15,11 +15,14 @@ class PropertyCosts extends ConsumerStatefulWidget {
 
 class PropertyCostsState extends ConsumerState<PropertyCosts> {
   TextEditingController listPriceController = TextEditingController();
+  TextEditingController renovationsController = TextEditingController();
 
   @override
   void initState() {
     listPriceController.text = kCurrencyFormat.format(ref.read(propertyProvider)
         .listPrice).toString();
+    renovationsController.text = kCurrencyFormat.format(ref.read(renovationsProvider)
+        .total).toString();
     super.initState();
   }
   @override
@@ -43,6 +46,17 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   double? listPrice = double.tryParse(newListPrice);
                   if (listPrice != null) {
                     ref.read(propertyProvider).updateListPrice(listPrice);
+                  }
+                },
+            ),
+            MoneyTextField(
+                labelText: 'Rehab',
+                controller: renovationsController,
+                onChanged: (String newTotal) {
+                  newTotal = newTotal.replaceAll(',', '');
+                  double? total = double.tryParse(newTotal);
+                  if(total != null) {
+                    ref.read(renovationsProvider).updateTotal(total);
                   }
                 },
             ),

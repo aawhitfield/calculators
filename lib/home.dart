@@ -1,4 +1,4 @@
-import 'package:calculators/location.dart';
+import 'package:calculators/inputs/location.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {

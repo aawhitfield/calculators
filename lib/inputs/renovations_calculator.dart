@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/property_costs.dart';
+import 'package:calculators/inputs/property_costs.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
