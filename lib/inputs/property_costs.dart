@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/providers.dart';
+import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
@@ -60,6 +61,50 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   }
                 },
             ),
+            MoneyTextField(
+                labelText: 'After Repair Price',
+                onChanged: (String newPrice) {
+                  newPrice = newPrice.replaceAll(',', '');
+                  double? price = double.tryParse(newPrice);
+                  if(price != null) {
+                    ref.read(propertyProvider).updateAfterRepairValue(price);
+                  }
+                }
+            ),
+            MoneyTextField(
+                labelText: 'Purchase Price',
+                onChanged: (String newPrice) {
+                  newPrice = newPrice.replaceAll(',', '');
+                  double? price = double.tryParse(newPrice);
+                  if(price != null) {
+                    ref.read(propertyProvider).updatePurchasePrice(price);
+                  }
+                }
+            ),
+            IntegerTextField(
+                labelText: 'Months to Rehab\/Rent',
+                onChanged: (String newValue) {
+                  int? value = int.tryParse(newValue);
+                  if(value != null) {
+                    ref.read(propertyProvider).updateMonthsToRehabRent(value);
+                  }
+                }),
+            IntegerTextField(
+                labelText: 'Units',
+                onChanged: (String newValue) {
+                  int? value = int.tryParse(newValue);
+                  if(value != null) {
+                    ref.read(propertyProvider).updateUnits(value);
+                  }
+                }),
+            IntegerTextField(
+                labelText: 'Investors',
+                onChanged: (String newValue) {
+                  int? value = int.tryParse(newValue);
+                  if(value != null) {
+                    ref.read(propertyProvider).updateInvestors(value);
+                  }
+                }),
           ],),
     );
   }
