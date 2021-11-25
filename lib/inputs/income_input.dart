@@ -1,10 +1,12 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/finance_options.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class IncomeInput extends ConsumerWidget {
   const IncomeInput({Key? key}) : super(key: key);
@@ -17,6 +19,7 @@ class IncomeInput extends ConsumerWidget {
         subheadText: 'Enter the income amounts',
         onSubmit: () {
           ref.read(incomeProvider).calculateTotal();
+          Get.to(() => const FinanceOptions());
         },
         position: kResidentialREIQuestions.indexOf(IncomeInput) + 1,
         totalQuestions: kResidentialREIQuestions.length,

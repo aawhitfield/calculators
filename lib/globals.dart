@@ -1,3 +1,4 @@
+import 'package:calculators/inputs/finance_options.dart';
 import 'package:calculators/inputs/income_input.dart';
 import 'package:calculators/inputs/location.dart';
 import 'package:calculators/inputs/property_costs.dart';
@@ -9,6 +10,7 @@ List<Type> kResidentialREIQuestions = [
   RenovationsCalculator,
   PropertyCosts,
   IncomeInput,
+  FinanceOptions,
 ];
 
 NumberFormat kCurrencyFormat = NumberFormat("#,##0.##", "en_US");
