@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/income_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -6,6 +7,7 @@ import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class PropertyCosts extends ConsumerStatefulWidget {
   const PropertyCosts({Key? key}) : super(key: key);
@@ -34,7 +36,9 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
         headerText: 'Property Costs',
         subheadText: 'Now let\'s get some information about costs associated '
             'with this property.',
-        onSubmit: () {},
+        onSubmit: () {
+          Get.to(() => const IncomeInput());
+        },
         position: kResidentialREIQuestions.indexOf(PropertyCosts) + 1,
         totalQuestions: kResidentialREIQuestions.length,
         child: ResponsiveLayout(

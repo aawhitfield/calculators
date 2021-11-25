@@ -1,3 +1,4 @@
+import 'package:calculators/models/income.dart';
 import 'package:calculators/models/renovations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -15,4 +16,8 @@ final propertyProvider = ChangeNotifierProvider<Property>(
 
 final renovationsProvider = ChangeNotifierProvider<Renovation>(
     (ref) => Renovation(),
+);
+
+final incomeProvider = ChangeNotifierProvider<Income>(
+    (ref) => Income(),
 );
