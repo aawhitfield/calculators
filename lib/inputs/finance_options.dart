@@ -23,10 +23,11 @@ class FinanceOptions extends ConsumerWidget {
     double downPaymentAmount = ref.watch(propertyProvider).purchasePrice -
         ref.watch(financeProvider).loanAmount;
 
-    // doubel monthlyPayment = TODO: calculate monthly payment
+    double monthlyPayment = ref.watch(financeProvider).calculateMonthlyPayment();
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
+    String monthlyPaymentString = kCurrencyFormat.format(monthlyPayment);
 
     return MyInputPage(
       imageUri: 'images/finance.svg',
@@ -111,7 +112,7 @@ class FinanceOptions extends ConsumerWidget {
               }
             },
           ),
-          // MoneyListTile('Monthly Payment', monthlyPaymentString), TODO: calculate monthly payment string
+          MoneyListTile('Monthly Payment', monthlyPaymentString),
         ],
       ),
     );

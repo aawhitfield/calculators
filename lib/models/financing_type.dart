@@ -80,4 +80,17 @@ class FinanceOptionData extends ChangeNotifier {
     monthlyPayment = newValue;
     notifyListeners();
   }
+
+  double calculateMonthlyPayment() {
+    switch(financingType) {
+      case FinancingType.conventional :
+      case FinancingType.commercial :
+      case FinancingType.sellerFinance :
+        return 0; // TODO: Add monthly payment calculation
+      case FinancingType.construction :
+      case FinancingType.hardMoney :
+      case FinancingType.sellerFinanceInterest :
+        return 1;
+    }
+  }
 }
