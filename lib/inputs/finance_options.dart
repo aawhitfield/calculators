@@ -7,6 +7,7 @@ import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -23,7 +24,12 @@ class FinanceOptions extends ConsumerWidget {
     double downPaymentAmount = ref.watch(propertyProvider).purchasePrice -
         ref.watch(financeProvider).loanAmount;
 
-    double monthlyPayment = ref.watch(financeProvider).calculateMonthlyPayment();
+    double monthlyPayment = ref.watch(financeProvider).calculateMonthlyPayment(
+          rate: ref.watch(financeProvider).interestRate / 12,
+          nper: ref.watch(financeProvider).term * 12,
+          pv: -1 * ref.watch(financeProvider).loanAmount,
+          per: 1,
+        );
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -113,6 +119,14 @@ class FinanceOptions extends ConsumerWidget {
             },
           ),
           MoneyListTile('Monthly Payment', monthlyPaymentString),
+          ListTile(
+            title: const Text('Refinance?'),
+            trailing: CupertinoSwitch(
+                value: ref.watch(financeProvider).willRefinance,
+                onChanged: (bool newValue) {
+                  ref.read(financeProvider).updateWillRefinance(newValue);
+                }),
+          )
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:finance/finance.dart';
 import 'package:flutter/foundation.dart';
 
 enum FinancingType {
@@ -35,10 +36,12 @@ class FinanceOptionData extends ChangeNotifier {
   int term;
   double closingCosts;
   double monthlyPayment;
+  bool willRefinance;
 
   FinanceOptionData({this.financingType = FinancingType.commercial,
     this.loanPercentage = 0, this.loanAmount = 0, this.downPaymentAmount = 0,
     this.interestRate = 0, this.term = 0, this.closingCosts = 0, this.monthlyPayment = 0,
+    this.willRefinance = false,
   });
 
   void updateFinancingType(newValue) {
@@ -81,16 +84,23 @@ class FinanceOptionData extends ChangeNotifier {
     notifyListeners();
   }
 
-  double calculateMonthlyPayment() {
+  double calculateMonthlyPayment({
+    required num rate, required num nper, required num pv, required num per}) {
+
     switch(financingType) {
       case FinancingType.conventional :
       case FinancingType.commercial :
       case FinancingType.sellerFinance :
-        return 0; // TODO: Add monthly payment calculation
+        return Finance.pmt(rate: rate, nper: nper, pv: pv).toDouble();
       case FinancingType.construction :
       case FinancingType.hardMoney :
       case FinancingType.sellerFinanceInterest :
-        return 1;
+        return Finance.ipmt(rate: rate, per: per, nper: nper, pv: pv).toDouble();
     }
+  }
+
+  void updateWillRefinance(bool newValue) {
+    willRefinance = newValue;
+    notifyListeners();
   }
 }
