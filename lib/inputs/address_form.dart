@@ -92,6 +92,7 @@ class AddressForm extends ConsumerWidget {
                     int? squareFeet = int.tryParse(newSqft);
                     if (squareFeet != null) {
                       ref.read(propertyProvider).updateSqft(squareFeet);
+                      ref.read(expensesProvider).calculateInsurance(squareFeet.toDouble());
                     }
                   }),
             ),

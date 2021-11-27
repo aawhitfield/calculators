@@ -1,3 +1,4 @@
+import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/income.dart';
 import 'package:calculators/models/renovations.dart';
@@ -25,4 +26,8 @@ final incomeProvider = ChangeNotifierProvider<Income>(
 
 final financeProvider = ChangeNotifierProvider<FinanceOptionData>(
     (ref) => FinanceOptionData(),
+);
+
+final expensesProvider = ChangeNotifierProvider<Expenses>(
+    (ref) => Expenses(),
 );

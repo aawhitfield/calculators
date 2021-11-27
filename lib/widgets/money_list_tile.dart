@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class MoneyListTile extends StatelessWidget {
   final String label;
   final String amount;
+  final String? subtitle;
 
   const MoneyListTile(this.label, this.amount, {
-    Key? key,
+    Key? key, this.subtitle,
   }) : super(key: key);
 
 
@@ -26,6 +27,7 @@ class MoneyListTile extends StatelessWidget {
           ),
         ],
       ),
+      subtitle: (subtitle != null) ? Text(subtitle!) : Container(),
     );
   }
 }

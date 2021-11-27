@@ -1,3 +1,4 @@
+import 'package:calculators/inputs/expenses_input.dart';
 import 'package:calculators/inputs/finance_options.dart';
 import 'package:calculators/inputs/income_input.dart';
 import 'package:calculators/inputs/location.dart';
@@ -10,6 +11,7 @@ List<Type> kResidentialREIQuestions = [
   RenovationsCalculator,
   PropertyCosts,
   IncomeInput,
+  ExpensesInput,
   FinanceOptions,
 ];
 

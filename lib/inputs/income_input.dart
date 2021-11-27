@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/finance_options.dart';
+import 'package:calculators/inputs/expenses_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
@@ -19,7 +19,7 @@ class IncomeInput extends ConsumerWidget {
         subheadText: 'Enter the income amounts',
         onSubmit: () {
           ref.read(incomeProvider).calculateTotal();
-          Get.to(() => const FinanceOptions());
+          Get.to(() => const ExpensesInput());
         },
         position: kResidentialREIQuestions.indexOf(IncomeInput) + 1,
         totalQuestions: kResidentialREIQuestions.length,
