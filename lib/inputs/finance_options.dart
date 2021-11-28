@@ -60,6 +60,11 @@ class FinanceOptions extends ConsumerWidget {
                       .toList(),
                   onChanged: (FinancingType? newValue) {
                     ref.read(financeProvider).updateFinancingType(newValue);
+                    ref.read(financeProvider).updateWillRefinance(
+                        (newValue == FinancingType.conventional
+                            || newValue == FinancingType.commercial)
+                            ? false : true
+                    );
                   },
                 ),
               )
@@ -120,12 +125,11 @@ class FinanceOptions extends ConsumerWidget {
           ),
           MoneyListTile('Monthly Payment', monthlyPaymentString),
           ListTile(
-            title: const Text('Refinance?'),
-            trailing: CupertinoSwitch(
-                value: ref.watch(financeProvider).willRefinance,
-                onChanged: (bool newValue) {
-                  ref.read(financeProvider).updateWillRefinance(newValue);
-                }),
+            title: const Text('Refinance'),
+            trailing: Text(
+                ref.watch(financeProvider).willRefinance
+                  ? 'YES' : 'NO',
+            ),
           )
         ],
       ),
