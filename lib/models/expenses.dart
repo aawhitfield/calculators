@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 
 class Expenses extends ChangeNotifier {
   double taxes;
-  double insurance;
   double propertyManagement;
   double vacancy;
   double maintenance;
@@ -12,7 +11,7 @@ class Expenses extends ChangeNotifier {
   double noiMonthly;
   double noiAnnual;
 
-  Expenses({this.taxes = 0, this.insurance = 0, this.propertyManagement = 0,
+  Expenses({this.taxes = 0, this.propertyManagement = 0,
     this.vacancy = 0, this.maintenance = 0, this.other = 0,
     this.totalMonthlyExpenses = 0, this.totalAnnualExpenses = 0,
     this.noiMonthly = 0, this.noiAnnual = 0,
@@ -20,11 +19,6 @@ class Expenses extends ChangeNotifier {
 
   void updateTaxes(double newValue) {
     taxes = newValue;
-    notifyListeners();
-  }
-
-  void updateInsurance(double newValue) {
-    insurance = newValue;
     notifyListeners();
   }
 
@@ -68,14 +62,8 @@ class Expenses extends ChangeNotifier {
     notifyListeners();
   }
 
-  double calculateInsurance(double sqft) {
-    insurance = sqft * 115 / 100 * 0.37;
-    notifyListeners();
-    return insurance;
-  }
-
   double calculateTotalExpensesMonthly(double totalMonthlyIncome) {
-    totalMonthlyExpenses = taxes / 12 + insurance / 12 +
+    totalMonthlyExpenses = taxes / 12  +
         propertyManagement * totalMonthlyIncome
         + vacancy * totalMonthlyIncome
         + maintenance * totalMonthlyIncome

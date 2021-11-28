@@ -36,11 +36,7 @@ class ExpensesInput extends ConsumerWidget {
               }
             },
           ),
-          MoneyListTile('Insurance',
-              kCurrencyFormat.format(
-                  double.parse(ref.watch(expensesProvider)
-                      .insurance.toStringAsFixed(2).replaceAll(',', ''))),
-          ),
+
           PercentTextField(labelText: 'Property Management',
               onChanged: (String newValue) {
                 double? value = double.tryParse(newValue);
