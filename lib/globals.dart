@@ -8,10 +8,10 @@ import 'package:intl/intl.dart';
 
 List<Type> kResidentialREIQuestions = [
   Location,
-  RenovationsCalculator,
   PropertyCosts,
   IncomeInput,
   ExpensesInput,
+  RenovationsCalculator,
   FinanceOptions,
 ];
 
