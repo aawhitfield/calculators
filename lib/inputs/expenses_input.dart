@@ -78,21 +78,21 @@ class ExpensesInput extends ConsumerWidget {
                 ref.watch(incomeProvider).total)).toString(),
             subtitle: 'Monthly',
           ),
-          // MoneyListTile('Total Expenses',
-          //   kCurrencyFormat.format(ref.watch(expensesProvider)
-          //       .calculateTotalAnnualExpenses().toStringAsFixed(2)),
-          //   subtitle: 'Annually',
-          // ),
-          // MoneyListTile('NOI',
-          //   kCurrencyFormat.format(ref.watch(expensesProvider).calculateNOIMonthly(
-          //       ref.watch(incomeProvider).total)).toString(),
-          //   subtitle: 'Monthly',
-          // ),
-          // MoneyListTile('NOI',
-          //   kCurrencyFormat.format(ref.watch(expensesProvider).calculateNOIAnnually(
-          //       ref.watch(incomeProvider).total)).toString(),
-          //   subtitle: 'Annually',
-          // ),
+          MoneyListTile('Total Expenses',
+            kCurrencyFormat.format(double.parse(ref.watch(expensesProvider)
+                .calculateTotalAnnualExpenses().toStringAsFixed(2))),
+            subtitle: 'Annually',
+          ),
+          MoneyListTile('NOI',
+            kCurrencyFormat.format(ref.watch(expensesProvider).calculateNOIMonthly(
+                ref.watch(incomeProvider).total)).toString(),
+            subtitle: 'Monthly',
+          ),
+          MoneyListTile('NOI',
+            kCurrencyFormat.format(ref.watch(expensesProvider).calculateNOIAnnually(
+                ref.watch(incomeProvider).total)).toString(),
+            subtitle: 'Annually',
+          ),
         ],
       ),
     );
