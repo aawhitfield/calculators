@@ -24,12 +24,19 @@ class FinanceOptions extends ConsumerWidget {
     double downPaymentAmount = ref.watch(propertyProvider).purchasePrice -
         ref.watch(financeProvider).loanAmount;
 
-    double monthlyPayment = ref.watch(financeProvider).calculateMonthlyPayment(
-          rate: ref.watch(financeProvider).interestRate / 12,
-          nper: ref.watch(financeProvider).term * 12,
-          pv: -1 * ref.watch(financeProvider).loanAmount,
-          per: 1,
-        );
+    double monthlyPayment = (ref.watch(financeProvider).paymentType ==
+            PaymentType.principalAndInterest)
+        ? ref.watch(financeProvider).calculateMonthlyPayment(
+              rate: ref.watch(financeProvider).interestRate / 12,
+              nper: ref.watch(financeProvider).term * 12,
+              pv: -1 * ref.watch(financeProvider).loanAmount,
+            )
+        : ref.watch(financeProvider).calculateMonthlyPaymentInterestOnly(
+              rate: ref.watch(financeProvider).interestRate / 12,
+              nper: ref.watch(financeProvider).term * 12,
+              pv: -1 * ref.watch(financeProvider).loanAmount,
+              per: 1,
+            );
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -61,10 +68,10 @@ class FinanceOptions extends ConsumerWidget {
                   onChanged: (FinancingType? newValue) {
                     ref.read(financeProvider).updateFinancingType(newValue);
                     ref.read(financeProvider).updateWillRefinance(
-                        (newValue == FinancingType.conventional
-                            || newValue == FinancingType.commercial)
-                            ? false : true
-                    );
+                        (newValue == FinancingType.conventional ||
+                                newValue == FinancingType.commercial)
+                            ? false
+                            : true);
                   },
                 ),
               )
@@ -123,12 +130,21 @@ class FinanceOptions extends ConsumerWidget {
               }
             },
           ),
+          CupertinoSlidingSegmentedControl<PaymentType>(
+            thumbColor: Theme.of(context).primaryColor,
+            groupValue: ref.watch(financeProvider).paymentType,
+            children: const {
+              PaymentType.principalAndInterest: Text('Principal & Interest'),
+              PaymentType.interestOnly: Text('Interest Only'),
+            },
+            onValueChanged: (PaymentType? newValue) =>
+                ref.read(financeProvider).updatePaymentType(newValue!),
+          ),
           MoneyListTile('Monthly Payment', monthlyPaymentString),
           ListTile(
             title: const Text('Refinance'),
             trailing: Text(
-                ref.watch(financeProvider).willRefinance
-                  ? 'YES' : 'NO',
+              ref.watch(financeProvider).willRefinance ? 'YES' : 'NO',
             ),
           )
         ],

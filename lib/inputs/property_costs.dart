@@ -86,7 +86,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 }
             ),
             IntegerTextField(
-                labelText: 'Months to Rehab\/Rent',
+                labelText: 'Months to Rehab/Rent',
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {

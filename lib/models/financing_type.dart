@@ -1,13 +1,19 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:finance/finance.dart';
 import 'package:flutter/foundation.dart';
 
 enum FinancingType {
   commercial,
-  construction,
+  commercialWithConstruction,
   conventional,
   hardMoney,
-  sellerFinance,
-  sellerFinanceInterest,
+  hardMoneyWithConstruction,
+}
+
+enum PaymentType {
+  principalAndInterest,
+  interestOnly,
 }
 
 class FinancingTypeUtils {
@@ -18,11 +24,10 @@ class FinancingTypeUtils {
   String get name {
     switch(financingType) {
       case FinancingType.commercial : return 'Commercial';
-      case FinancingType.construction : return 'Construction';
+      case FinancingType.commercialWithConstruction : return 'Commercial + Construction';
       case FinancingType.conventional : return 'Conventional';
       case FinancingType.hardMoney : return 'Hard Money';
-      case FinancingType.sellerFinance : return 'Seller Finance';
-      case FinancingType.sellerFinanceInterest : return 'Seller Finance Interest';
+      case FinancingType.hardMoneyWithConstruction : return 'Hard Money + Construction';
     }
   }
 }
@@ -37,11 +42,12 @@ class FinanceOptionData extends ChangeNotifier {
   double closingCosts;
   double monthlyPayment;
   bool willRefinance;
+  PaymentType paymentType;
 
   FinanceOptionData({this.financingType = FinancingType.commercial,
     this.loanPercentage = 0, this.loanAmount = 0, this.downPaymentAmount = 0,
     this.interestRate = 0, this.term = 0, this.closingCosts = 0, this.monthlyPayment = 0,
-    this.willRefinance = false,
+    this.willRefinance = false, this.paymentType = PaymentType.principalAndInterest,
   });
 
   void updateFinancingType(newValue) {
@@ -84,19 +90,19 @@ class FinanceOptionData extends ChangeNotifier {
     notifyListeners();
   }
 
-  double calculateMonthlyPayment({
-    required num rate, required num nper, required num pv, required num per}) {
+  void updatePaymentType(PaymentType newValue) {
+    paymentType = newValue;
+    notifyListeners();
+  }
 
-    switch(financingType) {
-      case FinancingType.conventional :
-      case FinancingType.commercial :
-      case FinancingType.sellerFinance :
+  double calculateMonthlyPayment({
+    required num rate, required num nper, required num pv}) {
         return Finance.pmt(rate: rate, nper: nper, pv: pv).toDouble();
-      case FinancingType.construction :
-      case FinancingType.hardMoney :
-      case FinancingType.sellerFinanceInterest :
+  }
+
+  double calculateMonthlyPaymentInterestOnly({
+    required num rate, required num nper, required num pv, required num per}) {
         return Finance.ipmt(rate: rate, per: per, nper: nper, pv: pv).toDouble();
-    }
   }
 
   void updateWillRefinance(bool newValue) {
