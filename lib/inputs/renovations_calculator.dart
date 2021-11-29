@@ -32,7 +32,7 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
           }
           Get.to(() => const FinanceOptions());
         },
-        position: 2,
+        position: kResidentialREIQuestions.indexOf(RenovationsCalculator) + 1,
         totalQuestions: kResidentialREIQuestions.length,
         child: ResponsiveLayout(
           children: (enterTotal)

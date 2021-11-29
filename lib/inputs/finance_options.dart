@@ -1,4 +1,6 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/is_seller_financed.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -10,6 +12,7 @@ import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class FinanceOptions extends ConsumerWidget {
   const FinanceOptions({Key? key}) : super(key: key);
@@ -46,7 +49,16 @@ class FinanceOptions extends ConsumerWidget {
       imageUri: 'images/finance.svg',
       headerText: 'Finance Options',
       subheadText: '',
-      onSubmit: () {},
+      onSubmit: () {
+        FinancingType financingType = ref.watch(financeProvider).financingType;
+        if (financingType == FinancingType.hardMoneyWithConstruction
+          || financingType == FinancingType.commercialWithConstruction) {
+          Get.to(() => const FinanceOptionConstructionLoan());
+        }
+        else {
+          Get.to(() => const IsSellerFinanced());
+        }
+      },
       position: kResidentialREIQuestions.indexOf(FinanceOptions) + 1,
       totalQuestions: kResidentialREIQuestions.length,
       child: ResponsiveLayout(
