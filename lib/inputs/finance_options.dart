@@ -36,7 +36,7 @@ class FinanceOptions extends ConsumerWidget {
             )
         : ref.watch(financeProvider).calculateMonthlyPaymentInterestOnly(
               rate: ref.watch(financeProvider).interestRate / 12,
-              nper: ref.watch(financeProvider).term * 12,
+              nper: ref.watch(financeProvider).term,
               pv: -1 * ref.watch(financeProvider).loanAmount,
               per: 1,
             );
@@ -158,7 +158,7 @@ class FinanceOptions extends ConsumerWidget {
             trailing: Text(
               ref.watch(financeProvider).willRefinance ? 'YES' : 'NO',
             ),
-          )
+          ),
         ],
       ),
     );

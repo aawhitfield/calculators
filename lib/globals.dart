@@ -27,4 +27,4 @@ List<Type> kResidentialREIQuestions = [
   Report,
 ];
 
-NumberFormat kCurrencyFormat = NumberFormat("#,##0.##", "en_US");
+NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");
