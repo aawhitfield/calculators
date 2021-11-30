@@ -2,6 +2,7 @@ import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_option_construction_provider.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/income.dart';
+import 'package:calculators/models/options.dart';
 import 'package:calculators/models/renovations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -35,4 +36,10 @@ final expensesProvider = ChangeNotifierProvider<Expenses>(
 final financeConstructionProvider =
     ChangeNotifierProvider<FinanceOptionConstructionProvider>(
   (ref) => FinanceOptionConstructionProvider(),
+);
+
+
+final optionsProvider =
+ChangeNotifierProvider<Options>(
+      (ref) => Options(),
 );
