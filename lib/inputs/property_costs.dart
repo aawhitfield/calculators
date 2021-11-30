@@ -66,7 +66,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 },
             ),
             MoneyTextField(
-                labelText: 'After Repair Price',
+                labelText: 'After Repair Value',
                 onChanged: (String newPrice) {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);

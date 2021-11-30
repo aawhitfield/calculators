@@ -6,7 +6,7 @@ import 'package:calculators/inputs/income_input.dart';
 import 'package:calculators/inputs/is_seller_financed.dart';
 import 'package:calculators/inputs/location.dart';
 import 'package:calculators/inputs/property_costs.dart';
-import 'package:calculators/inputs/refinance_options.dart';
+import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/inputs/renovations_calculator.dart';
 import 'package:calculators/inputs/want_to_refinance.dart';
 import 'package:calculators/report.dart';
@@ -23,7 +23,7 @@ List<Type> kResidentialREIQuestions = [
   IsSellerFinanced,
   FinanceOptionDownPayment,
   WantToRefinance,
-  RefinanceOptions,
+  RefinanceInput,
   Report,
 ];
 

@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/refinance_options.dart';
+import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/report.dart';
 import 'package:calculators/widgets/my_input_page.dart';
@@ -21,7 +21,7 @@ class WantToRefinance extends ConsumerWidget {
       subheadText: 'Would you like to refinance this property?',
       onSubmit: () {
         if (ref.read(optionsProvider).wantsToRefinance) {
-          Get.to(() => const RefinanceOptions());
+          Get.to(() => const RefinanceInput());
         } else {
           Get.to(() => const Report());
         }
