@@ -39,6 +39,7 @@ class FinanceOptionConstructionLoan extends ConsumerWidget {
         imageUri: 'images/finance-construction.svg',
         headerText: 'Finance Option', subheadText: 'Construction Loan',
         onSubmit: () {
+          ref.read(financeConstructionProvider).updateMonthlyPayment(monthlyPayment);
           Get.to(() => const IsSellerFinanced());
         },
         position: kResidentialREIQuestions.indexOf(FinanceOptionConstructionLoan) + 1,
@@ -58,12 +59,12 @@ class FinanceOptionConstructionLoan extends ConsumerWidget {
                 if (newValue != null) {
                   double loanPercentage = newValue / 100;
                   ref.read(financeConstructionProvider).updateLoanPercentage(loanPercentage);
-                  double purchasePrice = ref.read(propertyProvider).purchasePrice;
-                  double loanAmount = purchasePrice * loanPercentage;
+                  double totalConstruction = ref.read(renovationsProvider).total;
+                  double loanAmount = totalConstruction * loanPercentage;
 
                   ref.read(financeConstructionProvider).updateLoanAmount(loanAmount);
 
-                  double downPayment = purchasePrice - loanAmount;
+                  double downPayment = totalConstruction - loanAmount;
                   ref.read(financeConstructionProvider).updateDownPayment(downPayment);
                 }
               },

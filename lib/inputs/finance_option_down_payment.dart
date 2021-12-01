@@ -44,6 +44,7 @@ class FinanceOptionDownPayment extends ConsumerWidget {
         headerText: 'Finance Option',
         subheadText: 'Down Payment',
         onSubmit: () {
+          ref.read(sellerFinanceProvider).updateMonthlyPayment(monthlyPayment);
           Get.to(() => const WantToRefinance());
         },
         position: kResidentialREIQuestions.indexOf(FinanceOptionDownPayment) + 1,

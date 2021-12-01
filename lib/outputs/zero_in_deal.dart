@@ -28,8 +28,8 @@ class ZeroInDeal extends ConsumerWidget {
     double initialCashInvestment =
         totalDownPayment + constructionDownPayment + closingCosts;
     double initialCashPerInvestor = initialCashInvestment / ref.watch(propertyProvider).investors;
-    double purchasePrice = ref.watch(propertyProvider).purchasePrice;
-    double equity = purchasePrice - arvLoan;
+    double afterRepairValue = ref.watch(propertyProvider).afterRepairValue;
+    double equity = afterRepairValue - arvLoan;
     double afterRefinance = arvLoan - totalLoans - initialCashInvestment;
 
     String arvLoanString = kCurrencyFormat.format(arvLoan);

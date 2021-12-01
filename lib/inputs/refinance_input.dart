@@ -39,6 +39,7 @@ class RefinanceInput extends ConsumerWidget {
       headerText: 'Refinance Options',
       subheadText: '',
       onSubmit: () {
+        ref.read(refinanceProvider).updateMonthlyPayment(monthlyPayment);
         Get.to(() => const Report());
       },
       position: kResidentialREIQuestions.indexOf(RefinanceInput) + 1,

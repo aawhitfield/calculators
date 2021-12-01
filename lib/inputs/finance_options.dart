@@ -50,6 +50,7 @@ class FinanceOptions extends ConsumerWidget {
       headerText: 'Finance Options',
       subheadText: '',
       onSubmit: () {
+        ref.read(financeProvider).updateMonthlyPayment(monthlyPayment);
         FinancingType financingType = ref.watch(financeProvider).financingType;
         if (financingType == FinancingType.hardMoneyWithConstruction
           || financingType == FinancingType.commercialWithConstruction) {

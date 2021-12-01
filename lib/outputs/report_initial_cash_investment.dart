@@ -18,6 +18,7 @@ class ReportInitialCashInvestment extends ConsumerWidget {
 
     double constructionDownPayment =
         ref.watch(financeConstructionProvider).downPaymentAmount;
+
     double closingCosts = ref.watch(financeProvider).closingCosts;
     double rehab = ref.watch(renovationsProvider).total;
     double initialCashInvestment =
