@@ -12,7 +12,7 @@ class ResponsiveLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = context.isTablet
-        ? MediaQuery.of(context).size.width * 0.5
+        ? MediaQuery.of(context).size.width * 0.6
         : MediaQuery.of(context).size.width;
 
     return Align(

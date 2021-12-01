@@ -33,7 +33,7 @@ class MyInputPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double width = context.isTablet
-        ? MediaQuery.of(context).size.width * 0.5
+        ? MediaQuery.of(context).size.width * 0.6
         : MediaQuery.of(context).size.width;
 
     TextStyle? headline = context.isTablet
