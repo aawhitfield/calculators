@@ -188,4 +188,11 @@ class Renovation extends ChangeNotifier{
     notifyListeners();
   }
 
+  void reset() {
+    foundation = roof = airConditioner = paintingPatching = kitchen = windows
+      = plumbing = flooring = bathrooms = appliances = electrical = yard
+      = cleaning = baseboards = exterior = demo = elevators = build28Units
+      = other = total = tenPercentExtra = 0;
+    notifyListeners();
+  }
 }

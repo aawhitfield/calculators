@@ -57,4 +57,15 @@ class Property extends ChangeNotifier{
     investors = newInvestors;
     notifyListeners();
   }
+
+  void reset() {
+    listPrice = 0;
+    sqft = 0;
+    afterRepairValue = 0;
+    purchasePrice = 0;
+    monthsToRehabRent = 0;
+    units = 0;
+    investors = 0;
+    notifyListeners();
+  }
 }

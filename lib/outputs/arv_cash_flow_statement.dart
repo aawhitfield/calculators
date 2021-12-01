@@ -4,8 +4,8 @@ import 'package:calculators/widgets/report_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CashFlowStatement extends ConsumerWidget {
-  const CashFlowStatement({
+class ARVCashFlowStatement extends ConsumerWidget {
+  const ARVCashFlowStatement({
     Key? key,
   }) : super(key: key);
 
@@ -21,9 +21,7 @@ class CashFlowStatement extends ConsumerWidget {
     double noiAnnually = totalAnnualIncome - totalAnnualExpenses;
 
     double totalDebtServicePayments =
-        ref.watch(financeProvider).monthlyPayment +
-            ref.watch(financeConstructionProvider).monthlyPayment +
-            ref.watch(sellerFinanceProvider).monthlyPayment;
+        ref.watch(refinanceProvider).monthlyPayment;
 
     double netCashFlowMonthly = noiMonthly - totalDebtServicePayments;
     double netCashFlowAnnually = noiAnnually - totalDebtServicePayments * 12;
@@ -35,7 +33,7 @@ class CashFlowStatement extends ConsumerWidget {
 
     return Column(
       children: [
-        const ReportHeader('Cash Flow Statement'),
+        const ReportHeader('ARV Cash Flow Statement'),
         const SizedBox(height: 16),
         Table(
           border: TableBorder.all(),

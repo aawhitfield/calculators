@@ -92,4 +92,13 @@ class SellerFinanceOptionData extends ChangeNotifier {
     willRefinance = newValue;
     notifyListeners();
   }
+
+  void reset() {
+    financingType = SellerFinancingType.payment;
+    loanPercentage = loanAmount = downPaymentAmount = interestRate = 0;
+    term = 0;
+    closingCosts = monthlyPayment = 0;
+    willRefinance = false;
+    notifyListeners();
+  }
 }

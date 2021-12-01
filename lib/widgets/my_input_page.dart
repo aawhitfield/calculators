@@ -1,11 +1,14 @@
+import 'package:calculators/home.dart';
+import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
-class MyInputPage extends StatelessWidget {
+class MyInputPage extends ConsumerWidget {
   final String? headlineText;
   final String imageUri;
   final String headerText;
@@ -28,7 +31,7 @@ class MyInputPage extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double width = context.isTablet
         ? MediaQuery.of(context).size.width * 0.5
         : MediaQuery.of(context).size.width;
@@ -52,10 +55,14 @@ class MyInputPage extends StatelessWidget {
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        leading: (position != 1) ? IconButton(
-          icon: Icon(GetPlatform.isAndroid ? Icons.arrow_back : CupertinoIcons.back),
-          onPressed: () => Get.back(),
-        ) : Container(),
+        leading: (position != 1)
+            ? IconButton(
+                icon: Icon(GetPlatform.isAndroid
+                    ? Icons.arrow_back
+                    : CupertinoIcons.back),
+                onPressed: () => Get.back(),
+              )
+            : Container(),
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.green.shade500,
@@ -100,14 +107,39 @@ class MyInputPage extends StatelessWidget {
               const SizedBox(height: 8),
               child,
               (position != totalQuestions)
-              ? MyElevatedButton(width: width, onPressed: onSubmit,
-                label: (position == totalQuestions - 1) ? 'Generate report' : 'Continue',)
-              : Container(),
+                  ? MyElevatedButton(
+                      width: width,
+                      onPressed: onSubmit,
+                      label: (position == totalQuestions - 1)
+                          ? 'Generate report'
+                          : 'Continue',
+                    )
+                  : MyElevatedButton(
+                      width: width,
+                      onPressed: () {
+                        resetAllData(ref);
+                        Get.offAll(() => const MyHomePage(title: ''));
+                      },
+                      label: 'Start over',
+                    ),
               const SizedBox(height: 16),
             ],
           ),
         ),
       ),
     );
+  }
+
+  void resetAllData(WidgetRef ref) {
+    ref.read(addressProvider).reset();
+    ref.read(expensesProvider).reset();
+    ref.read(financeConstructionProvider).reset();
+    ref.read(financeProvider).reset();
+    ref.read(incomeProvider).reset();
+    ref.read(optionsProvider).reset();
+    ref.read(propertyProvider).reset();
+    ref.read(refinanceProvider).reset();
+    ref.read(renovationsProvider).reset();
+    ref.read(sellerFinanceProvider).reset();
   }
 }

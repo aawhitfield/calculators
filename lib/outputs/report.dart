@@ -1,7 +1,10 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/models/refinance.dart';
+import 'package:calculators/outputs/arv_cash_flow_statement.dart';
 import 'package:calculators/outputs/cash_flow_statement.dart';
 import 'package:calculators/outputs/report_initial_cash_investment.dart';
-import 'package:calculators/outputs/report_total_loans.dart';
+import 'package:calculators/outputs/zero_in_deal.dart';
+import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +15,10 @@ class Report extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    bool isRefinancing = ref.watch(optionsProvider).wantsToRefinance;
+    bool isCashOut = ref.watch(refinanceProvider).refinancingMethod == Refinancing.cashOut;
+    bool shouldShow0inDeal = isRefinancing && isCashOut;
+    bool shouldShowARVStatement = isRefinancing;
 
     return MyInputPage(
       imageUri: 'images/report.svg',
@@ -20,11 +27,12 @@ class Report extends ConsumerWidget {
       position: kResidentialREIQuestions.indexOf(Report) + 1,
       totalQuestions: kResidentialREIQuestions.length,
       onSubmit: () {},
-      child: const ResponsiveLayout(
+      child: ResponsiveLayout(
         children: [
-          ReportTotalLoans(),
-          ReportInitialCashInvestment(),
-          CashFlowStatement(),
+          const ReportInitialCashInvestment(),
+          const CashFlowStatement(),
+          (shouldShow0inDeal) ? const ZeroInDeal() : Container(),
+          (shouldShowARVStatement) ? const ARVCashFlowStatement() : Container(),
         ],
       ),
     );

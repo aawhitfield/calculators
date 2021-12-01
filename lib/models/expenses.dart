@@ -86,4 +86,10 @@ class Expenses extends ChangeNotifier {
     noiAnnual = totalMonthlyIncome * 12 - totalAnnualExpenses;
     return noiAnnual;
   }
+
+  void reset() {
+    taxes = propertyManagement = vacancy = maintenance = other = totalMonthlyExpenses
+      = totalAnnualExpenses = noiMonthly = noiAnnual = 0;
+    notifyListeners();
+  }
 }

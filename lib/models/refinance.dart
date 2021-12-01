@@ -87,4 +87,13 @@ class RefinanceOptions extends ChangeNotifier {
     return Finance.ipmt(rate: rate, per: per, nper: nper, pv: pv).toDouble();
   }
 
+  void reset() {
+    refinancingMethod = Refinancing.cashOut;
+    loanPercentage = loanAmount = downPaymentAmount = 0;
+    interestRate = 0;
+    term = 0;
+    closingCosts = monthlyPayment = 0;
+    notifyListeners();
+  }
+
 }

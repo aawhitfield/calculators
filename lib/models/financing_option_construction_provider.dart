@@ -64,4 +64,15 @@ class FinanceOptionConstructionProvider extends ChangeNotifier {
         double payment = Finance.ipmt(rate: rate, per: per, nper: nper, pv: pv).toDouble();
         return payment;
   }
+
+  void reset() {
+    financingType = FinancingType.commercial;
+    loanPercentage = 0;
+    loanAmount = 0;
+    downPaymentAmount = 0;
+    interestRate = 0;
+    term = 0;
+    monthlyPayment = 0;
+    notifyListeners();
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/finance_options.dart';
+import 'package:calculators/inputs/property_costs.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -37,7 +37,7 @@ class _RenovationsCalculatorState extends State<RenovationsCalculator> {
               if (!enterTotal) {
                 ref.read(renovationsProvider).calculateTotal();
               }
-              Get.to(() => const FinanceOptions());
+              Get.to(() => const PropertyCosts());
             },
             position: kResidentialREIQuestions.indexOf(RenovationsCalculator) +
                 1,

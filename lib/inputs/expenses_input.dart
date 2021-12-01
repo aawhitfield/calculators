@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/renovations_calculator.dart';
+import 'package:calculators/inputs/finance_options.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -22,7 +22,7 @@ class ExpensesInput extends ConsumerWidget {
       position: kResidentialREIQuestions.indexOf(ExpensesInput) + 1,
       totalQuestions: kResidentialREIQuestions.length,
       onSubmit: () {
-        Get.to(() => const RenovationsCalculator());
+        Get.to(() => const FinanceOptions());
       },
       child: ResponsiveLayout(
         children: [

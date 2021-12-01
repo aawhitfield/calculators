@@ -37,4 +37,9 @@ class Address extends ChangeNotifier{
     zip = newZip;
     notifyListeners();
   }
+
+  void reset() {
+    street = line2 = city = state = zip = '';
+    notifyListeners();
+  }
 }

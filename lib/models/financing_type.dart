@@ -109,4 +109,18 @@ class FinanceOptionData extends ChangeNotifier {
     willRefinance = newValue;
     notifyListeners();
   }
+
+  void reset() {
+    financingType = FinancingType.commercial;
+    loanPercentage = 0;
+    loanAmount = 0;
+    downPaymentAmount = 0;
+    interestRate = 0;
+    term = 0;
+    closingCosts = 0;
+    monthlyPayment = 0;
+    willRefinance = false;
+    paymentType = PaymentType.principalAndInterest;
+    notifyListeners();
+  }
 }
