@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/models/refinance.dart';
 import 'package:calculators/providers.dart';
-import 'package:calculators/report.dart';
+import 'package:calculators/outputs/report.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';

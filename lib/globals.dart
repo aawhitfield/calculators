@@ -9,7 +9,7 @@ import 'package:calculators/inputs/property_costs.dart';
 import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/inputs/renovations_calculator.dart';
 import 'package:calculators/inputs/want_to_refinance.dart';
-import 'package:calculators/report.dart';
+import 'package:calculators/outputs/report.dart';
 import 'package:intl/intl.dart';
 
 List<Type> kResidentialREIQuestions = [

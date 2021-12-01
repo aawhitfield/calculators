@@ -99,8 +99,10 @@ class MyInputPage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               child,
-              MyElevatedButton(width: width, onPressed: onSubmit,
-                label: (position == totalQuestions) ? 'Calculate' : 'Continue',),
+              (position != totalQuestions)
+              ? MyElevatedButton(width: width, onPressed: onSubmit,
+                label: (position == totalQuestions - 1) ? 'Generate report' : 'Continue',)
+              : Container(),
               const SizedBox(height: 16),
             ],
           ),
