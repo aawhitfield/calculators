@@ -46,15 +46,15 @@ class ZeroInDeal extends ConsumerWidget {
         const SizedBox(height: 16),
         MoneyListTile('ARV Loan', arvLoanString),
         MoneyListTile(
-            'Original Loan Amount', totalLoansString),
-        MoneyListTile('Initial Cash Investment', initialCashInvestmentString),
-        MoneyListTile('Initial Cash Per Investor', initialCashPerInvestorString),
+            'Original \nLoan Amount', totalLoansString),
+        MoneyListTile('Initial \nCash Investment', initialCashInvestmentString),
+        MoneyListTile('Initial Cash \nPer Investor', initialCashPerInvestorString),
         MoneyListTile('Equity', equityString),
         Container(
             color: (afterRefinance > 0)? Colors.green.withOpacity(0.5)
               : (afterRefinance < 0) ? Colors.red.withOpacity(0.5)
               : Colors.transparent,
-            child: MoneyListTile('After refinance 0 in deal?', afterRefinanceString)),
+            child: MoneyListTile('After refinance \n0 in deal?', afterRefinanceString)),
         const SizedBox(height: 16),
       ],
     );

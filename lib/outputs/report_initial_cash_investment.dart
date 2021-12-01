@@ -39,12 +39,12 @@ class ReportInitialCashInvestment extends ConsumerWidget {
       children: [
         const ReportHeader('Initial Cash Investment'),
         const SizedBox(height: 16),
-        MoneyListTile('Loan Down Payment', loanDownPaymentString),
+        MoneyListTile('Loan \nDown Payment', loanDownPaymentString),
         MoneyListTile(
-            'Construction Down Payment', constructionDownPaymentString),
+            'Construction \nDown Payment', constructionDownPaymentString),
         MoneyListTile('Closing Costs', closingCostsString),
         MoneyListTile('Rehab', rehabString),
-        MoneyListTile('Initial Cash Investment', initialCashInvestmentString),
+        MoneyListTile('Initial \nCash Investment', initialCashInvestmentString),
         MoneyListTile('Cost per investor', costPerInvestorString),
       ],
     );
