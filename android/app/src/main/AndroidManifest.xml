@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="us.binarychaos.calculators">
    <application
-        android:label="calculators"
+        android:label="Vereifi"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
