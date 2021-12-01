@@ -17,18 +17,21 @@ class RefinanceInput extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Refinancing refinancingMethod = ref.watch(refinanceProvider).refinancingMethod;
+    Refinancing refinancingMethod =
+        ref.watch(refinanceProvider).refinancingMethod;
 
     double loanAmount = ref.watch(propertyProvider).afterRepairValue *
         ref.watch(refinanceProvider).loanPercentage;
 
-    double downPaymentAmount = ref.watch(propertyProvider).afterRepairValue - loanAmount;
+    double downPaymentAmount =
+        ref.watch(propertyProvider).afterRepairValue - loanAmount;
 
-    double monthlyPayment = ref.watch(refinanceProvider).calculateMonthlyPayment(
-      rate: ref.watch(refinanceProvider).interestRate / 12,
-      nper: ref.watch(refinanceProvider).term * 12,
-      pv: -1 * loanAmount,
-    );
+    double monthlyPayment =
+        ref.watch(refinanceProvider).calculateMonthlyPayment(
+              rate: ref.watch(refinanceProvider).interestRate / 12,
+              nper: ref.watch(refinanceProvider).term * 12,
+              pv: -1 * loanAmount,
+            );
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -55,10 +58,10 @@ class RefinanceInput extends ConsumerWidget {
                   value: refinancingMethod,
                   items: Refinancing.values
                       .map((Refinancing refinancingMethod) =>
-                      DropdownMenuItem<Refinancing>(
-                          value: refinancingMethod,
-                          child:
-                          Text(RefinancingUtils(refinancingMethod).name)))
+                          DropdownMenuItem<Refinancing>(
+                              value: refinancingMethod,
+                              child: Text(
+                                  RefinancingUtils(refinancingMethod).name)))
                       .toList(),
                   onChanged: (Refinancing? newValue) {
                     ref.read(refinanceProvider).updateFinancingType(newValue!);
@@ -74,8 +77,11 @@ class RefinanceInput extends ConsumerWidget {
               double? newValue = double.tryParse(newPercentage);
               if (newValue != null) {
                 double loanPercentage = newValue / 100;
-                ref.read(refinanceProvider).updateLoanPercentage(loanPercentage);
-                double afterRepairValue = ref.read(propertyProvider).afterRepairValue;
+                ref
+                    .read(refinanceProvider)
+                    .updateLoanPercentage(loanPercentage);
+                double afterRepairValue =
+                    ref.read(propertyProvider).afterRepairValue;
                 double loanAmount = afterRepairValue * loanPercentage;
 
                 ref.read(refinanceProvider).updateLoanAmount(loanAmount);
@@ -85,8 +91,16 @@ class RefinanceInput extends ConsumerWidget {
               }
             },
           ),
-          MoneyListTile('Loan Amount', loanAmountString),
-          MoneyListTile('Down Payment', downPaymentString),
+          MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Loan\nAmount'
+                  : 'Loan Amount',
+              loanAmountString),
+          MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Down\nPayment'
+                  : 'Down Payment',
+              downPaymentString),
           PercentTextField(
             labelText: 'Interest Rate',
             onChanged: (String newPercentage) {
@@ -120,10 +134,11 @@ class RefinanceInput extends ConsumerWidget {
               }
             },
           ),
-          MoneyListTile('Monthly Payment', monthlyPaymentString),
+          MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Monthly\nPayment':'Monthly Payment', monthlyPaymentString),
         ],
       ),
     );
   }
-
 }

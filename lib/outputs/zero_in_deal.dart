@@ -10,10 +10,8 @@ class ZeroInDeal extends ConsumerWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     double arvLoan = ref.watch(refinanceProvider).loanAmount;
     double totalLoans = ref.watch(financeProvider).loanAmount +
         ref.watch(financeConstructionProvider).loanAmount +
@@ -27,7 +25,8 @@ class ZeroInDeal extends ConsumerWidget {
     double closingCosts = ref.watch(financeProvider).closingCosts;
     double initialCashInvestment =
         totalDownPayment + constructionDownPayment + closingCosts;
-    double initialCashPerInvestor = initialCashInvestment / ref.watch(propertyProvider).investors;
+    double initialCashPerInvestor =
+        initialCashInvestment / ref.watch(propertyProvider).investors;
     double afterRepairValue = ref.watch(propertyProvider).afterRepairValue;
     double equity = afterRepairValue - arvLoan;
     double afterRefinance = arvLoan - totalLoans - initialCashInvestment;
@@ -35,8 +34,9 @@ class ZeroInDeal extends ConsumerWidget {
     String arvLoanString = kCurrencyFormat.format(arvLoan);
     String totalLoansString = kCurrencyFormat.format(totalLoans);
     String initialCashInvestmentString =
-    kCurrencyFormat.format(initialCashInvestment);
-    String initialCashPerInvestorString = kCurrencyFormat.format(initialCashPerInvestor);
+        kCurrencyFormat.format(initialCashInvestment);
+    String initialCashPerInvestorString =
+        kCurrencyFormat.format(initialCashPerInvestor);
     String equityString = kCurrencyFormat.format(equity);
     String afterRefinanceString = kCurrencyFormat.format(afterRefinance);
 
@@ -44,17 +44,38 @@ class ZeroInDeal extends ConsumerWidget {
       children: [
         const ReportHeader('0 in Deal?'),
         const SizedBox(height: 16),
-        MoneyListTile('ARV Loan', arvLoanString),
         MoneyListTile(
-            'Original \nLoan Amount', totalLoansString),
-        MoneyListTile('Initial \nCash Investment', initialCashInvestmentString),
-        MoneyListTile('Initial Cash \nPer Investor', initialCashPerInvestorString),
+            (MediaQuery.of(context).size.width < 640)
+                ? 'ARV\nLoan'
+                : 'ARV Loan',
+            arvLoanString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Original\nAmount'
+                : 'Original \nLoan Amount',
+            totalLoansString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Initial\ncash'
+                : 'Initial \nCash Investment',
+            initialCashInvestmentString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Per\nInvestor'
+                : 'Initial Cash \nPer Investor',
+            initialCashPerInvestorString),
         MoneyListTile('Equity', equityString),
         Container(
-            color: (afterRefinance > 0)? Colors.green.withOpacity(0.5)
-              : (afterRefinance < 0) ? Colors.red.withOpacity(0.5)
-              : Colors.transparent,
-            child: MoneyListTile('After refinance \n0 in deal?', afterRefinanceString)),
+            color: (afterRefinance > 0)
+                ? Colors.green.withOpacity(0.5)
+                : (afterRefinance < 0)
+                    ? Colors.red.withOpacity(0.5)
+                    : Colors.transparent,
+            child: MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'After\nrefinance'
+                    : 'After refinance \n0 in deal?',
+                afterRefinanceString)),
         const SizedBox(height: 16),
       ],
     );

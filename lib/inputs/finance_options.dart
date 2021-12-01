@@ -52,11 +52,10 @@ class FinanceOptions extends ConsumerWidget {
       onSubmit: () {
         ref.read(financeProvider).updateMonthlyPayment(monthlyPayment);
         FinancingType financingType = ref.watch(financeProvider).financingType;
-        if (financingType == FinancingType.hardMoneyWithConstruction
-          || financingType == FinancingType.commercialWithConstruction) {
+        if (financingType == FinancingType.hardMoneyWithConstruction ||
+            financingType == FinancingType.commercialWithConstruction) {
           Get.to(() => const FinanceOptionConstructionLoan());
-        }
-        else {
+        } else {
           Get.to(() => const IsSellerFinanced());
         }
       },
@@ -64,32 +63,24 @@ class FinanceOptions extends ConsumerWidget {
       totalQuestions: kResidentialREIQuestions.length,
       child: ResponsiveLayout(
         children: [
-          Row(
-            children: [
-              const Text('Financing Type'),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DropdownButton<FinancingType>(
-                  value: value,
-                  items: FinancingType.values
-                      .map((FinancingType financingType) =>
-                          DropdownMenuItem<FinancingType>(
-                              value: financingType,
-                              child:
-                                  Text(FinancingTypeUtils(financingType).name)))
-                      .toList(),
-                  onChanged: (FinancingType? newValue) {
-                    ref.read(financeProvider).updateFinancingType(newValue);
-                    ref.read(financeProvider).updateWillRefinance(
-                        (newValue == FinancingType.conventional ||
-                                newValue == FinancingType.commercial)
-                            ? false
-                            : true);
-                  },
+          (MediaQuery.of(context).size.width > 640)
+              ? Row(
+                  children: [
+                    const Text('Financing Type'),
+                    const SizedBox(width: 8),
+                    Expanded(child: FinancingDropDown(value: value, ref: ref)),
+                  ],
+                )
+              : Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Financing Type'),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: FinancingDropDown(value: value, ref: ref)),
+                  ],
                 ),
-              )
-            ],
-          ),
           PercentTextField(
             labelText: 'Loan Percent',
             onChanged: (String newPercentage) {
@@ -108,8 +99,16 @@ class FinanceOptions extends ConsumerWidget {
               }
             },
           ),
-          MoneyListTile('Loan Amount', loanAmountString),
-          MoneyListTile('Down Payment', downPaymentString),
+          MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Loan\nAmount'
+                  : 'Loan Amount',
+              loanAmountString),
+          MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Down\nPayment'
+                  : 'Down Payment',
+              downPaymentString),
           PercentTextField(
             labelText: 'Interest Rate',
             onChanged: (String newPercentage) {
@@ -153,7 +152,11 @@ class FinanceOptions extends ConsumerWidget {
             onValueChanged: (PaymentType? newValue) =>
                 ref.read(financeProvider).updatePaymentType(newValue!),
           ),
-          MoneyListTile('Monthly Payment', monthlyPaymentString),
+          MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Monthly\nPayment'
+                  : 'Monthly Payment',
+              monthlyPaymentString),
           ListTile(
             title: const Text('Refinance'),
             trailing: Text(
@@ -162,6 +165,38 @@ class FinanceOptions extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class FinancingDropDown extends StatelessWidget {
+  const FinancingDropDown({
+    Key? key,
+    required this.value,
+    required this.ref,
+  }) : super(key: key);
+
+  final FinancingType value;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<FinancingType>(
+      value: value,
+      items: FinancingType.values
+          .map((FinancingType financingType) =>
+              DropdownMenuItem<FinancingType>(
+                  value: financingType,
+                  child: Text(FinancingTypeUtils(financingType).name)))
+          .toList(),
+      onChanged: (FinancingType? newValue) {
+        ref.read(financeProvider).updateFinancingType(newValue);
+        ref.read(financeProvider).updateWillRefinance(
+            (newValue == FinancingType.conventional ||
+                    newValue == FinancingType.commercial)
+                ? false
+                : true);
+      },
     );
   }
 }

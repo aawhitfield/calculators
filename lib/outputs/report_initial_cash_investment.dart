@@ -10,7 +10,6 @@ class ReportInitialCashInvestment extends ConsumerWidget {
     Key? key,
   }) : super(key: key);
 
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double totalDownPayment = ref.watch(financeProvider).downPaymentAmount -
@@ -28,24 +27,43 @@ class ReportInitialCashInvestment extends ConsumerWidget {
 
     String loanDownPaymentString = kCurrencyFormat.format(totalDownPayment);
     String constructionDownPaymentString =
-    kCurrencyFormat.format(constructionDownPayment);
+        kCurrencyFormat.format(constructionDownPayment);
     String closingCostsString = kCurrencyFormat.format(closingCosts);
     String rehabString = kCurrencyFormat.format(rehab);
     String initialCashInvestmentString =
-    kCurrencyFormat.format(initialCashInvestment);
+        kCurrencyFormat.format(initialCashInvestment);
     String costPerInvestorString = kCurrencyFormat.format(costPerInvestor);
 
     return Column(
       children: [
         const ReportHeader('Initial Cash Investment'),
         const SizedBox(height: 16),
-        MoneyListTile('Loan \nDown Payment', loanDownPaymentString),
         MoneyListTile(
-            'Construction \nDown Payment', constructionDownPaymentString),
-        MoneyListTile('Closing Costs', closingCostsString),
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Loan\nDP'
+                : 'Loan \nDown Payment',
+            loanDownPaymentString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Construct\nDP'
+                : 'Construction \nDown Payment',
+            constructionDownPaymentString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Closing\nCosts'
+                : 'Closing Costs',
+            closingCostsString),
         MoneyListTile('Rehab', rehabString),
-        MoneyListTile('Initial \nCash Investment', initialCashInvestmentString),
-        MoneyListTile('Cost per investor', costPerInvestorString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Initial\nCash'
+                : 'Initial \nCash Investment',
+            initialCashInvestmentString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Cost per\ninvestor'
+                : 'Cost per investor',
+            costPerInvestorString),
       ],
     );
   }

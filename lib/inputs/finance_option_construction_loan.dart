@@ -69,8 +69,14 @@ class FinanceOptionConstructionLoan extends ConsumerWidget {
                 }
               },
             ),
-            MoneyListTile('Loan Amount', loanAmountString),
-            MoneyListTile('Down Payment', downPaymentString),
+            MoneyListTile(
+    (MediaQuery.of(context).size.width < 640)
+                ? 'Loan\nAmount'
+                : 'Loan Amount', loanAmountString),
+            MoneyListTile(
+    (MediaQuery.of(context).size.width < 640)
+                ? 'Down\nPayment'
+                : 'Down Payment', downPaymentString),
             PercentTextField(
               labelText: 'Interest Rate',
               onChanged: (String newPercentage) {
@@ -94,7 +100,10 @@ class FinanceOptionConstructionLoan extends ConsumerWidget {
                 }
               },
             ),
-            MoneyListTile('Monthly Payment', monthlyPaymentString),
+            MoneyListTile(
+    (MediaQuery.of(context).size.width < 640)
+                ? 'Monthly\nPayment'
+                : 'Monthly Payment', monthlyPaymentString),
           ],
         ),
     );

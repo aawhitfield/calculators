@@ -69,12 +69,12 @@ class ExpensesInput extends ConsumerWidget {
                   ref.read(expensesProvider).updateOther(value);
                 }
               }),
-          MoneyListTile('Total Expenses',
+          MoneyListTile('Total \nExpenses',
             kCurrencyFormat.format(ref.watch(expensesProvider).calculateTotalExpensesMonthly(
                 ref.watch(incomeProvider).total)).toString(),
             subtitle: 'Monthly',
           ),
-          MoneyListTile('Total Expenses',
+          MoneyListTile('Total \nExpenses',
             kCurrencyFormat.format(double.parse(ref.watch(expensesProvider)
                 .calculateTotalAnnualExpenses().toStringAsFixed(2))),
             subtitle: 'Annually',
