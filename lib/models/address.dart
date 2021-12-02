@@ -45,7 +45,7 @@ class Address extends ChangeNotifier{
   }
 
   void reset() {
-    street = line2 = city = state = zip = '';
+    street = line2 = city = state = zip = fullAddress = '';
     notifyListeners();
   }
 }
