@@ -28,3 +28,5 @@ List<Type> kResidentialREIQuestions = [
 ];
 
 NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");
+
+String kGoogleAPIkey = 'AIzaSyD60flaZZs5lNOKU0uzCOiJ4uhYwmwHtuo';

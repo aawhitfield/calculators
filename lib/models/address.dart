@@ -8,10 +8,11 @@ class Address extends ChangeNotifier{
   String city;
   String state;
   String zip;
+  String fullAddress;
 
 
   Address({required this.street, required this.line2, required this.city,
-      required this.state, required this.zip,});
+      required this.state, required this.zip, this.fullAddress = ''});
 
   void updateStreet(String newStreet) {
     street = newStreet;
@@ -35,6 +36,11 @@ class Address extends ChangeNotifier{
 
   void updateZip(String newZip) {
     zip = newZip;
+    notifyListeners();
+  }
+
+  void updateAddress(String newAddress) {
+    fullAddress = newAddress;
     notifyListeners();
   }
 
