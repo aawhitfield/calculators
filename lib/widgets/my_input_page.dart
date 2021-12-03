@@ -17,6 +17,7 @@ class MyInputPage extends ConsumerWidget {
   final VoidCallback onSubmit;
   final int position;
   final int totalQuestions;
+  final bool? shouldShowBackButton;
 
   const MyInputPage({
     Key? key,
@@ -28,6 +29,7 @@ class MyInputPage extends ConsumerWidget {
     required this.onSubmit,
     required this.position,
     required this.totalQuestions,
+    this.shouldShowBackButton,
   }) : super(key: key);
 
   @override
@@ -55,14 +57,18 @@ class MyInputPage extends ConsumerWidget {
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        leading: (position != 1)
-            ? IconButton(
-                icon: Icon(GetPlatform.isAndroid
-                    ? Icons.arrow_back
-                    : CupertinoIcons.back),
-                onPressed: () => Get.back(),
-              )
-            : Container(),
+        leading: (shouldShowBackButton != null)
+            ? (shouldShowBackButton!)
+                ? null
+                : Container()
+            : (position != 1)
+                ? IconButton(
+                    icon: Icon(GetPlatform.isAndroid
+                        ? Icons.arrow_back
+                        : CupertinoIcons.back),
+                    onPressed: () => Get.back(),
+                  )
+                : Container(),
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Colors.green.shade500,

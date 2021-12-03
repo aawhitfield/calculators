@@ -18,6 +18,7 @@ class Location extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MyInputPage(headlineText: 'Residential REI', imageUri: 'images/house_searching.svg',
       headerText: 'Let\'s first find the property', subheadText: 'Where is the property located?',
+      shouldShowBackButton: true,
       child: const AddressForm(),
       onSubmit: () {
       // save the address onto the Property model class
