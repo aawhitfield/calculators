@@ -24,7 +24,7 @@ class MyHomePage extends ConsumerWidget {
         svgImage: 'images/residential.svg',
         imageSize: imageSize,
         onPressed: () {
-        Get.to(() => const Location());
+        Get.to(() => Location());
         },
       ),
       CardButton(label: 'Fix & Flip',

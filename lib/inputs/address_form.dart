@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 class AddressForm extends ConsumerWidget {
-  const AddressForm({
+  final TextEditingController addressController;
+  const AddressForm(this.addressController, {
     Key? key,
   }) : super(key: key);
 
@@ -27,9 +28,10 @@ class AddressForm extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PlacesAutocompleteField(
+                controller: addressController,
                 onChanged: (String? newAddress) {
                   if (newAddress != null) {
-                    ref.read(addressProvider).updateAddress(newAddress);
+                    ref.read(propertyProvider).updateAddress(newAddress);
                   }
                 },
                   apiKey: kGoogleAPIkey,

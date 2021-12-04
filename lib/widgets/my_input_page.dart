@@ -137,7 +137,6 @@ class MyInputPage extends ConsumerWidget {
   }
 
   void resetAllData(WidgetRef ref) {
-    ref.read(addressProvider).reset();
     ref.read(expensesProvider).reset();
     ref.read(financeConstructionProvider).reset();
     ref.read(financeProvider).reset();

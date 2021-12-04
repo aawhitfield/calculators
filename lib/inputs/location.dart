@@ -7,27 +7,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import 'address_form.dart';
-import '../models/address.dart';
 
 
 
 class Location extends ConsumerWidget {
-  const Location({Key? key}) : super(key: key);
+  Location({Key? key}) : super(key: key);
+  final TextEditingController addressController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MyInputPage(headlineText: 'Residential REI', imageUri: 'images/house_searching.svg',
       headerText: 'Let\'s first find the property', subheadText: 'Where is the property located?',
       shouldShowBackButton: true,
-      child: const AddressForm(),
+      child: AddressForm(addressController),
       onSubmit: () {
-      // save the address onto the Property model class
-      final address = ref.read(addressProvider);
-      ref.read(propertyProvider).updateAddress(
-        Address(street: address.street, line2: address.line2, city: address.city,
-            state: address.state, zip: address.zip,
-        )
-      );
+      ref.read(propertyProvider).updateAddress(addressController.text);
+
         Get.to(() => const RenovationsCalculator());
       },
       position: 1,
