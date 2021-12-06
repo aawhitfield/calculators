@@ -1,43 +1,45 @@
-import 'dart:math';
-
-import 'package:calculators/inputs/location.dart';
-import 'package:calculators/widgets/card_button.dart';
-import 'package:calculators/widgets/responsive_row_column_grid.dart';
+import 'package:calculators/calculator_selector.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
-class MyHomePage extends ConsumerWidget {
+class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  State<MyHomePage> createState() => _MyHomePageState();
+}
 
-    double minSize = min(MediaQuery.of(context).size.width,
-        MediaQuery.of(context).size.height);
-    double imageSize = minSize * 0.35;
+class _MyHomePageState extends State<MyHomePage> {
+  int selectedIndex = 0;
 
-    List<CardButton> calculators = [
-      CardButton(label: 'Residential REI',
-        svgImage: 'images/residential.svg',
-        imageSize: imageSize,
-        onPressed: () {
-        Get.to(() => Location());
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: const [
+          CalculatorSelector(),
+          Icon(Icons.place),
+        ].elementAt(selectedIndex),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.calculate),
+            label: 'Calculators',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.place),
+            label: 'Saved Places',
+          )
+        ],
+        currentIndex: selectedIndex,
+        onTap: (int index) {
+          setState(() {
+            selectedIndex = index;
+          });
         },
       ),
-      CardButton(label: 'Fix & Flip',
-        svgImage: 'images/fix-flip.svg',
-        imageSize: imageSize,
-        onPressed: () {},
-      ),
-    ];
-
-    return ResponsiveRowColumnGrid(
-      heading: 'Verefi',
-      subheading: 'Which calculator would you like to use today?',
-      children: calculators,
     );
   }
 }
