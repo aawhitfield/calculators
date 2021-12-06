@@ -1,4 +1,5 @@
 import 'package:calculators/calculator_selector.dart';
+import 'package:calculators/saved/saved_places.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -19,7 +20,7 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: const [
           CalculatorSelector(),
-          Icon(Icons.place),
+          SavedPlaces(),
         ].elementAt(selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
