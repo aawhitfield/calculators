@@ -1,3 +1,4 @@
+import 'package:calculators/models/property.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -8,8 +9,13 @@ class SavedPlaces extends StatelessWidget {
   Widget build(BuildContext context) {
 
     List<int> colors = [
-      0xFF6DFC71, 0xFF8ABD8C, 0xFF4CAF50, 0xFFB8FCBB, 0xFF367D38
+      0xFF3DC2BA, 0xFF3EC9A3, 0xFF40B37B, 0xFF3EC969, 0xFF39BF47
     ];
+
+    List<Property> properties = List.filled(10, Property(
+        listPrice: 450000, address: '1910 Emmy Dr, Bakersfield, CA, 93307',
+
+    ));
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
@@ -33,8 +39,8 @@ class SavedPlaces extends StatelessWidget {
                     leading: Icon(Icons.place, size: 48,
                       color: Color(colors[index % colors.length]),
                     ),
-                    title: const Text('Saved Address'),
-                    subtitle: const Text('Calculator Type'),
+                    title: Text(properties[index].address),
+                    subtitle: const Text('Residential REI'),
                   trailing: const Icon(CupertinoIcons.right_chevron),
                 );
               },
