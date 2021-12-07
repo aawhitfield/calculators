@@ -79,7 +79,7 @@ class PropertyDatabase {
   Future<List<Property>> readAllProperties() async {
     final db = await instance.database;
 
-    final orderBy = '${PropertyFields.id} ASC';
+    const orderBy = '${PropertyFields.id} ASC';
 
     final result = await db.query(tableProperty, orderBy: orderBy);
 
