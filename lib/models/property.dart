@@ -24,7 +24,7 @@ class PropertyFields {
 }
 
 class Property extends ChangeNotifier{
-  final int? id;
+  int? id;
   Calculator calculator;
   String address;
   double listPrice;
@@ -90,6 +90,19 @@ class Property extends ChangeNotifier{
       investors: json[PropertyFields.investors] as int,
   );
 
+  void updateProperty(Property newProperty) {
+    id = newProperty.id;
+    calculator = newProperty.calculator;
+    address = newProperty.address;
+    listPrice = newProperty.listPrice;
+    sqft = newProperty.sqft;
+    afterRepairValue = newProperty.afterRepairValue;
+    purchasePrice = newProperty.purchasePrice;
+    monthsToRehabRent = newProperty.monthsToRehabRent;
+    units = newProperty.units;
+    investors = newProperty.investors;
+    notifyListeners();
+  }
   void updateCalculator(Calculator newCalculator) {
     calculator = newCalculator;
     notifyListeners();

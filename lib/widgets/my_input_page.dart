@@ -1,7 +1,5 @@
-import 'package:calculators/home.dart';
-import 'package:calculators/providers.dart';
+import 'package:calculators/outputs/final_options_buttons.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
-import 'package:calculators/widgets/my_outlined_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -121,52 +119,12 @@ class MyInputPage extends ConsumerWidget {
                           ? 'Generate report'
                           : 'Continue',
                     )
-                  : Row(
-                mainAxisSize: MainAxisSize.min,
-                    children: [
-                      MyOutlinedButton(
-                          width: width * 0.4,
-                          onPressed: () {
-                            resetAllData(ref);
-                            Get.offAll(() => const MyHomePage(title: '', startingTab: 0,));
-                          },
-                          label: 'Start over',
-                        ),
-                      const Spacer(),
-                      MyElevatedButton(
-                        width: width * 0.4,
-                        onPressed: () {
-                          Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: const [
-                              Icon(Icons.check, color: Colors.white),
-                              SizedBox(width: 4),
-                              Text('Place saved!',),
-                            ],
-                          ), shape: const StadiumBorder(), behavior: SnackBarBehavior.floating,));
-                        },
-                        label: 'Save Info',
-                      ),
-                    ],
-                  ),
+                  : FinalOptionsButtons(width: width,), // show on final report page
               const SizedBox(height: 16),
             ],
           ),
         ),
       ),
     );
-  }
-
-  void resetAllData(WidgetRef ref) {
-    ref.read(expensesProvider).reset();
-    ref.read(financeConstructionProvider).reset();
-    ref.read(financeProvider).reset();
-    ref.read(incomeProvider).reset();
-    ref.read(optionsProvider).reset();
-    ref.read(propertyProvider).reset();
-    ref.read(refinanceProvider).reset();
-    ref.read(renovationsProvider).reset();
-    ref.read(sellerFinanceProvider).reset();
   }
 }

@@ -51,3 +51,15 @@ final optionsProvider =
 ChangeNotifierProvider<Options>(
       (ref) => Options(),
 );
+
+void resetAllData(WidgetRef ref) {
+  ref.read(expensesProvider).reset();
+  ref.read(financeConstructionProvider).reset();
+  ref.read(financeProvider).reset();
+  ref.read(incomeProvider).reset();
+  ref.read(optionsProvider).reset();
+  ref.read(propertyProvider).reset();
+  ref.read(refinanceProvider).reset();
+  ref.read(renovationsProvider).reset();
+  ref.read(sellerFinanceProvider).reset();
+}
