@@ -1,16 +1,18 @@
 // organizes all information for a property
 
+import 'package:calculators/models/calculator.dart';
 import 'package:flutter/material.dart';
 
 const String tableProperty = 'properties';
 
 class PropertyFields {
   static final List<String> values = [
-    id, address, listPrice, sqft, afterRepairValue, monthsToRehabRent,
+    id, calculator, address, listPrice, sqft, afterRepairValue, monthsToRehabRent,
     units, investors
   ];
 
   static const String id = '_id';
+  static const String calculator = 'calculator';
   static const String address = 'address';
   static const String listPrice = 'listPrice';
   static const String sqft = 'sqft';
@@ -23,6 +25,7 @@ class PropertyFields {
 
 class Property extends ChangeNotifier{
   final int? id;
+  Calculator calculator;
   String address;
   double listPrice;
   int? sqft;
@@ -32,13 +35,14 @@ class Property extends ChangeNotifier{
   int units;
   int investors;
 
-  Property({this.id, required this.address, required this.listPrice, this.sqft,
+  Property({this.id, required this.calculator, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
     this.units = 0, this.investors = 0,
   });
 
   Property copy({
     int? id,
+    Calculator? calculator,
     String? address,
     double? listPrice,
     int? sqft,
@@ -49,6 +53,7 @@ class Property extends ChangeNotifier{
     int? investors,
 }) => Property(
       id: id ?? this.id,
+      calculator:  calculator ?? this.calculator,
       address: address ?? this.address,
       listPrice: listPrice ?? this.listPrice,
       sqft: sqft ?? this.sqft,
@@ -61,6 +66,7 @@ class Property extends ChangeNotifier{
 
   Map<String, Object?> toJson() => {
     PropertyFields.id: id,
+    PropertyFields.calculator: CalculatorUtils.getName(calculator),
     PropertyFields.address: address,
     PropertyFields.listPrice: listPrice,
     PropertyFields.sqft: sqft,
@@ -73,6 +79,7 @@ class Property extends ChangeNotifier{
 
   static Property fromJson(Map<String, Object?> json) => Property(
     id: json[PropertyFields.id] as int?,
+      calculator: CalculatorUtils.toType(json[PropertyFields.calculator] as String),
       address: json[PropertyFields.address] as String,
       listPrice: json[PropertyFields.listPrice] as double,
       sqft: json[PropertyFields.sqft] as int?,
@@ -82,6 +89,11 @@ class Property extends ChangeNotifier{
       units: json[PropertyFields.units] as int,
       investors: json[PropertyFields.investors] as int,
   );
+
+  void updateCalculator(Calculator newCalculator) {
+    calculator = newCalculator;
+    notifyListeners();
+  }
 
   void updateAddress(String newAddress) {
     address = newAddress;

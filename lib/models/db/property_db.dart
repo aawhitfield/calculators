@@ -25,6 +25,7 @@ class PropertyDatabase {
 
   Future _createDB(Database db, int version) async {
     const idType = 'INTEGER PRIMARY KEY AUTOINCREMENT';
+    const calculatorType = 'TEXT NON NULL';
     const addressType = 'TEXT NON NULL';
     const sqftType = 'INTEGER NON NULL';
     const listPriceType = 'REAL NON NULL';
@@ -37,6 +38,7 @@ class PropertyDatabase {
     await db.execute('''
       CREATE TABLE $tableProperty (
         ${PropertyFields.id} $idType,
+        ${PropertyFields.calculator} $calculatorType,
         ${PropertyFields.address} $addressType,
         ${PropertyFields.sqft} $sqftType,
         ${PropertyFields.listPrice} $listPriceType,

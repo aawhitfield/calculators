@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:calculators/models/calculator.dart';
 import 'package:calculators/widgets/waiting.dart';
 import 'package:calculators/models/db/property_db.dart';
 import 'package:calculators/models/property.dart';
@@ -69,7 +70,7 @@ class SavedPlaces extends StatelessWidget {
                                 color: Color(colors[index % colors.length]),
                               ),
                               title: Text(properties[index].address),
-                              subtitle: const Text('Residential REI'),
+                              subtitle: Text(CalculatorUtils.getName(properties[index].calculator)),
                               trailing:
                                   const Icon(CupertinoIcons.right_chevron),
                             );

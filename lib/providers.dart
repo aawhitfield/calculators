@@ -1,3 +1,4 @@
+import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_option_construction_provider.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -11,6 +12,7 @@ import 'models/property.dart';
 import 'models/refinance.dart';
 
 final propertyProvider = ChangeNotifierProvider<Property>((ref) => Property(
+      calculator: Calculator.residentialREI,
       address: '',//Address(street: '', line2: '', city: '', state: '', zip: ''),
       listPrice: 0,
     ));
