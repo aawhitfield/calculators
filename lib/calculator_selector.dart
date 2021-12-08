@@ -14,7 +14,7 @@ class CalculatorSelector extends StatelessWidget {
   Widget build(BuildContext context) {
     double minSize = min(
         MediaQuery.of(context).size.width, MediaQuery.of(context).size.height);
-    double imageSize = minSize * 0.35;
+    double imageSize = minSize * 0.3;
 
     List<CardButton> calculators = [
       CardButton(
