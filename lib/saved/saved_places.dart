@@ -162,13 +162,9 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                         onTap: () async {
                                           int? id = properties[index].id;
                                           if (id != null) {
-                                            Property savedProperty =
-                                                await PropertyDatabase.instance
-                                                    .readProperty(id);
-                                            ref
-                                                .read(propertyProvider)
-                                                .updateProperty(savedProperty);
-                                            if(savedProperty.calculator == Calculator.residentialREI) {
+                                            Calculator savedCalculator =
+                                              await DatabaseUtils.loadDataByID(id, ref);
+                                            if(savedCalculator == Calculator.residentialREI) {
                                               Get.to(() => Location());
                                             }
                                           }

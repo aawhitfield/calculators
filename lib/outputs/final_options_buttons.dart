@@ -1,5 +1,6 @@
 import 'package:calculators/home.dart';
 import 'package:calculators/models/db/property_db.dart';
+import 'package:calculators/models/db/renovations_db.dart';
 import 'package:calculators/models/property.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
@@ -32,6 +33,7 @@ class FinalOptionsButtons extends ConsumerWidget {
             // create property
             Property property = ref.read(propertyProvider);
             await PropertyDatabase.instance.create(property);
+            await RenovationsDatabase.instance.create(ref.read(renovationsProvider));
             resetAllData(ref);
             Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(
