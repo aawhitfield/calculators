@@ -7,7 +7,7 @@ const String tableProperty = 'properties';
 
 class PropertyFields {
   static final List<String> values = [
-    id, calculator, address, listPrice, sqft, afterRepairValue, monthsToRehabRent,
+    id, calculator, address, listPrice, sqft, afterRepairValue, purchasePrice, monthsToRehabRent,
     units, investors
   ];
 
@@ -149,6 +149,7 @@ class Property extends ChangeNotifier{
   }
 
   void reset() {
+    address = '';
     listPrice = 0;
     sqft = 0;
     afterRepairValue = 0;

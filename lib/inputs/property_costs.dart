@@ -19,6 +19,11 @@ class PropertyCosts extends ConsumerStatefulWidget {
 class PropertyCostsState extends ConsumerState<PropertyCosts> {
   TextEditingController listPriceController = TextEditingController();
   TextEditingController renovationsController = TextEditingController();
+  TextEditingController afterRepairController = TextEditingController();
+  TextEditingController purchasePriceController = TextEditingController();
+  TextEditingController monthsToRehabController = TextEditingController();
+  TextEditingController unitsController = TextEditingController();
+  TextEditingController investorsController = TextEditingController();
 
   @override
   void initState() {
@@ -26,6 +31,26 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
         .listPrice).toString();
     renovationsController.text = kCurrencyFormat.format(ref.read(renovationsProvider)
         .total).toString();
+    double afterRepairValue = ref.read(propertyProvider).afterRepairValue;
+    if (afterRepairValue != 0) {
+      afterRepairController.text = kCurrencyFormat.format(afterRepairValue);
+    }
+    double purchasePrice = ref.read(propertyProvider).purchasePrice;
+    if (purchasePrice != 0) {
+      purchasePriceController.text = kCurrencyFormat.format(purchasePrice);
+    }
+    int monthsToRehab = ref.read(propertyProvider).monthsToRehabRent;
+    if (monthsToRehab != 0) {
+      monthsToRehabController.text = monthsToRehab.toString();
+    }
+    int units = ref.read(propertyProvider).units;
+    if (units != 0) {
+      unitsController.text = units.toString();
+    }
+    int investors = ref.read(propertyProvider).investors;
+    if (investors != 0) {
+      investorsController.text = investors.toString();
+    }
     super.initState();
   }
   @override
@@ -67,6 +92,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
             ),
             MoneyTextField(
                 labelText: 'After Repair Value',
+                controller: afterRepairController,
                 onChanged: (String newPrice) {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);
@@ -77,6 +103,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
             ),
             MoneyTextField(
                 labelText: 'Purchase Price',
+                controller: purchasePriceController,
                 onChanged: (String newPrice) {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);
@@ -87,6 +114,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
             ),
             IntegerTextField(
                 labelText: 'Months to Rehab/Rent',
+                controller: monthsToRehabController,
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
@@ -95,6 +123,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 }),
             IntegerTextField(
                 labelText: 'Units',
+                controller: unitsController,
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
@@ -103,6 +132,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 }),
             IntegerTextField(
                 labelText: 'Investors',
+                controller: investorsController,
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {

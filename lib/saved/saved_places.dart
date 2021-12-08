@@ -33,8 +33,9 @@ class _SavedPlacesState extends State<SavedPlaces> {
       0xFF39BF47
     ];
 
-    void deletePlace(int id) {
+    void deletePlace(int id, WidgetRef ref) {
       DatabaseUtils.deletePlaceByID(id);
+      resetAllData(ref);
       setState(() {
       });
     }
@@ -117,7 +118,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                         dismissible: DismissiblePane(
                                             onDismissed: () {
                                               if (properties[index].id != null) {
-                                                deletePlace(properties[index].id!);
+                                                deletePlace(properties[index].id!, ref);
                                               }
                                             }),
                                         children: [
@@ -128,7 +129,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                               label: 'Delete',
                                               onPressed: (context) {
                                                 if (properties[index].id != null) {
-                                                  deletePlace(properties[index].id!);
+                                                  deletePlace(properties[index].id!, ref);
                                                 }
                                               },
                                           ),
@@ -143,7 +144,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                     color: Colors.red),
                                                 onPressed: () {
                                                   if (properties[index].id != null) {
-                                                    deletePlace(properties[index].id!);
+                                                    deletePlace(properties[index].id!, ref);
                                                   }
                                                 },
                                               )
