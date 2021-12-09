@@ -14,30 +14,61 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class FinanceOptions extends ConsumerWidget {
+class FinanceOptions extends ConsumerStatefulWidget {
   const FinanceOptions({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _FinanceOptionsState createState() => _FinanceOptionsState();
+}
+
+class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
+  TextEditingController loanPercentController = TextEditingController();
+  TextEditingController interestRateController = TextEditingController();
+  TextEditingController termController = TextEditingController();
+  TextEditingController closingCostsController = TextEditingController();
+
+  @override
+  void initState() {
+    double loanPercent = ref.read(financeProvider).loanPercentage * 100;
+    if(loanPercent != 0) {
+      loanPercentController.text = kWholeNumber.format(loanPercent);
+    }
+    double interestRate = ref.read(financeProvider).interestRate * 100;
+    if(interestRate != 0) {
+      interestRateController.text = interestRate.toString();
+    }
+    int term = ref.read(financeProvider).term;
+    if(term != 0) {
+      termController.text = kWholeNumber.format(term);
+    }
+    double closingCosts = ref.read(financeProvider).closingCosts;
+    if (closingCosts != 0) {
+      closingCostsController.text = kCurrencyFormat.format(closingCosts);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     FinancingType value = ref.watch(financeProvider).financingType;
 
     double loanAmount = ref.watch(propertyProvider).purchasePrice *
         ref.watch(financeProvider).loanPercentage;
 
     double downPaymentAmount = ref.watch(propertyProvider).purchasePrice -
-        ref.watch(financeProvider).loanAmount;
+        loanAmount;
 
     double monthlyPayment = (ref.watch(financeProvider).paymentType ==
             PaymentType.principalAndInterest)
         ? ref.watch(financeProvider).calculateMonthlyPayment(
               rate: ref.watch(financeProvider).interestRate / 12,
               nper: ref.watch(financeProvider).term * 12,
-              pv: -1 * ref.watch(financeProvider).loanAmount,
+              pv: -1 * loanAmount,
             )
         : ref.watch(financeProvider).calculateMonthlyPaymentInterestOnly(
               rate: ref.watch(financeProvider).interestRate / 12,
               nper: ref.watch(financeProvider).term,
-              pv: -1 * ref.watch(financeProvider).loanAmount,
+              pv: -1 * loanAmount,
               per: 1,
             );
 
@@ -83,6 +114,7 @@ class FinanceOptions extends ConsumerWidget {
                 ),
           PercentTextField(
             labelText: 'Loan Percent',
+            controller: loanPercentController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
               double? newValue = double.tryParse(newPercentage);
@@ -111,6 +143,7 @@ class FinanceOptions extends ConsumerWidget {
               downPaymentString),
           PercentTextField(
             labelText: 'Interest Rate',
+            controller: interestRateController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
               double? newValue = double.tryParse(newPercentage);
@@ -122,6 +155,7 @@ class FinanceOptions extends ConsumerWidget {
           ),
           IntegerTextField(
             labelText: 'Term',
+            controller: termController,
             leftPadding: 8,
             rightPadding: 8,
             onChanged: (String newTerm) {
@@ -134,6 +168,7 @@ class FinanceOptions extends ConsumerWidget {
           ),
           MoneyTextField(
             labelText: 'Closing Costs',
+            controller: closingCostsController,
             onChanged: (String newCost) {
               newCost = newCost.replaceAll(',', '');
               double? newValue = double.tryParse(newCost);
