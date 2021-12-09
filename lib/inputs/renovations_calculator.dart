@@ -55,7 +55,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
       airConditionerController.text = kCurrencyFormat.format(airConditioner);
     }
     double painting = ref.read(renovationsProvider).paintingPatching;
-    if (foundation != 0) {
+    if (painting != 0) {
       paintingController.text = kCurrencyFormat.format(painting);
     }
     double kitchen = ref.read(renovationsProvider).kitchen;

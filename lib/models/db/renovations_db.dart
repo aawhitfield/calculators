@@ -72,7 +72,7 @@ class RenovationsDatabase {
         ${RenovationFields.build28} $build28Type,
         ${RenovationFields.other} $otherType,
         ${RenovationFields.tenPercent} $tenPercentExtraType,
-        ${RenovationFields.total} $totalType,
+        ${RenovationFields.total} $totalType
       )
     ''');
   }
