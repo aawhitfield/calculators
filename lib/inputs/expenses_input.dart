@@ -10,11 +10,50 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class ExpensesInput extends ConsumerWidget {
+class ExpensesInput extends ConsumerStatefulWidget {
   const ExpensesInput({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _ExpensesInputState createState() => _ExpensesInputState();
+}
+
+class _ExpensesInputState extends ConsumerState<ExpensesInput> {
+  TextEditingController taxesController = TextEditingController();
+  TextEditingController propertyManagementController = TextEditingController();
+  TextEditingController vacancyController = TextEditingController();
+  TextEditingController maintenanceController = TextEditingController();
+  TextEditingController otherController = TextEditingController();
+
+  @override
+  void initState() {
+    double taxes = ref.read(expensesProvider).taxes;
+    if (taxes != 0) {
+      taxesController.text = kCurrencyFormat.format(taxes);
+    }
+    double propertyManagement = ref.read(expensesProvider).propertyManagement * 100;
+    if(propertyManagement != 0) {
+      propertyManagementController.text = kWholeNumber.format(propertyManagement);
+    }
+    double vacancy = ref.read(expensesProvider).vacancy * 100;
+    if(vacancy != 0) {
+      vacancyController.text = kWholeNumber.format(vacancy);
+    }
+    double maintenance = ref.read(expensesProvider).maintenance * 100;
+    if(maintenance != 0) {
+      maintenanceController.text = kWholeNumber.format(maintenance);
+    }
+    double other = ref.read(expensesProvider).other * 100;
+    if(other != 0) {
+      otherController.text = kWholeNumber.format(other);
+    }
+
+
+
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MyInputPage(
       imageUri: 'images/expenses.svg',
       headerText: 'Expenses',
@@ -28,6 +67,7 @@ class ExpensesInput extends ConsumerWidget {
         children: [
           MoneyTextField(
             labelText: 'Taxes',
+            controller: taxesController,
             onChanged: (String newValue) {
               newValue = newValue.replaceAll(',', '');
               double? taxes = double.tryParse(newValue);
@@ -38,6 +78,7 @@ class ExpensesInput extends ConsumerWidget {
           ),
 
           PercentTextField(labelText: 'Property Management',
+              controller: propertyManagementController,
               onChanged: (String newValue) {
                 double? value = double.tryParse(newValue);
                 if(value != null) {
@@ -46,6 +87,7 @@ class ExpensesInput extends ConsumerWidget {
                 }
               }),
           PercentTextField(labelText: 'Vacancy',
+              controller: vacancyController,
               onChanged: (String newValue) {
                 double? value = double.tryParse(newValue);
                 if(value != null) {
@@ -54,6 +96,7 @@ class ExpensesInput extends ConsumerWidget {
                 }
               }),
           PercentTextField(labelText: 'Maintenance',
+              controller: maintenanceController,
               onChanged: (String newValue) {
                 double? value = double.tryParse(newValue);
                 if(value != null) {
@@ -62,6 +105,7 @@ class ExpensesInput extends ConsumerWidget {
                 }
               }),
           PercentTextField(labelText: 'Other',
+              controller: otherController,
               onChanged: (String newValue) {
                 double? value = double.tryParse(newValue);
                 if(value != null) {
