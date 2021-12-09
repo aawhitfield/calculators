@@ -8,11 +8,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class IncomeInput extends ConsumerWidget {
+class IncomeInput extends ConsumerStatefulWidget {
   const IncomeInput({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _IncomeInputState createState() => _IncomeInputState();
+}
+
+class _IncomeInputState extends ConsumerState<IncomeInput> {
+  TextEditingController rentController = TextEditingController();
+  TextEditingController otherController = TextEditingController();
+
+  @override
+  void initState() {
+    double rent = ref.read(incomeProvider).rent;
+    if (rent != 0) {
+      rentController.text = kCurrencyFormat.format(rent);
+    }
+    double other = ref.read(incomeProvider).other;
+    if (other != 0) {
+      otherController.text = kCurrencyFormat.format(other);
+    }
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
     return MyInputPage(
         imageUri: 'images/income.svg',
         headerText: 'Income',
@@ -27,6 +47,7 @@ class IncomeInput extends ConsumerWidget {
           children: [
             MoneyTextField(
                 labelText: 'Rent',
+                controller: rentController,
                 onChanged: (String newValue) {
                   newValue = newValue.replaceAll(',', '');
                   double? value = double.tryParse(newValue);
@@ -36,6 +57,7 @@ class IncomeInput extends ConsumerWidget {
                 }),
             MoneyTextField(
                 labelText: 'Other',
+                controller: otherController,
                 onChanged: (String newValue) {
                   newValue = newValue.replaceAll(',', '');
                   double? value = double.tryParse(newValue);
