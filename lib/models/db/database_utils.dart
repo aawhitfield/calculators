@@ -1,10 +1,12 @@
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/db/expenses_db.dart';
+import 'package:calculators/models/db/finance_construction_db.dart';
 import 'package:calculators/models/db/finance_db.dart';
 import 'package:calculators/models/db/income_db.dart';
 import 'package:calculators/models/db/property_db.dart';
 import 'package:calculators/models/db/renovations_db.dart';
 import 'package:calculators/models/expenses.dart';
+import 'package:calculators/models/financing_option_construction_provider.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/income.dart';
 import 'package:calculators/models/property.dart';
@@ -19,6 +21,7 @@ class DatabaseUtils {
     IncomeDatabase.instance.delete(id);
     ExpensesDatabase.instance.delete(id);
     FinanceDatabase.instance.delete(id);
+    FinanceConstructionDatabase.instance.delete(id);
   }
 
   static Future<Calculator> loadDataByID(int id, WidgetRef ref) async {
@@ -28,12 +31,14 @@ class DatabaseUtils {
     Income savedIncome = await IncomeDatabase.instance.readIncome(id);
     Expenses savedExpenses = await ExpensesDatabase.instance.readExpenses(id);
     FinanceOptionData savedFinanceOptions = await FinanceDatabase.instance.readFinanceOption(id);
+    FinanceOptionConstructionProvider savedFinanceConstruction = await FinanceConstructionDatabase.instance.readFinanceOption(id);
 
     ref.read(propertyProvider).updateProperty(savedProperty);
     ref.read(renovationsProvider).updateRenovation(savedRenovation);
     ref.read(incomeProvider).updateIncome(savedIncome);
     ref.read(expensesProvider).updateExpenses(savedExpenses);
     ref.read(financeProvider).updateFinanceOptionData(savedFinanceOptions);
+    ref.read(financeConstructionProvider).updateFinanceOptionConstruction(savedFinanceConstruction);
 
     return savedProperty.calculator;
   }
@@ -45,12 +50,14 @@ class DatabaseUtils {
     Income income = ref.read(incomeProvider);
     Expenses expenses = ref.read(expensesProvider);
     FinanceOptionData financeOptionData = ref.read(financeProvider);
+    FinanceOptionConstructionProvider financeConstructionData = ref.read(financeConstructionProvider);
 
     property = await PropertyDatabase.instance.create(property);
     renovation = await RenovationsDatabase.instance.create(renovation);
     income = await IncomeDatabase.instance.create(income);
     expenses = await ExpensesDatabase.instance.create(expenses);
     financeOptionData = await FinanceDatabase.instance.create(financeOptionData);
+    financeConstructionData = await FinanceConstructionDatabase.instance.create(financeConstructionData);
 
   }
 }
