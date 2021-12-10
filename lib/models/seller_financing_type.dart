@@ -8,6 +8,21 @@ enum SellerFinancingType {
   interest,
 }
 
+const String tableSellerFinance = 'finance_down_payment';
+
+class SellerFinanceFields {
+  static final List<String> values = [
+    id, financingType, loanPercent, interestRate, term,
+  ];
+
+  static const String id = '_id';
+  static const String financingType = 'financingType';
+  static const String loanPercent = 'loanPercent';
+  static const String interestRate = 'interestRate';
+  static const String term = 'term';
+}
+
+
 class SellerFinancingTypeUtils {
   final SellerFinancingType sellerFinancingType;
 
@@ -19,24 +34,74 @@ class SellerFinancingTypeUtils {
       case SellerFinancingType.interest : return 'Seller Finance Interest';
     }
   }
+
+  static SellerFinancingType getFinancingType(String name) {
+    if (name == 'Seller Finance Interest') {
+      return SellerFinancingType.interest;
+    } else {
+      return SellerFinancingType.payment;
+    }
+  }
 }
 
 class SellerFinanceOptionData extends ChangeNotifier {
+  int? id;
   SellerFinancingType financingType;
   double loanPercentage;
   double loanAmount;
   double downPaymentAmount;
   double interestRate;
   int term;
-  double closingCosts;
   double monthlyPayment;
-  bool willRefinance;
 
   SellerFinanceOptionData({this.financingType = SellerFinancingType.payment,
     this.loanPercentage = 0, this.loanAmount = 0, this.downPaymentAmount = 0,
-    this.interestRate = 0, this.term = 0, this.closingCosts = 0, this.monthlyPayment = 0,
-    this.willRefinance = false,
+    this.interestRate = 0, this.term = 0, this.monthlyPayment = 0, this.id,
   });
+
+  SellerFinanceOptionData copy({
+    int? id,
+    SellerFinancingType? financingType,
+    double? loanPercentage,
+    double? loanAmount,
+    double? interestRate,
+    int? term,
+    double? monthlyPayment,
+  }) => SellerFinanceOptionData(
+    id: id ?? this.id,
+    financingType: financingType ?? this.financingType,
+    loanPercentage: loanPercentage ?? this.loanPercentage,
+    loanAmount: loanAmount ?? this.loanAmount,
+    interestRate: interestRate ?? this.interestRate,
+    term: term ?? this.term,
+    monthlyPayment: monthlyPayment ?? this.monthlyPayment,
+  );
+
+  Map<String, Object?> toJson() => {
+    SellerFinanceFields.id: id,
+    SellerFinanceFields.financingType: SellerFinancingTypeUtils(financingType).name,
+    SellerFinanceFields.loanPercent: loanPercentage,
+    SellerFinanceFields.interestRate: interestRate,
+    SellerFinanceFields.term: term,
+
+  };
+
+  static SellerFinanceOptionData fromJson(Map<String, Object?> json) => SellerFinanceOptionData(
+    id: json[SellerFinanceFields.id] as int?,
+    financingType: SellerFinancingTypeUtils.getFinancingType(json[SellerFinanceFields.financingType] as String),
+    loanPercentage: json[SellerFinanceFields.loanPercent] as double,
+    interestRate: json[SellerFinanceFields.interestRate] as double,
+    term: json[SellerFinanceFields.term] as int,
+  );
+
+  void updateSellerFinanceOptionData(SellerFinanceOptionData newFinanceOptionData) {
+    id = newFinanceOptionData.id;
+    financingType = newFinanceOptionData.financingType;
+    loanPercentage = newFinanceOptionData.loanPercentage;
+    interestRate = newFinanceOptionData.interestRate;
+    term = newFinanceOptionData.term;
+    notifyListeners();
+  }
 
   void updateFinancingType(newValue) {
     financingType = newValue;
@@ -68,10 +133,6 @@ class SellerFinanceOptionData extends ChangeNotifier {
     notifyListeners();
   }
 
-  void updateClosingCosts(newValue) {
-    closingCosts = newValue;
-    notifyListeners();
-  }
 
   void updateMonthlyPayment(newValue) {
     monthlyPayment = newValue;
@@ -88,17 +149,11 @@ class SellerFinanceOptionData extends ChangeNotifier {
         return Finance.ipmt(rate: rate, per: per, nper: nper, pv: pv).toDouble();
   }
 
-  void updateWillRefinance(bool newValue) {
-    willRefinance = newValue;
-    notifyListeners();
-  }
 
   void reset() {
     financingType = SellerFinancingType.payment;
     loanPercentage = loanAmount = downPaymentAmount = interestRate = 0;
     term = 0;
-    closingCosts = monthlyPayment = 0;
-    willRefinance = false;
     notifyListeners();
   }
 }

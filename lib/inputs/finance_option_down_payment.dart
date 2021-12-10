@@ -11,11 +11,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class FinanceOptionDownPayment extends ConsumerWidget {
+class FinanceOptionDownPayment extends ConsumerStatefulWidget {
   const FinanceOptionDownPayment({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _FinanceOptionDownPaymentState createState() => _FinanceOptionDownPaymentState();
+}
+
+class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionDownPayment> {
+
+  TextEditingController loanPercentController = TextEditingController();
+  TextEditingController interestRateController = TextEditingController();
+  TextEditingController termController = TextEditingController();
+
+  @override
+  void initState() {
+    double loanPercent = ref.read(sellerFinanceProvider).loanPercentage * 100;
+    if(loanPercent != 0) {
+      loanPercentController.text = kWholeNumber.format(loanPercent);
+    }
+    double interestRate = ref.read(sellerFinanceProvider).interestRate * 100;
+    if(interestRate != 0) {
+      interestRateController.text = interestRate.toString();
+    }
+    int term = ref.read(sellerFinanceProvider).term;
+    if(term != 0) {
+      termController.text = kWholeNumber.format(term);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     SellerFinancingType value = ref.watch(sellerFinanceProvider).financingType;
 
     double loanAmount = ref.watch(propertyProvider).purchasePrice *
@@ -71,6 +98,7 @@ class FinanceOptionDownPayment extends ConsumerWidget {
                   ),
             PercentTextField(
               labelText: 'Loan Percent',
+              controller: loanPercentController,
               onChanged: (String newPercentage) {
                 newPercentage = newPercentage.replaceAll(',', '');
                 double? newValue = double.tryParse(newPercentage);
@@ -89,6 +117,7 @@ class FinanceOptionDownPayment extends ConsumerWidget {
                 loanAmountString),
             PercentTextField(
               labelText: 'Interest Rate',
+              controller: interestRateController,
               onChanged: (String newPercentage) {
                 newPercentage = newPercentage.replaceAll(',', '');
                 double? newValue = double.tryParse(newPercentage);
@@ -102,6 +131,7 @@ class FinanceOptionDownPayment extends ConsumerWidget {
             ),
             IntegerTextField(
               labelText: 'Term',
+              controller: termController,
               leftPadding: 8,
               rightPadding: 8,
               onChanged: (String newTerm) {
