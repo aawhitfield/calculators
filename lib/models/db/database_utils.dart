@@ -6,6 +6,7 @@ import 'package:calculators/models/db/finance_down_payment_db.dart';
 import 'package:calculators/models/db/income_db.dart';
 import 'package:calculators/models/db/options_db.dart';
 import 'package:calculators/models/db/property_db.dart';
+import 'package:calculators/models/db/refinance_db.dart';
 import 'package:calculators/models/db/renovations_db.dart';
 import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_option_construction_provider.dart';
@@ -13,6 +14,7 @@ import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/income.dart';
 import 'package:calculators/models/options.dart';
 import 'package:calculators/models/property.dart';
+import 'package:calculators/models/refinance.dart';
 import 'package:calculators/models/renovations.dart';
 import 'package:calculators/models/seller_financing_type.dart';
 import 'package:calculators/providers.dart';
@@ -27,6 +29,7 @@ class DatabaseUtils {
     FinanceDatabase.instance.delete(id);
     FinanceConstructionDatabase.instance.delete(id);
     SellerFinanceDatabase.instance.delete(id);
+    RefinanceDatabase.instance.delete(id);
   }
 
   static Future<Calculator> loadDataByID(int id, WidgetRef ref) async {
@@ -39,6 +42,7 @@ class DatabaseUtils {
     FinanceOptionConstructionProvider savedFinanceConstruction = await FinanceConstructionDatabase.instance.readFinanceOption(id);
     Options savedOptions = await OptionsDatabase.instance.readOptions(id);
     SellerFinanceOptionData savedSellerFinanceData = await SellerFinanceDatabase.instance.readFinanceOption(id);
+    RefinanceOptions savedRefinanceData = await RefinanceDatabase.instance.readFinanceOption(id);
 
     ref.read(propertyProvider).updateProperty(savedProperty);
     ref.read(renovationsProvider).updateRenovation(savedRenovation);
@@ -48,6 +52,7 @@ class DatabaseUtils {
     ref.read(financeConstructionProvider).updateFinanceOptionConstruction(savedFinanceConstruction);
     ref.read(optionsProvider).updateOptions(savedOptions);
     ref.read(sellerFinanceProvider).updateSellerFinanceOptionData(savedSellerFinanceData);
+    ref.read(refinanceProvider).updateRefinanceData(savedRefinanceData);
 
     return savedProperty.calculator;
   }
@@ -62,6 +67,7 @@ class DatabaseUtils {
     FinanceOptionConstructionProvider financeConstructionData = ref.read(financeConstructionProvider);
     Options optionsData = ref.read(optionsProvider);
     SellerFinanceOptionData sellerFinanceOptionData = ref.read(sellerFinanceProvider);
+    RefinanceOptions refinanceData = ref.read(refinanceProvider);
 
     property = await PropertyDatabase.instance.create(property);
     renovation = await RenovationsDatabase.instance.create(renovation);
@@ -71,6 +77,7 @@ class DatabaseUtils {
     financeConstructionData = await FinanceConstructionDatabase.instance.create(financeConstructionData);
     optionsData = await OptionsDatabase.instance.create(optionsData);
     sellerFinanceOptionData = await SellerFinanceDatabase.instance.create(sellerFinanceOptionData);
+    refinanceData = await RefinanceDatabase.instance.create(refinanceData);
 
   }
 }

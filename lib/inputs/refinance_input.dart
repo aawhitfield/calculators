@@ -12,11 +12,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class RefinanceInput extends ConsumerWidget {
+class RefinanceInput extends ConsumerStatefulWidget {
   const RefinanceInput({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _RefinanceInputState createState() => _RefinanceInputState();
+}
+
+class _RefinanceInputState extends ConsumerState<RefinanceInput> {
+
+  TextEditingController loanPercentController = TextEditingController();
+  TextEditingController interestRateController = TextEditingController();
+  TextEditingController termController = TextEditingController();
+  TextEditingController closingCostsController = TextEditingController();
+
+  @override
+  void initState() {
+    double loanPercent = ref.read(refinanceProvider).loanPercentage * 100;
+    if(loanPercent != 0) {
+      loanPercentController.text = kWholeNumber.format(loanPercent);
+    }
+    double interestRate = ref.read(refinanceProvider).interestRate * 100;
+    if(interestRate != 0) {
+      interestRateController.text = interestRate.toString();
+    }
+    int term = ref.read(refinanceProvider).term;
+    if(term != 0) {
+      termController.text = kWholeNumber.format(term);
+    }
+    double closingCosts = ref.read(refinanceProvider).closingCosts;
+    if (closingCosts != 0) {
+      closingCostsController.text = kCurrencyFormat.format(closingCosts);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     Refinancing refinancingMethod =
         ref.watch(refinanceProvider).refinancingMethod;
 
@@ -72,6 +104,7 @@ class RefinanceInput extends ConsumerWidget {
           ),
           PercentTextField(
             labelText: 'Loan Percent',
+            controller: loanPercentController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
               double? newValue = double.tryParse(newPercentage);
@@ -103,6 +136,7 @@ class RefinanceInput extends ConsumerWidget {
               downPaymentString),
           PercentTextField(
             labelText: 'Interest Rate',
+            controller: interestRateController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
               double? newValue = double.tryParse(newPercentage);
@@ -114,6 +148,7 @@ class RefinanceInput extends ConsumerWidget {
           ),
           IntegerTextField(
             labelText: 'Term',
+            controller: termController,
             leftPadding: 8,
             rightPadding: 8,
             onChanged: (String newTerm) {
@@ -126,6 +161,7 @@ class RefinanceInput extends ConsumerWidget {
           ),
           MoneyTextField(
             labelText: 'Closing Costs',
+            controller: closingCostsController,
             onChanged: (String newCost) {
               newCost = newCost.replaceAll(',', '');
               double? newValue = double.tryParse(newCost);
