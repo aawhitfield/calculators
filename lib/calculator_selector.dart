@@ -25,12 +25,12 @@ class CalculatorSelector extends StatelessWidget {
           Get.to(() => Location());
         },
       ),
-      CardButton(
-        label: 'Fix & Flip',
-        svgImage: 'images/fix-flip.svg',
-        imageSize: imageSize,
-        onPressed: () {},
-      ),
+      // CardButton(
+      //   label: 'Fix & Flip',
+      //   svgImage: 'images/fix-flip.svg',
+      //   imageSize: imageSize,
+      //   onPressed: () {},
+      // ),
     ];
 
     return ResponsiveRowColumnGrid(
