@@ -68,6 +68,8 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
         headerText: 'Finance Option', subheadText: 'Construction Loan',
         onSubmit: () {
           ref.read(financeConstructionProvider).updateMonthlyPayment(monthlyPayment);
+          ref.read(financeConstructionProvider).updateDownPayment(downPaymentAmount);
+          ref.read(financeConstructionProvider).updateLoanAmount(loanAmount);
           Get.to(() => const IsSellerFinanced());
         },
         position: kResidentialREIQuestions.indexOf(FinanceOptionConstructionLoan) + 1,

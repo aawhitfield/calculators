@@ -46,7 +46,7 @@ class RefinanceDatabase {
   Future<RefinanceOptions> create(RefinanceOptions financeOptionData) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableRefinance, financeOptionData.toJson());
+    final id = await db.insert(tableRefinance, financeOptionData.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return financeOptionData.copy(id: id);
   }
 

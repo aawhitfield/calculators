@@ -169,6 +169,7 @@ class RefinanceOptions extends ChangeNotifier {
     interestRate = 0;
     term = 0;
     closingCosts = monthlyPayment = 0;
+    id = null;
     notifyListeners();
   }
 

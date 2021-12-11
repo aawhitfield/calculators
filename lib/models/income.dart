@@ -68,6 +68,7 @@ class Income extends ChangeNotifier {
 
   void reset() {
     rent = other = total = 0;
+    id = null;
     notifyListeners();
   }
 }

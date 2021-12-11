@@ -48,7 +48,7 @@ class FinanceDatabase {
   Future<FinanceOptionData> create(FinanceOptionData financeOptionData) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableFinance, financeOptionData.toJson());
+    final id = await db.insert(tableFinance, financeOptionData.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return financeOptionData.copy(id: id);
   }
 

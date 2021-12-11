@@ -46,7 +46,7 @@ class ExpensesDatabase {
   Future<Expenses> create(Expenses expenses) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableExpenses, expenses.toJson());
+    final id = await db.insert(tableExpenses, expenses.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return expenses.copy(id: id);
   }
 

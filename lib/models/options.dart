@@ -61,6 +61,7 @@ class Options extends ChangeNotifier {
 
   void reset() {
     isSellerFinanced = wantsToRefinance = false;
+    id = null;
     notifyListeners();
   }
 }

@@ -157,6 +157,7 @@ class Property extends ChangeNotifier{
     monthsToRehabRent = 0;
     units = 0;
     investors = 0;
+    id = null;
     notifyListeners();
   }
 }

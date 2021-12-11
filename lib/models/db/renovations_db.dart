@@ -80,7 +80,7 @@ class RenovationsDatabase {
   Future<Renovation> create(Renovation renovation) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableRenovations, renovation.toJson());
+    final id = await db.insert(tableRenovations, renovation.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return renovation.copy(id: id);
   }
 

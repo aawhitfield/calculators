@@ -154,6 +154,7 @@ class SellerFinanceOptionData extends ChangeNotifier {
     financingType = SellerFinancingType.payment;
     loanPercentage = loanAmount = downPaymentAmount = interestRate = 0;
     term = 0;
+    id = null;
     notifyListeners();
   }
 }

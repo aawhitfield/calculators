@@ -133,6 +133,7 @@ class FinanceOptionConstructionProvider extends ChangeNotifier {
     interestRate = 0;
     term = 0;
     monthlyPayment = 0;
+    id = null;
     notifyListeners();
   }
 }

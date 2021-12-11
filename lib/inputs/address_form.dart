@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/providers.dart';
+import 'package:calculators/widgets/clear_all_fields_button.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -49,6 +50,16 @@ class _AddressFormState extends ConsumerState<AddressForm> {
         width: width,
         child: Column(
           children: [
+            ClearAllFieldsButton(
+              onPressed: () {
+                resetAllData(ref);
+                setState(() {
+                  widget.addressController.clear();
+                  sqftController.clear();
+                  listPriceController.clear();
+                });
+              },
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: PlacesAutocompleteField(

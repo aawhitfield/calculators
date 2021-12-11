@@ -40,7 +40,7 @@ class IncomeDatabase {
   Future<Income> create(Income income) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableIncome, income.toJson());
+    final id = await db.insert(tableIncome, income.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return income.copy(id: id);
   }
 

@@ -159,6 +159,7 @@ class Expenses extends ChangeNotifier {
   void reset() {
     taxes = propertyManagement = vacancy = maintenance = other = totalMonthlyExpenses
       = totalAnnualExpenses = noiMonthly = noiAnnual = 0;
+    id = null;
     notifyListeners();
   }
 }

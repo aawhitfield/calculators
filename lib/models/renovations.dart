@@ -352,6 +352,7 @@ class Renovation extends ChangeNotifier{
       = plumbing = flooring = bathrooms = appliances = electrical = yard
       = cleaning = baseboards = exterior = demo = elevators = build28Units
       = other = total = tenPercentExtra = 0;
+    id = null;
     notifyListeners();
   }
 }

@@ -39,7 +39,7 @@ class OptionsDatabase {
   Future<Options> create(Options options) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableOptions, options.toJson());
+    final id = await db.insert(tableOptions, options.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return options.copy(id: id);
   }
 

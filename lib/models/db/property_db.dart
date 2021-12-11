@@ -54,7 +54,7 @@ class PropertyDatabase {
   Future<Property> create(Property property) async {
     final db = await instance.database;
 
-    final id = await db.insert(tableProperty, property.toJson());
+    final id = await db.insert(tableProperty, property.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
     return property.copy(id: id);
   }
 

@@ -232,6 +232,7 @@ class FinanceOptionData extends ChangeNotifier {
     monthlyPayment = 0;
     willRefinance = false;
     paymentType = PaymentType.principalAndInterest;
+    id = null;
     notifyListeners();
   }
 }

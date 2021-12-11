@@ -71,6 +71,7 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionDownPaym
         subheadText: 'Down Payment',
         onSubmit: () {
           ref.read(sellerFinanceProvider).updateMonthlyPayment(monthlyPayment);
+          ref.read(sellerFinanceProvider).updateLoanAmount(loanAmount);
           Get.to(() => const WantToRefinance());
         },
         position:
