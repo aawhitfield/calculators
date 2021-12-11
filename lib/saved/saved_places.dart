@@ -36,8 +36,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
     void deletePlace(int id, WidgetRef ref) {
       DatabaseUtils.deletePlaceByID(id);
       resetAllData(ref);
-      setState(() {
-      });
+      setState(() {});
     }
 
     return Consumer(
@@ -115,60 +114,100 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                       key: const ValueKey(0),
                                       endActionPane: ActionPane(
                                         motion: const BehindMotion(),
-                                        dismissible: DismissiblePane(
-                                            onDismissed: () {
-                                              if (properties[index].id != null) {
-                                                deletePlace(properties[index].id!, ref);
-                                              }
-                                            }),
+                                        dismissible:
+                                            DismissiblePane(onDismissed: () {
+                                          if (properties[index].id != null) {
+                                            deletePlace(
+                                                properties[index].id!, ref);
+                                          }
+                                        }),
                                         children: [
                                           SlidableAction(
-                                              foregroundColor: Colors.white,
-                                              backgroundColor: Colors.red,
-                                              icon: Icons.archive,
-                                              label: 'Delete',
-                                              onPressed: (context) {
-                                                if (properties[index].id != null) {
-                                                  deletePlace(properties[index].id!, ref);
-                                                }
-                                              },
+                                            foregroundColor: Colors.white,
+                                            backgroundColor: Colors.red,
+                                            icon: Icons.archive,
+                                            label: 'Delete',
+                                            onPressed: (context) {
+                                              if (properties[index].id !=
+                                                  null) {
+                                                deletePlace(
+                                                    properties[index].id!, ref);
+                                              }
+                                            },
                                           ),
                                         ],
                                       ),
-                                      child: ListTile(
-                                        leading: (isEditing)
-                                            ? IconButton(
-                                                icon: const Icon(
-                                                    CupertinoIcons
-                                                        .minus_circle_fill,
-                                                    color: Colors.red),
-                                                onPressed: () {
-                                                  if (properties[index].id != null) {
-                                                    deletePlace(properties[index].id!, ref);
-                                                  }
-                                                },
-                                              )
-                                            : Icon(
-                                                Icons.place,
-                                                size: 48,
-                                                color: Color(colors[
-                                                    index % colors.length]),
+                                      child: CupertinoContextMenu(
+                                        actions: [
+                                          CupertinoContextMenuAction(
+                                              child: const Material(
+                                                child: ListTile(
+                                                    title: Text(
+                                                      'Delete',
+                                                      style: TextStyle(
+                                                          color: Colors.red),
+                                                    ),
+                                                    trailing: Icon(
+                                                      CupertinoIcons.delete_solid,
+                                                      color: Colors.red,
+                                                    )),
                                               ),
-                                        title: Text(properties[index].address),
-                                        subtitle: Text(CalculatorUtils.getName(
-                                            properties[index].calculator)),
-                                        trailing: const Icon(
-                                            CupertinoIcons.right_chevron),
-                                        onTap: () async {
-                                          int? id = properties[index].id;
-                                          if (id != null) {
-                                            Calculator savedCalculator =
-                                              await DatabaseUtils.loadDataByID(id, ref);
-                                            if(savedCalculator == Calculator.residentialREI) {
-                                              Get.to(() => Location());
-                                            }
-                                          }
-                                        },
+                                            onPressed: () {
+                                              if (properties[index].id != null) {
+                                                deletePlace(
+                                                    properties[index].id!, ref);
+                                              }
+                                              Navigator.of(context).pop();
+                                            },
+                                          )
+                                        ],
+                                        child: Material(
+                                          child: ListTile(
+                                            leading: (isEditing)
+                                                ? IconButton(
+                                                    icon: const Icon(
+                                                        CupertinoIcons
+                                                            .minus_circle_fill,
+                                                        color: Colors.red),
+                                                    onPressed: () {
+                                                      if (properties[index]
+                                                              .id !=
+                                                          null) {
+                                                        deletePlace(
+                                                            properties[index]
+                                                                .id!,
+                                                            ref);
+                                                      }
+                                                    },
+                                                  )
+                                                : Icon(
+                                                    Icons.place,
+                                                    size: 48,
+                                                    color: Color(colors[
+                                                        index % colors.length]),
+                                                  ),
+                                            title:
+                                                Text(properties[index].address),
+                                            subtitle: Text(
+                                                CalculatorUtils.getName(
+                                                    properties[index]
+                                                        .calculator)),
+                                            trailing: const Icon(
+                                                CupertinoIcons.right_chevron),
+                                            onTap: () async {
+                                              int? id = properties[index].id;
+                                              if (id != null) {
+                                                Calculator savedCalculator =
+                                                    await DatabaseUtils
+                                                        .loadDataByID(id, ref);
+                                                if (savedCalculator ==
+                                                    Calculator.residentialREI) {
+                                                  Get.to(() => Location());
+                                                }
+                                              }
+                                            },
+                                          ),
+                                        ),
                                       ),
                                     );
                                   },
