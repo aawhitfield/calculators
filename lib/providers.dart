@@ -52,6 +52,10 @@ ChangeNotifierProvider<Options>(
       (ref) => Options(),
 );
 
+final calculatorProvider = ChangeNotifierProvider<CurrentCalculator>(
+    (ref) => CurrentCalculator(),
+);
+
 void resetAllData(WidgetRef ref) {
   ref.read(expensesProvider).reset();
   ref.read(financeConstructionProvider).reset();
