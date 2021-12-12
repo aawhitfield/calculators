@@ -2,6 +2,7 @@ import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_option_construction_provider.dart';
 import 'package:calculators/models/financing_type.dart';
+import 'package:calculators/models/fix_flip_selling_costs.dart';
 import 'package:calculators/models/income.dart';
 import 'package:calculators/models/options.dart';
 import 'package:calculators/models/renovations.dart';
@@ -56,6 +57,10 @@ final calculatorProvider = ChangeNotifierProvider<CurrentCalculator>(
     (ref) => CurrentCalculator(),
 );
 
+final ffSellingCostsProvider = ChangeNotifierProvider<FixFlipSellingCosts>(
+    (ref) => FixFlipSellingCosts(),
+);
+
 void resetAllData(WidgetRef ref) {
   ref.read(expensesProvider).reset();
   ref.read(financeConstructionProvider).reset();
@@ -66,4 +71,5 @@ void resetAllData(WidgetRef ref) {
   ref.read(refinanceProvider).reset();
   ref.read(renovationsProvider).reset();
   ref.read(sellerFinanceProvider).reset();
+  ref.read(ffSellingCostsProvider).reset();
 }

@@ -131,6 +131,9 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
                 double downPayment = purchasePrice - loanAmount;
                 ref.read(financeProvider).updateDownPayment(downPayment);
               }
+              else {
+                ref.read(financeProvider).updateLoanPercentage(0);
+              }
             },
           ),
           MoneyListTile(
@@ -153,6 +156,9 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
                 double interestRate = newValue / 100;
                 ref.read(financeProvider).updateInterestRate(interestRate);
               }
+              else {
+                ref.read(financeProvider).updateInterestRate(0);
+              }
             },
           ),
           IntegerTextField(
@@ -166,6 +172,9 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               if (newValue != null) {
                 ref.read(financeProvider).updateTerm(newValue);
               }
+              else {
+                ref.read(financeProvider).updateTerm(0);
+              }
             },
           ),
           MoneyTextField(
@@ -176,6 +185,9 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               double? newValue = double.tryParse(newCost);
               if (newValue != null) {
                 ref.read(financeProvider).updateClosingCosts(newValue);
+              }
+              else {
+                ref.read(financeProvider).updateClosingCosts(0);
               }
             },
           ),

@@ -1,6 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/finance_option_down_payment.dart';
 import 'package:calculators/inputs/want_to_refinance.dart';
+import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
@@ -8,6 +9,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+
+import 'fix_and_flip_selling_costs_input.dart';
 
 class IsSellerFinanced extends ConsumerWidget {
   const IsSellerFinanced({Key? key}) : super(key: key);
@@ -22,7 +25,12 @@ class IsSellerFinanced extends ConsumerWidget {
         if (ref.read(optionsProvider).isSellerFinanced) {
           Get.to(() => const FinanceOptionDownPayment());
         } else {
-          Get.to(() => const WantToRefinance());
+          if (ref.read(propertyProvider).calculator == Calculator.residentialREI) {
+            Get.to(() => const WantToRefinance());
+          }
+          else {
+            Get.to(() => const FixAndFlipSellingCostsInput());
+          }
         }
       },
       position: kResidentialREIQuestions.indexOf(IsSellerFinanced) + 1,

@@ -2,6 +2,7 @@ import 'package:calculators/inputs/expenses_input.dart';
 import 'package:calculators/inputs/finance_option_construction_loan.dart';
 import 'package:calculators/inputs/finance_option_down_payment.dart';
 import 'package:calculators/inputs/finance_options.dart';
+import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/income_input.dart';
 import 'package:calculators/inputs/is_seller_financed.dart';
 import 'package:calculators/inputs/location.dart';
@@ -24,6 +25,7 @@ List<Type> kResidentialREIQuestions = [
   FinanceOptionDownPayment,
   WantToRefinance,
   RefinanceInput,
+  FixAndFlipSellingCostsInput,
   Report,
 ];
 

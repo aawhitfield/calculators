@@ -1,5 +1,7 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/want_to_refinance.dart';
+import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/seller_financing_type.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -72,7 +74,13 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionDownPaym
         onSubmit: () {
           ref.read(sellerFinanceProvider).updateMonthlyPayment(monthlyPayment);
           ref.read(sellerFinanceProvider).updateLoanAmount(loanAmount);
-          Get.to(() => const WantToRefinance());
+          Calculator calculatorType = ref.read(propertyProvider).calculator;
+          if (calculatorType == Calculator.residentialREI) {
+            Get.to(() => const WantToRefinance());
+          }
+          else {
+            Get.to(() => const FixAndFlipSellingCostsInput());
+          }
         },
         position:
             kResidentialREIQuestions.indexOf(FinanceOptionDownPayment) + 1,
