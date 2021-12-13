@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/outputs/report.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -9,22 +10,56 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class FixAndFlipSellingCostsInput extends ConsumerWidget {
+class FixAndFlipSellingCostsInput extends ConsumerStatefulWidget {
   const FixAndFlipSellingCostsInput({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  _FixAndFlipSellingCostsInputState createState() => _FixAndFlipSellingCostsInputState();
+}
+
+class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingCostsInput> {
+  TextEditingController realtorsFeesController = TextEditingController();
+  TextEditingController sellersClosingCostsController = TextEditingController();
+  TextEditingController buyersClosingCostsController = TextEditingController();
+  TextEditingController closingCostsController = TextEditingController();
+
+  late double sellersClosingCosts;
+  late double buyersClosingCosts;
+
+  @override
+  void initState() {
+    double realtorsFeesDecimal = ref.read(ffSellingCostsProvider).realtorFeesPercentage;
+    double realtorsFeesPercentage = realtorsFeesDecimal * 100;
+    if(realtorsFeesPercentage != 0) {
+      realtorsFeesController.text = kWholeNumber.format(realtorsFeesPercentage);
+    }
+
+    sellersClosingCosts = ref.read(ffSellingCostsProvider).sellersClosingCosts;
+    if (sellersClosingCosts != 0) {
+      sellersClosingCostsController.text = kCurrencyFormat.format(sellersClosingCosts);
+    }
+
+    buyersClosingCosts = ref.read(ffSellingCostsProvider).buyersClosingCosts;
+    if (buyersClosingCosts != 0) {
+      buyersClosingCostsController.text = kCurrencyFormat.format(buyersClosingCosts);
+    }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     double realtorsFees = ref.watch(propertyProvider).afterRepairValue *
         ref.watch(ffSellingCostsProvider).realtorFeesPercentage;
 
     int numberOfMonthsToRehabRent =
         ref.read(propertyProvider).monthsToRehabRent;
-    double taxes = 0;
+    double taxes = ref.watch(expensesProvider).taxes;
     if (numberOfMonthsToRehabRent != 0) {
-      taxes = ref.watch(expensesProvider).taxes / numberOfMonthsToRehabRent;
+      taxes = taxes / numberOfMonthsToRehabRent;
     }
     double other = ref.watch(propertyProvider).afterRepairValue * 0.02;
-    double total = ref.watch(ffSellingCostsProvider).totalClosingCosts;
+    double total = realtorsFees + taxes + sellersClosingCosts + buyersClosingCosts + other;
+    total = ref.watch(ffSellingCostsProvider).totalClosingCosts;
 
     String taxesString = kCurrencyFormat.format(taxes);
     String realtorsFeesString = kCurrencyFormat.format(realtorsFees);
@@ -38,22 +73,26 @@ class FixAndFlipSellingCostsInput extends ConsumerWidget {
       position:
           kResidentialREIQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
       totalQuestions: kResidentialREIQuestions.length,
-      onSubmit: () {},
+      onSubmit: () {
+        ref.read(ffSellingCostsProvider).calculateTotal();
+        Get.to(() => const Report());
+      },
       child: ResponsiveLayout(
         children: [
           PercentTextField(
             labelText: 'Realtor\'s Fees',
+            controller: realtorsFeesController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
               double? newValue = double.tryParse(newPercentage);
               if (newValue != null) {
-                double realtorFeesPerecentage = newValue / 100;
+                double realtorFeesPercentage = newValue / 100;
                 ref
                     .read(ffSellingCostsProvider)
-                    .updateRealtorFeesPercentage(realtorFeesPerecentage);
+                    .updateRealtorFeesPercentage(realtorFeesPercentage);
                 double afterRepairValue =
                     ref.read(propertyProvider).afterRepairValue;
-                double realtorsFees = afterRepairValue * realtorFeesPerecentage;
+                double realtorsFees = afterRepairValue * realtorFeesPercentage;
 
                 ref
                     .read(ffSellingCostsProvider)
@@ -74,6 +113,7 @@ class FixAndFlipSellingCostsInput extends ConsumerWidget {
           MoneyListTile('Taxes', taxesString),
           MoneyTextField(
             labelText: 'Seller\'s Closing Costs',
+            controller: sellersClosingCostsController,
             onChanged: (String newCost) {
               newCost = newCost.replaceAll(',', '');
               double? newValue = double.tryParse(newCost);
@@ -83,6 +123,7 @@ class FixAndFlipSellingCostsInput extends ConsumerWidget {
                     .updateSellersClosingCosts(newValue);
                 ref.read(ffSellingCostsProvider).updateTaxes(taxes);
                 ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
+                ref.read(ffSellingCostsProvider).calculateTotal();
               } else {
                 ref.read(ffSellingCostsProvider).updateSellersClosingCosts(0);
               }
@@ -90,6 +131,7 @@ class FixAndFlipSellingCostsInput extends ConsumerWidget {
           ),
           MoneyTextField(
             labelText: 'Buyer\'s Closing Costs',
+            controller: buyersClosingCostsController,
             onChanged: (String newCost) {
               newCost = newCost.replaceAll(',', '');
               double? newValue = double.tryParse(newCost);
@@ -99,6 +141,7 @@ class FixAndFlipSellingCostsInput extends ConsumerWidget {
                     .updateBuyersClosingCosts(newValue);
                 ref.read(ffSellingCostsProvider).updateTaxes(taxes);
                 ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
+                ref.read(ffSellingCostsProvider).calculateTotal();
               } else {
                 ref.read(ffSellingCostsProvider).updateBuyersClosingCosts(0);
               }
@@ -118,7 +161,7 @@ class FixAndFlipSellingCostsInput extends ConsumerWidget {
               (MediaQuery.of(context).size.width < 640)
                   ? 'Total'
                   : context.isTablet
-                      ? 'Total CLosing Costs'
+                      ? 'Total Closing Costs'
                       : 'Total \nClosing Costs',
               totalString),
         ],

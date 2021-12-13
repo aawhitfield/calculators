@@ -10,13 +10,14 @@ import 'package:get/get.dart';
 import 'address_form.dart';
 
 class Location extends ConsumerWidget {
-  Location({Key? key}) : super(key: key);
+  final String title;
+  Location(this.title, {Key? key}) : super(key: key);
   final TextEditingController addressController = TextEditingController();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MyInputPage(
-      headlineText: 'Residential REI',
+      headlineText: title,
       imageUri: 'images/house_searching.svg',
       headerText: 'Let\'s first find the property',
       subheadText: 'Where is the property located?',

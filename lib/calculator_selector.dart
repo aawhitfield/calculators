@@ -26,7 +26,7 @@ class CalculatorSelector extends ConsumerWidget {
         imageSize: imageSize,
         onPressed: () {
           ref.read(propertyProvider).updateCalculator(Calculator.residentialREI);
-          Get.to(() => Location());
+          Get.to(() => Location('Residential REI'));
         },
       ),
       CardButton(
@@ -35,7 +35,7 @@ class CalculatorSelector extends ConsumerWidget {
         imageSize: imageSize,
         onPressed: () {
           ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
-          Get.to(() => Location());
+          Get.to(() => Location('Fix & Flip'));
         },
       ),
     ];

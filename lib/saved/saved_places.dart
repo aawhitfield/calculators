@@ -201,8 +201,10 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                     await DatabaseUtils
                                                         .loadDataByID(id, ref);
                                                 if (savedCalculator ==
-                                                    Calculator.residentialREI) {
-                                                  Get.to(() => Location());
+                                                    Calculator.residentialREI ||
+                                                  savedCalculator == Calculator.fixAndFlip) {
+                                                  Get.to(() =>
+                                                      Location(CalculatorUtils.getName(savedCalculator)));
                                                 }
                                               }
                                             },
