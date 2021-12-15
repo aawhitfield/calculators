@@ -26,7 +26,7 @@ class PercentTextField extends StatelessWidget {
               labelText: labelText,
             ),
             inputFormatters: [ThousandsFormatter(allowFraction: true)],
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (String newTotal) {
               onChanged(newTotal);
             }),
