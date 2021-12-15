@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 enum Calculator {
   residentialREI,
   fixAndFlip,
+  quickMaxOffer,
 }
 
 class CalculatorUtils {
@@ -13,6 +14,8 @@ class CalculatorUtils {
         return 'Residential REI';
       case Calculator.fixAndFlip :
         return 'Fix and Flip';
+      case Calculator.quickMaxOffer :
+        return 'Quick Max Offer';
     }
   }
 
@@ -20,6 +23,7 @@ class CalculatorUtils {
     switch(name) {
       case 'Residential REI': return Calculator.residentialREI;
       case 'Fix and Flip': return Calculator.fixAndFlip;
+      case 'Quick Max Offer': return Calculator.quickMaxOffer;
       default: return Calculator.residentialREI;
     }
   }
@@ -36,6 +40,8 @@ class CurrentCalculator extends ChangeNotifier{
         return 'Residential REI';
       case Calculator.fixAndFlip :
         return 'Fix and Flip';
+      case Calculator.quickMaxOffer:
+        return 'Quick Max Offer';
     }
   }
 

@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:calculators/inputs/location.dart';
+import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/card_button.dart';
@@ -36,6 +37,15 @@ class CalculatorSelector extends ConsumerWidget {
         onPressed: () {
           ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
           Get.to(() => Location('Fix & Flip'));
+        },
+      ),
+      CardButton(
+        label: CalculatorUtils.getName(Calculator.quickMaxOffer),
+        svgImage: 'images/offer.svg',
+        imageSize: imageSize,
+        onPressed: () {
+          ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
+          Get.to(() => const QuickMaxOffer());
         },
       ),
     ];
