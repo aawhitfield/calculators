@@ -173,7 +173,8 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
                       }
                   ),
                   MoneyListTile('Equity', equityString),
-                  MoneyListTile('Max Offer', maxOfferString),
+                  MoneyListTile((MediaQuery.of(context).size.width < 640)
+                      ? 'Max\nOffer' : 'Max Offer', maxOfferString),
                 ],
               ),
               const SizedBox(height: 16),
