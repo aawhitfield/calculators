@@ -55,7 +55,7 @@ class IsSellerFinanced extends ConsumerWidget {
             padding: const EdgeInsets.all(32.0),
             child: CupertinoSlidingSegmentedControl<bool>(
               groupValue: ref.watch(optionsProvider).isSellerFinanced,
-              thumbColor: Theme.of(context).primaryColor.withOpacity(0.75),
+              thumbColor: Theme.of(context).primaryColor.withOpacity(0.5),
               children: const {
                 true: Padding(
                   padding: EdgeInsets.all(16),

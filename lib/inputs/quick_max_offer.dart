@@ -69,7 +69,7 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
         ),
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
-          statusBarColor: Colors.green.shade500,
+          statusBarColor: Theme.of(context).primaryColor,
           statusBarIconBrightness: Brightness.light,
         ),
       ),

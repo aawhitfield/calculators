@@ -70,7 +70,7 @@ class MyInputPage extends ConsumerWidget {
                 : Container(),
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
-          statusBarColor: Colors.green.shade500,
+          statusBarColor: Theme.of(context).primaryColor,
           statusBarIconBrightness: Brightness.light,
         ),
         title: LinearProgressIndicator(

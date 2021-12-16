@@ -192,7 +192,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
             },
           ),
           CupertinoSlidingSegmentedControl<PaymentType>(
-            thumbColor: Theme.of(context).primaryColor,
+            thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
             groupValue: ref.watch(financeProvider).paymentType,
             children: const {
               PaymentType.principalAndInterest: Text('Principal & Interest'),

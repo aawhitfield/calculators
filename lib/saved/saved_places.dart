@@ -26,11 +26,11 @@ class _SavedPlacesState extends State<SavedPlaces> {
   @override
   Widget build(BuildContext context) {
     List<int> colors = [
-      0xFF3DC2BA,
-      0xFF3EC9A3,
-      0xFF40B37B,
-      0xFF3EC969,
-      0xFF39BF47
+      0xFF0059BF,
+      0xFF29578A,
+      0xFF003673,
+      0xFF3978BF,
+      0xFF001E40
     ];
 
     void deletePlace(int id, WidgetRef ref) {
