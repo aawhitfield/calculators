@@ -3,34 +3,24 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 class ResponsiveRowColumnGrid extends StatelessWidget {
-  final String heading;
+  final String? heading;
   final String subheading;
   final List<Widget> children;
 
   const ResponsiveRowColumnGrid({
     Key? key,
-    required this.heading,
+    this.heading,
     required this.subheading,
     required this.children,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // double width = context.isTablet
-    //     ? MediaQuery.of(context).size.width * 0.6
-    //     : MediaQuery.of(context).size.width;
-
-    TextStyle? headline = context.isTablet
-        ? Theme.of(context).textTheme.headline2
-        : Theme.of(context).textTheme.headline3;
 
     TextStyle? header = context.isTablet
         ? Theme.of(context).textTheme.headline3
         : Theme.of(context).textTheme.headline4;
 
-    // TextStyle? subhead = context.isTablet
-    //     ? Theme.of(context).textTheme.headline4
-    //     : Theme.of(context).textTheme.headline5;
 
     bool isTablet = context.isTablet;
     bool isPortrait =
@@ -59,12 +49,11 @@ class ResponsiveRowColumnGrid extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 Center(
-                  child: Text(
-                    heading,
-                    style: headline,
+                  child: Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Image.asset('images/logo.png'),
                   ),
                 ),
-                const SizedBox(height: 32),
                 Text(
                   subheading,
                   style: header,

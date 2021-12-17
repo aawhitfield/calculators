@@ -51,7 +51,6 @@ class CalculatorSelector extends ConsumerWidget {
     ];
 
     return ResponsiveRowColumnGrid(
-      heading: 'Verefi',
       subheading: 'Which calculator would you like to use today?',
       children: calculators,
     );
