@@ -28,7 +28,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
     List<int> colors = [
       0xFF0059BF,
       0xFF29578A,
-      0xFF003673,
+      0xFF29abe2 ,
       0xFF3978BF,
       0xFF001E40
     ];
