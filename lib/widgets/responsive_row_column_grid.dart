@@ -16,15 +16,13 @@ class ResponsiveRowColumnGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     TextStyle? header = context.isTablet
         ? Theme.of(context).textTheme.headline3
         : Theme.of(context).textTheme.headline4;
 
-
-    bool isTablet = context.isTablet;
-    bool isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    // bool isTablet = context.isTablet;
+    // bool isPortrait =
+    //     MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Scaffold(
       appBar: AppBar(
@@ -60,26 +58,33 @@ class ResponsiveRowColumnGrid extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 8),
-                (isTablet)
-                    ? GridView.count(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        crossAxisCount: 2,
-                        children: children,
-                      )
-                    : (isPortrait)
-                        ? Column(
-                            children: children,
-                          )
-                        : SizedBox(
-                            height: 250,
-                            child: ListView(
-                              shrinkWrap: true,
-                              physics: const ClampingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              children: children,
-                            ),
-                          ),
+                // (true) ?
+                GridView.count(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  crossAxisCount: 2,
+                  childAspectRatio: (context.isPortrait)
+                      ? (context.isTablet)
+                          ? 1
+                          : MediaQuery.of(context).size.width < 375
+                              ? 0.72
+                              : 0.8
+                      : 1.5,
+                  children: children,
+                ),
+                // : (isPortrait)
+                //     ? Column(
+                //         children: children,
+                //       )
+                //     : SizedBox(
+                //         height: 250,
+                //         child: ListView(
+                //           shrinkWrap: true,
+                //           physics: const ClampingScrollPhysics(),
+                //           scrollDirection: Axis.horizontal,
+                //           children: children,
+                //         ),
+                //       ),
                 const SizedBox(height: 16),
               ],
             ),

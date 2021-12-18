@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 
 class CardButton extends StatelessWidget {
   final String? svgImage;
@@ -14,6 +15,9 @@ class CardButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    bool kIsTablet = context.isTablet;
+
     return Card(
         child: InkWell(
           splashColor: Theme.of(context).primaryColor,
@@ -29,7 +33,9 @@ class CardButton extends StatelessWidget {
             )
                 :const Icon(Icons.home),
             const SizedBox(height: 16),
-            Text(label, style: Theme.of(context).textTheme.headline4,),
+            Text(label, style: (kIsTablet)
+                ? Theme.of(context).textTheme.headline4
+                : Theme.of(context).textTheme.headline6,),
       ],
     ),
           ),
