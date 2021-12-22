@@ -1,10 +1,9 @@
 import 'package:calculators/initialization.dart';
+import 'package:calculators/onboarding/auth_gate.dart';
 import 'package:calculators/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-
-import 'home.dart';
 
 void main() async {
   await Initialization.initialize();
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Flutter Demo',
         theme: buildThemeData(context),
-        home: const MyHomePage(title: 'Flutter Demo Home Page'),
+        home: const AuthGate(),
       ),
     );
   }
