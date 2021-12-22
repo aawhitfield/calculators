@@ -71,7 +71,7 @@ class ResponsiveRowColumnGrid extends StatelessWidget {
                       ? (context.isTablet)
                           ? 1
                           : MediaQuery.of(context).size.width < 375
-                              ? 0.72
+                              ? 0.7
                               : 0.8
                       : 1.5,
                   children: children,
