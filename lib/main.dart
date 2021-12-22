@@ -1,3 +1,4 @@
+import 'package:calculators/initialization.dart';
 import 'package:calculators/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,7 +6,8 @@ import 'package:get/get.dart';
 
 import 'home.dart';
 
-void main() {
+void main() async {
+  await Initialization.initialize();
   runApp(const ProviderScope(child: MyApp()));
 }
 
