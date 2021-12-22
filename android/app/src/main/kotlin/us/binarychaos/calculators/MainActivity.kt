@@ -1,4 +1,4 @@
-package us.binarychaos.calculators
+package com.vereifi.calculator
 
 import io.flutter.embedding.android.FlutterActivity
 

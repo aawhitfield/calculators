@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="us.binarychaos.calculators">
+    package="com.vereifi.calculator">
    <application
         android:label="Vereifi"
         android:icon="@mipmap/ic_launcher">

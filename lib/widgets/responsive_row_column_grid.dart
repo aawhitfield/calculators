@@ -49,7 +49,11 @@ class ResponsiveRowColumnGrid extends StatelessWidget {
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(32.0),
-                    child: Image.asset('images/logo.png'),
+                    child: Image.asset('images/logo.png',
+                      width: (context.isPortrait)
+                        ? MediaQuery.of(context).size.width
+                          : MediaQuery.of(context).size.width * 0.4
+                    ),
                   ),
                 ),
                 Text(
