@@ -16,6 +16,9 @@ class AuthGate extends StatelessWidget {
           return const SignInScreen(
               providerConfigs: [
                 EmailProviderConfiguration(),
+                GoogleProviderConfiguration(
+                  clientId: 'vereifiapp',
+                ),
               ]
           );
         }
