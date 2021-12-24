@@ -62,6 +62,6 @@ class DefaultFirebaseOptions {
     projectId: 'vereifiapp',
     storageBucket: 'vereifiapp.appspot.com',
     iosClientId: '106474774733-sg964jbasj7jt35rlia82rmpm5ertrj7.apps.googleusercontent.com',
-    iosBundleId: 'com.vereifi.calculator',
+    iosBundleId: 'com.vereifi.calc',
   );
 }

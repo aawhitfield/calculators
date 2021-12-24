@@ -1,4 +1,4 @@
-package com.vereifi.calculator
+package com.vereifi.calc
 
 import io.flutter.embedding.android.FlutterActivity
 
