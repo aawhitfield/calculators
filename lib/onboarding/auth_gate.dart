@@ -22,9 +22,9 @@ class AuthGate extends StatelessWidget {
             },
               providerConfigs: const [
                 EmailProviderConfiguration(),
-                GoogleProviderConfiguration(
-                  clientId: 'vereifiapp',
-                ),
+                // GoogleProviderConfiguration(
+                //   clientId: 'vereifiapp',
+                // ),
               ]
           );
         }
