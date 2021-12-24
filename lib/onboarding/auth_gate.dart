@@ -15,7 +15,10 @@ class AuthGate extends StatelessWidget {
         if (!snapshot.hasData) {
           return SignInScreen(
             headerBuilder: (context, constraints, _) {
-              return Image.asset('images/logo.png');
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Image.asset('images/logo.png'),
+              );
             },
             sideBuilder: (context, constraints) {
               return Image.asset('images/logo.png');
