@@ -39,17 +39,17 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyD60flaZZs5lNOKU0uzCOiJ4uhYwmwHtuo',
-    appId: '1:106474774733:web:d959e646aacf8f5c448984',
+    appId: '1:106474774733:web:986558e290146f38448984',
     messagingSenderId: '106474774733',
     projectId: 'vereifiapp',
     authDomain: 'vereifiapp.firebaseapp.com',
     storageBucket: 'vereifiapp.appspot.com',
-    measurementId: 'G-3NKWWKWK35',
+    measurementId: 'G-VRLV7KP91M',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAnD7JUQ_czAY0YaWTmwVPI-dDJZYkTi3A',
-    appId: '1:106474774733:android:fa557a6c2d4a3f69448984',
+    appId: '1:106474774733:android:d83b8317d8d1785d448984',
     messagingSenderId: '106474774733',
     projectId: 'vereifiapp',
     storageBucket: 'vereifiapp.appspot.com',
@@ -57,11 +57,12 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyCUW6-4f42t-09BZuaJlL5NnwBpN-wggYc',
-    appId: '1:106474774733:ios:bfc97c8987930c63448984',
+    appId: '1:106474774733:ios:70ab20e12fa03bef448984',
     messagingSenderId: '106474774733',
     projectId: 'vereifiapp',
     storageBucket: 'vereifiapp.appspot.com',
-    iosClientId: '106474774733-sg964jbasj7jt35rlia82rmpm5ertrj7.apps.googleusercontent.com',
+    androidClientId: '106474774733-9i4rc8ncaukqdsalf9k06oatsick7rj2.apps.googleusercontent.com',
+    iosClientId: '106474774733-t7f0ijnrqldbrlnn2jjfn3bmcoq53tfe.apps.googleusercontent.com',
     iosBundleId: 'com.vereifi.calc',
   );
 }
