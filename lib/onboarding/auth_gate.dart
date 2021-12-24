@@ -13,8 +13,14 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         // User is not signed in
         if (!snapshot.hasData) {
-          return const SignInScreen(
-              providerConfigs: [
+          return SignInScreen(
+            headerBuilder: (context, constraints, _) {
+              return Image.asset('images/logo.png');
+            },
+            sideBuilder: (context, constraints) {
+              return Image.asset('images/logo.png');
+            },
+              providerConfigs: const [
                 EmailProviderConfiguration(),
                 GoogleProviderConfiguration(
                   clientId: 'vereifiapp',
