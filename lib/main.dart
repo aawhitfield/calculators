@@ -21,6 +21,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Flutter Demo',
         theme: buildThemeData(context),
+        debugShowCheckedModeBanner: false,
         home: const AuthGate(),
       ),
     );

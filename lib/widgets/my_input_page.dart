@@ -1,5 +1,6 @@
 import 'package:calculators/outputs/final_options_buttons.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
+import 'package:calculators/widgets/sign_out_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -77,6 +78,7 @@ class MyInputPage extends ConsumerWidget {
           value: position / totalQuestions,
         ),
         centerTitle: true,
+        actions: const[SignOutButton()],
       ),
       body: SafeArea(
         top: false,

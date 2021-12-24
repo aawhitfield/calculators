@@ -1,9 +1,11 @@
 import 'package:calculators/calculator_selector.dart';
 import 'package:calculators/saved/saved_places.dart';
+import 'package:calculators/widgets/sign_out_button.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title, this.startingTab = 0}) : super(key: key);
+  const MyHomePage({Key? key, required this.title, this.startingTab = 0})
+      : super(key: key);
 
   final String title;
   final int? startingTab;
@@ -24,6 +26,11 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        actions: const [SignOutButton()],
+      ),
       body: Center(
         child: const [
           CalculatorSelector(),

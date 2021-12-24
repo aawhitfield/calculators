@@ -4,6 +4,7 @@ import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:calculators/widgets/sign_out_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -62,6 +63,7 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
+        actions: const [SignOutButton()],
         leading: IconButton(
           icon: Icon(
               GetPlatform.isAndroid ? Icons.arrow_back : CupertinoIcons.back),
