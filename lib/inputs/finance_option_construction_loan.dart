@@ -131,6 +131,9 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                 if (newValue != null) {
                   ref.read(financeConstructionProvider).updateTerm(newValue);
                 }
+                else {
+                  ref.read(financeConstructionProvider).updateTerm(0);
+                }
               },
             ),
             MoneyListTile(

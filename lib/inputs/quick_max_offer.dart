@@ -1,13 +1,18 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/models/calculator.dart';
+import 'package:calculators/models/financing_type.dart';
+import 'package:calculators/widgets/financing_type_drop_down.dart';
+import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:calculators/widgets/sign_out_button.dart';
+import 'package:finance/finance.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 
@@ -27,21 +32,31 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
   TextEditingController equityController = TextEditingController();
 
   double arv = 0;
-  double holdingCosts = 0;
   double rehabCosts = 0;
-  double equityPercentage = 0;
   double equity = 0;
   double maxOffer = 0;
+  double downPaymentPercentage = 0;
+  double interestRate = 0;
+  int termInYears = 0;
+  double closingCosts = 0;
+  double taxesPerYear = 0;
+  double taxesPerMonth = 0;
+  double insurancePerYear = 0;
+  double insurancePerMonth = 0;
+  double utilitiesPerMonth = 0;
+
+  int monthsOfHolding = 0;
+
+
+
   String equityString = '';
   String maxOfferString = '';
+  String taxesPerMonthString = '';
+  String insurancePerMonthString = '';
 
-  void update() {
-    equity = arv * equityPercentage;
-    equityString = kCurrencyFormat.format(equity);
 
-    maxOffer = arv - holdingCosts - rehabCosts - equity;
-    maxOfferString = kCurrencyFormat.format(maxOffer);
-  }
+  FinancingType financingType = FinancingType.commercial;
+
 
   @override
   void initState() {
@@ -55,6 +70,18 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
     TextStyle? headline = context.isTablet
         ? Theme.of(context).textTheme.headline2
         : Theme.of(context).textTheme.headline3;
+
+    double loanAmount = (1 - downPaymentPercentage) * arv;
+    double downPayment = arv - loanAmount;
+    double principleInterestMonthly = Finance.pmt(rate: interestRate / 12, nper: termInYears * 12, pv: -1*loanAmount).toDouble();
+    double totalHoldingCosts = (taxesPerMonth + insurancePerMonth + utilitiesPerMonth + principleInterestMonthly) * monthsOfHolding;
+    double maxOffer = arv - totalHoldingCosts - rehabCosts - downPayment;
+
+    String loanAmountString = kCurrencyFormat.format(loanAmount);
+    String downPaymentString = kCurrencyFormat.format(downPayment);
+    String principleInterestMonthlyString = kCurrencyFormat.format(principleInterestMonthly);
+    String totalHoldingCostsString = kCurrencyFormat.format(totalHoldingCosts);
+    maxOfferString = kCurrencyFormat.format(maxOffer);
 
     return Scaffold(
       appBar: AppBar(
@@ -95,6 +122,19 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
               const SizedBox(height: 32),
               ResponsiveLayout(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: PlacesAutocompleteField(
+                      hint: 'Address',
+                      onChanged: (String? newAddress) {
+                        // if (newAddress != null) {
+                        //   ref.read(propertyProvider).updateAddress(newAddress);
+                        // }
+                      },
+                      apiKey: kGoogleAPIkey,
+                      mode: Mode.overlay,
+                    ),
+                  ),
                   MoneyTextField(
                       labelText: 'ARV',
                       controller: arvController,
@@ -104,36 +144,173 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
                         if (arvTemp != null) {
                           setState(() {
                             arv = arvTemp;
-                            update();
                           });
                         }
                         else {
                           setState(() {
                             arv = 0;
-                            update();
                           });
                         }
                       }),
-                  MoneyTextField(
-                    labelText: 'Holding Costs',
-                    controller: holdingCostsController,
-                    onChanged: (String newValue) {
-                      newValue = newValue.replaceAll(',', '');
-                      double? holdingTemp = double.tryParse(newValue);
-                      if (holdingTemp != null) {
+                  MoneyListTile('Total Holding Costs', totalHoldingCostsString),
+                  Row(
+                    children: [
+                      const Text('Financing Type', style: TextStyle(fontWeight: FontWeight.w700),),
+                      const SizedBox(width: 8),
+                      Expanded(child: FinancingTypeDropDown(initialValue: financingType,
+                        onChanged: (FinancingType? newType) {
+                          if (newType != null) {
+                            setState(() {
+                              financingType = newType;
+                            });
+                          }
+                        },
+                      )),
+                    ],
+                  ),
+                  PercentTextField(labelText: 'Down Payment Percentage',
+                    onChanged: (String newPercentage) {
+                      newPercentage = newPercentage.replaceAll(',', '');
+                      double? newValue = double.tryParse(newPercentage);
+                      if (newValue != null) {
                         setState(() {
-                          holdingCosts = holdingTemp;
-                          update();
+                          downPaymentPercentage = newValue / 100;
                         });
                       }
                       else {
                         setState(() {
-                          holdingCosts = 0;
-                          update();
+                          downPaymentPercentage = 0;
                         });
                       }
-                    }
+                    },
+                      ),
+                  MoneyListTile('Loan Amount', loanAmountString),
+                  MoneyListTile('Down Payment', downPaymentString),
+                  PercentTextField(labelText: 'Interest Rate',
+                    onChanged: (String newPercentage) {
+                      newPercentage = newPercentage.replaceAll(',', '');
+                      double? newValue = double.tryParse(newPercentage);
+                      if (newValue != null) {
+                        setState(() {
+                          interestRate = newValue / 100;
+                        });
+                      }
+                      else {
+                        setState(() {
+                          interestRate = 0;
+                        });
+                      }
+                    },
                   ),
+                  IntegerTextField(labelText: 'Term in Years',
+                    onChanged: (String newTerm) {
+                      newTerm = newTerm.replaceAll(',', '');
+                      int? newValue = int.tryParse(newTerm);
+                      if (newValue != null) {
+                        setState(() {
+                          termInYears = newValue;
+                        });
+                      }
+                      else {
+                        setState(() {
+                          termInYears = 0;
+                        });
+                      }
+                    },
+                    leftPadding: 0,),
+                  MoneyTextField(labelText: 'Closing Costs',
+                    onChanged: (String newValue) {
+                      newValue = newValue.replaceAll(',', '');
+                      double? costs = double.tryParse(newValue);
+                      if (costs != null) {
+                        setState(() {
+                          closingCosts = costs;
+                        });
+                      }
+                      else {
+                        setState(() {
+                          closingCosts = 0;
+                        });
+                      }
+                    },
+                  ),
+                  MoneyTextField(labelText: 'Taxes Per Year',
+                    onChanged: (String newValue) {
+                      newValue = newValue.replaceAll(',', '');
+                      double? taxes = double.tryParse(newValue);
+                      if (taxes != null) {
+                        setState(() {
+                          taxesPerYear = taxes;
+                          taxesPerMonth = taxesPerYear / 12;
+                          taxesPerMonthString = kCurrencyFormat.format(taxesPerMonth);
+                        });
+                      }
+                      else {
+                        setState(() {
+                          taxesPerYear = 0;
+                          taxesPerMonth = taxesPerYear / 12;
+                          taxesPerMonthString = kCurrencyFormat.format(taxesPerMonth);
+                        });
+                      }
+                    },
+                  ),
+                  MoneyListTile('Taxes Per Month', taxesPerMonthString),
+                  MoneyTextField(labelText: 'Insurance Per Year',
+                    onChanged: (String newValue) {
+                      newValue = newValue.replaceAll(',', '');
+                      double? insurance = double.tryParse(newValue);
+                      if (insurance != null) {
+                        setState(() {
+                          insurancePerYear = insurance;
+                          insurancePerMonth = insurancePerYear / 12;
+                          insurancePerMonthString = kCurrencyFormat.format(insurancePerMonth);
+                        });
+                      }
+                      else {
+                        setState(() {
+                          insurancePerYear = 0;
+                          insurancePerMonth = insurancePerYear / 12;
+                          insurancePerMonthString = kCurrencyFormat.format(insurancePerMonth);
+                        });
+                      }
+                    },
+                  ),
+                  MoneyListTile('Insurance Per Month', insurancePerMonthString),
+                  MoneyTextField(labelText: 'Utilities Per Month',
+                    onChanged: (String newValue) {
+                      newValue = newValue.replaceAll(',', '');
+                      double? costs = double.tryParse(newValue);
+                      if (costs != null) {
+                        setState(() {
+                          utilitiesPerMonth = costs;
+                        });
+                      }
+                      else {
+                        setState(() {
+                          utilitiesPerMonth = 0;
+                        });
+                      }
+                    },
+                  ),
+                  MoneyListTile('Principle \n& Interest',
+                      principleInterestMonthlyString, subtitle: 'Monthly',),
+                  IntegerTextField(labelText: 'Months of Holding',
+                    onChanged: (String newTerm) {
+                      newTerm = newTerm.replaceAll(',', '');
+                      int? newValue = int.tryParse(newTerm);
+                      if (newValue != null) {
+                        setState(() {
+                          monthsOfHolding = newValue;
+                        });
+                      }
+                      else {
+                        setState(() {
+                          monthsOfHolding = 0;
+                        });
+                      }
+                    },
+                  ),
+                  MoneyListTile('Total Holding Costs', totalHoldingCostsString),
                   MoneyTextField(
                     labelText: 'Rehab Costs',
                     controller: rehabController,
@@ -143,38 +320,17 @@ class _QuickMaxOfferState extends State<QuickMaxOffer> {
                         if (rehabTemp != null) {
                           setState(() {
                             rehabCosts = rehabTemp;
-                            update();
                           });
                         }
                         else {
                           setState(() {
                             rehabCosts = 0;
-                            update();
                           });
                         }
                       }
                   ),
-                  PercentTextField(
-                    labelText: 'Equity',
-                    controller: equityController,
-                      onChanged: (String newValue) {
-                        newValue = newValue.replaceAll(',', '');
-                        double? equityPercentageTemp = double.tryParse(newValue);
-                        if (equityPercentageTemp != null) {
-                          setState(() {
-                            equityPercentage = equityPercentageTemp / 100;
-                            update();
-                          });
-                        }
-                        else {
-                          setState(() {
-                            equityPercentage = 0;
-                            update();
-                          });
-                        }
-                      }
-                  ),
-                  MoneyListTile('Equity', equityString),
+
+                  MoneyListTile('Equity / Down \nPayment', downPaymentString),
                   MoneyListTile((MediaQuery.of(context).size.width < 640)
                       ? 'Max\nOffer' : 'Max Offer', maxOfferString),
                 ],
