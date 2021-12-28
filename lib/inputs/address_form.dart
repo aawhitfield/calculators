@@ -25,12 +25,12 @@ class _AddressFormState extends ConsumerState<AddressForm> {
 
   @override
   void initState() {
-    widget.addressController.text = ref.read(propertyProvider).address;
-    int? sqft = ref.read(propertyProvider).sqft;
+    widget.addressController.text = ref.read(brrrrProvider).address;
+    int? sqft = ref.read(brrrrProvider).sqft;
     if (sqft != null && sqft != 0) {
       sqftController.text = sqft.toString();
     }
-    double listPrice = ref.read(propertyProvider).listPrice;
+    double listPrice = ref.read(brrrrProvider).listPrice;
     if (listPrice != 0) {
       listPriceController.text = kCurrencyFormat.format(listPrice);
     }
@@ -66,7 +66,7 @@ class _AddressFormState extends ConsumerState<AddressForm> {
                 controller: widget.addressController,
                 onChanged: (String? newAddress) {
                   if (newAddress != null) {
-                    ref.read(propertyProvider).updateAddress(newAddress);
+                    ref.read(brrrrProvider).updateAddress(newAddress);
                   }
                 },
                 apiKey: kGoogleAPIkey,
@@ -144,7 +144,7 @@ class _AddressFormState extends ConsumerState<AddressForm> {
                   onChanged: (String newSqft) {
                     int? squareFeet = int.tryParse(newSqft);
                     if (squareFeet != null) {
-                      ref.read(propertyProvider).updateSqft(squareFeet);
+                      ref.read(brrrrProvider).updateSqft(squareFeet);
                     }
                   }),
             ),
@@ -155,7 +155,7 @@ class _AddressFormState extends ConsumerState<AddressForm> {
                   newListPrice = newListPrice.replaceAll(',', '');
                   double? listPrice = double.tryParse(newListPrice);
                   if (listPrice != null) {
-                    ref.read(propertyProvider).updateListPrice(listPrice);
+                    ref.read(brrrrProvider).updateListPrice(listPrice);
                   }
                 }),
             const SizedBox(height: 16),

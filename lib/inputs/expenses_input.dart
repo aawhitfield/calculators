@@ -55,7 +55,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
 
   @override
   Widget build(BuildContext context) {
-    Calculator calculatorType = ref.read(propertyProvider).calculator;
+    Calculator calculatorType = ref.read(calculatorProvider).type;
 
     return MyInputPage(
       imageUri: 'images/expenses.svg',
@@ -82,7 +82,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
               }
             },
           ),
-          (calculatorType == Calculator.residentialREI)
+          (calculatorType == Calculator.brrrr)
               ? Column(
                   children: [
                     PercentTextField(
@@ -160,7 +160,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
                 .toStringAsFixed(2))),
             subtitle: 'Annually',
           ),
-          (calculatorType == Calculator.residentialREI)
+          (calculatorType == Calculator.brrrr)
               ? Column(
                   children: [
                     MoneyListTile(

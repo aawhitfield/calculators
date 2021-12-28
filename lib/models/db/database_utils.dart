@@ -5,8 +5,6 @@ import 'package:calculators/models/db/finance_construction_db.dart';
 import 'package:calculators/models/db/finance_db.dart';
 import 'package:calculators/models/db/finance_down_payment_db.dart';
 import 'package:calculators/models/db/income_db.dart';
-import 'package:calculators/models/db/options_db.dart';
-import 'package:calculators/models/db/property_db.dart';
 import 'package:calculators/models/db/refinance_db.dart';
 import 'package:calculators/models/db/renovations_db.dart';
 import 'package:calculators/models/expenses.dart';
@@ -25,7 +23,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseUtils {
   static void deletePlaceByID(int id) {
-    PropertyDatabase.instance.delete(id);
     RenovationsDatabase.instance.delete(id);
     IncomeDatabase.instance.delete(id);
     ExpensesDatabase.instance.delete(id);
@@ -37,35 +34,35 @@ class DatabaseUtils {
   }
 
   static Future<Calculator> loadDataByID(int id, WidgetRef ref) async {
-    Property savedProperty = await PropertyDatabase.instance.readProperty(id);
-    Renovation savedRenovation =
-        await RenovationsDatabase.instance.readRenovation(id);
-    Income savedIncome = await IncomeDatabase.instance.readIncome(id);
-    Expenses savedExpenses = await ExpensesDatabase.instance.readExpenses(id);
-    FinanceOptionData savedFinanceOptions = await FinanceDatabase.instance.readFinanceOption(id);
-    FinanceOptionConstructionProvider savedFinanceConstruction = await FinanceConstructionDatabase.instance.readFinanceOption(id);
-    Options savedOptions = await OptionsDatabase.instance.readOptions(id);
-    SellerFinanceOptionData savedSellerFinanceData = await SellerFinanceDatabase.instance.readFinanceOption(id);
-    RefinanceOptions savedRefinanceData = await RefinanceDatabase.instance.readFinanceOption(id);
-    FixFlipSellingCosts sellingCostsData = await SellingCostDatabase.instance.readFinanceOption(id);
-
-    ref.read(propertyProvider).updateProperty(savedProperty);
-    ref.read(renovationsProvider).updateRenovation(savedRenovation);
-    ref.read(incomeProvider).updateIncome(savedIncome);
-    ref.read(expensesProvider).updateExpenses(savedExpenses);
-    ref.read(financeProvider).updateFinanceOptionData(savedFinanceOptions);
-    ref.read(financeConstructionProvider).updateFinanceOptionConstruction(savedFinanceConstruction);
-    ref.read(optionsProvider).updateOptions(savedOptions);
-    ref.read(sellerFinanceProvider).updateSellerFinanceOptionData(savedSellerFinanceData);
-    ref.read(refinanceProvider).updateRefinanceData(savedRefinanceData);
-    ref.read(ffSellingCostsProvider).updateFixFlipSellingCostsData(sellingCostsData);
-
-    return savedProperty.calculator;
+    // BRRRR savedProperty = await PropertyDatabase.instance.readProperty(id);
+    // Renovation savedRenovation =
+    //     await RenovationsDatabase.instance.readRenovation(id);
+    // Income savedIncome = await IncomeDatabase.instance.readIncome(id);
+    // Expenses savedExpenses = await ExpensesDatabase.instance.readExpenses(id);
+    // FinanceOptionData savedFinanceOptions = await FinanceDatabase.instance.readFinanceOption(id);
+    // FinanceOptionConstructionProvider savedFinanceConstruction = await FinanceConstructionDatabase.instance.readFinanceOption(id);
+    // Options savedOptions = await OptionsDatabase.instance.readOptions(id);
+    // SellerFinanceOptionData savedSellerFinanceData = await SellerFinanceDatabase.instance.readFinanceOption(id);
+    // RefinanceOptions savedRefinanceData = await RefinanceDatabase.instance.readFinanceOption(id);
+    // FixFlipSellingCosts sellingCostsData = await SellingCostDatabase.instance.readFinanceOption(id);
+    //
+    // ref.read(brrrrProvider).updateProperty(savedProperty);
+    // ref.read(renovationsProvider).updateRenovation(savedRenovation);
+    // ref.read(incomeProvider).updateIncome(savedIncome);
+    // ref.read(expensesProvider).updateExpenses(savedExpenses);
+    // ref.read(financeProvider).updateFinanceOptionData(savedFinanceOptions);
+    // ref.read(financeConstructionProvider).updateFinanceOptionConstruction(savedFinanceConstruction);
+    // ref.read(optionsProvider).updateOptions(savedOptions);
+    // ref.read(sellerFinanceProvider).updateSellerFinanceOptionData(savedSellerFinanceData);
+    // ref.read(refinanceProvider).updateRefinanceData(savedRefinanceData);
+    // ref.read(ffSellingCostsProvider).updateFixFlipSellingCostsData(sellingCostsData);
+    //
+    return Calculator.brrrr;//savedProperty.calculator;
   }
 
-  static Future<void> saveDataToDatabase(WidgetRef ref, {String uid = ''}) async {
+  static Future<void> saveDataToDatabase(WidgetRef ref, {String uid = '', String? docID}) async {
     // create property
-    Property property = ref.read(propertyProvider);
+    BRRRR property = ref.read(brrrrProvider);
     Renovation renovation = ref.read(renovationsProvider);
     Income income = ref.read(incomeProvider);
     Expenses expenses = ref.read(expensesProvider);
@@ -102,7 +99,7 @@ class DatabaseUtils {
 
     await FirebaseFirestore.instance.collection('users').doc(uid)
       .collection('calculators')
-      .doc('${DateTime.now().toIso8601String()} ~ ${property.calculator.name}')
+      .doc((docID))
       .set(data, SetOptions(merge: true));
 
 

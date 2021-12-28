@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 
 enum Calculator {
-  residentialREI,
+  brrrr,
   fixAndFlip,
   quickMaxOffer,
 }
@@ -10,7 +10,7 @@ class CalculatorUtils {
 
   static String getName(Calculator calculator) {
     switch (calculator) {
-      case Calculator.residentialREI :
+      case Calculator.brrrr :
         return 'Residential REI';
       case Calculator.fixAndFlip :
         return 'Fix and Flip';
@@ -21,10 +21,10 @@ class CalculatorUtils {
 
   static Calculator toType(String name) {
     switch(name) {
-      case 'Residential REI': return Calculator.residentialREI;
+      case 'BRRRR': return Calculator.brrrr;
       case 'Fix and Flip': return Calculator.fixAndFlip;
       case 'Quick Max Offer': return Calculator.quickMaxOffer;
-      default: return Calculator.residentialREI;
+      default: return Calculator.brrrr;
     }
   }
 }
@@ -32,12 +32,12 @@ class CalculatorUtils {
 class CurrentCalculator extends ChangeNotifier{
   Calculator type;
 
-  CurrentCalculator({this.type = Calculator.residentialREI});
+  CurrentCalculator({this.type = Calculator.brrrr});
 
   String get name {
     switch (type) {
-      case Calculator.residentialREI :
-        return 'Residential REI';
+      case Calculator.brrrr :
+        return 'BRRRR';
       case Calculator.fixAndFlip :
         return 'Fix and Flip';
       case Calculator.quickMaxOffer:

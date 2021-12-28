@@ -48,16 +48,16 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
 
   @override
   Widget build(BuildContext context) {
-    double realtorsFees = ref.watch(propertyProvider).afterRepairValue *
+    double realtorsFees = ref.watch(brrrrProvider).afterRepairValue *
         ref.watch(ffSellingCostsProvider).realtorFeesPercentage;
 
     int numberOfMonthsToRehabRent =
-        ref.read(propertyProvider).monthsToRehabRent;
+        ref.read(brrrrProvider).monthsToRehabRent;
     double taxes = ref.watch(expensesProvider).taxes;
     if (numberOfMonthsToRehabRent != 0) {
       taxes = taxes / numberOfMonthsToRehabRent;
     }
-    double other = ref.watch(propertyProvider).afterRepairValue * 0.02;
+    double other = ref.watch(brrrrProvider).afterRepairValue * 0.02;
     double total = realtorsFees + taxes + sellersClosingCosts + buyersClosingCosts + other;
     total = ref.watch(ffSellingCostsProvider).totalClosingCosts;
 
@@ -91,7 +91,7 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
                     .read(ffSellingCostsProvider)
                     .updateRealtorFeesPercentage(realtorFeesPercentage);
                 double afterRepairValue =
-                    ref.read(propertyProvider).afterRepairValue;
+                    ref.read(brrrrProvider).afterRepairValue;
                 double realtorsFees = afterRepairValue * realtorFeesPercentage;
 
                 ref

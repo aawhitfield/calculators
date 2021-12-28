@@ -26,7 +26,7 @@ class Location extends ConsumerWidget {
       shouldShowBackButton: true,
       child: AddressForm(addressController),
       onSubmit: () {
-        ref.read(propertyProvider).updateAddress(addressController.text);
+        ref.read(brrrrProvider).updateAddress(addressController.text);
 
         Get.to(() => const RenovationsCalculator());
       },

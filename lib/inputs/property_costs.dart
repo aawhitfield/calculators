@@ -29,27 +29,27 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
 
   @override
   void initState() {
-    listPriceController.text = kCurrencyFormat.format(ref.read(propertyProvider)
+    listPriceController.text = kCurrencyFormat.format(ref.read(brrrrProvider)
         .listPrice).toString();
     renovationsController.text = kCurrencyFormat.format(ref.read(renovationsProvider)
         .total).toString();
-    double afterRepairValue = ref.read(propertyProvider).afterRepairValue;
+    double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
     if (afterRepairValue != 0) {
       afterRepairController.text = kCurrencyFormat.format(afterRepairValue);
     }
-    double purchasePrice = ref.read(propertyProvider).purchasePrice;
+    double purchasePrice = ref.read(brrrrProvider).purchasePrice;
     if (purchasePrice != 0) {
       purchasePriceController.text = kCurrencyFormat.format(purchasePrice);
     }
-    int monthsToRehab = ref.read(propertyProvider).monthsToRehabRent;
+    int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
     if (monthsToRehab != 0) {
       monthsToRehabController.text = monthsToRehab.toString();
     }
-    int units = ref.read(propertyProvider).units;
+    int units = ref.read(brrrrProvider).units;
     if (units != 0) {
       unitsController.text = units.toString();
     }
-    int investors = ref.read(propertyProvider).investors;
+    int investors = ref.read(brrrrProvider).investors;
     if (investors != 0) {
       investorsController.text = investors.toString();
     }
@@ -64,8 +64,8 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
         subheadText: 'Now let\'s get some information about costs associated '
             'with this property.',
         onSubmit: () {
-          Calculator calculatorType = ref.read(propertyProvider).calculator;
-          if (calculatorType == Calculator.residentialREI) {
+          Calculator calculatorType = ref.read(calculatorProvider).type;
+          if (calculatorType == Calculator.brrrr) {
             Get.to(() => const IncomeInput());
           }
           else {
@@ -83,7 +83,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   newListPrice = newListPrice.replaceAll(',', '');
                   double? listPrice = double.tryParse(newListPrice);
                   if (listPrice != null) {
-                    ref.read(propertyProvider).updateListPrice(listPrice);
+                    ref.read(brrrrProvider).updateListPrice(listPrice);
                   }
                 },
             ),
@@ -105,7 +105,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);
                   if(price != null) {
-                    ref.read(propertyProvider).updateAfterRepairValue(price);
+                    ref.read(brrrrProvider).updateAfterRepairValue(price);
                   }
                 }
             ),
@@ -116,7 +116,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);
                   if(price != null) {
-                    ref.read(propertyProvider).updatePurchasePrice(price);
+                    ref.read(brrrrProvider).updatePurchasePrice(price);
                   }
                 }
             ),
@@ -126,7 +126,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
-                    ref.read(propertyProvider).updateMonthsToRehabRent(value);
+                    ref.read(brrrrProvider).updateMonthsToRehabRent(value);
                   }
                 }),
             IntegerTextField(
@@ -135,7 +135,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
-                    ref.read(propertyProvider).updateUnits(value);
+                    ref.read(brrrrProvider).updateUnits(value);
                   }
                 }),
             IntegerTextField(
@@ -144,7 +144,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
-                    ref.read(propertyProvider).updateInvestors(value);
+                    ref.read(brrrrProvider).updateInvestors(value);
                   }
                 }),
           ],),

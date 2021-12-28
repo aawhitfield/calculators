@@ -52,10 +52,10 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
   Widget build(BuildContext context) {
     FinancingType value = ref.watch(financeProvider).financingType;
 
-    double loanAmount = ref.watch(propertyProvider).purchasePrice *
+    double loanAmount = ref.watch(brrrrProvider).purchasePrice *
         ref.watch(financeProvider).loanPercentage;
 
-    double downPaymentAmount = ref.watch(propertyProvider).purchasePrice -
+    double downPaymentAmount = ref.watch(brrrrProvider).purchasePrice -
         loanAmount;
 
     double monthlyPayment = (ref.watch(financeProvider).paymentType ==
@@ -123,7 +123,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               if (newValue != null) {
                 double loanPercentage = newValue / 100;
                 ref.read(financeProvider).updateLoanPercentage(loanPercentage);
-                double purchasePrice = ref.read(propertyProvider).purchasePrice;
+                double purchasePrice = ref.read(brrrrProvider).purchasePrice;
                 double loanAmount = purchasePrice * loanPercentage;
 
                 ref.read(financeProvider).updateLoanAmount(loanAmount);

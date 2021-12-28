@@ -13,11 +13,11 @@ class FixFlipStatement extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    double purchasePrice = ref.read(propertyProvider).purchasePrice;
+    double purchasePrice = ref.read(brrrrProvider).purchasePrice;
     double closingCosts = ref.read(financeProvider).closingCosts;
     double totalMoneyToBuy = purchasePrice + closingCosts;
 
-    int monthsToRehab = ref.read(propertyProvider).monthsToRehabRent;
+    int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
     double totalDebtServicePayments = ref.read(financeProvider).monthlyPayment
         + ref.read(sellerFinanceProvider).monthlyPayment +
         ref.read(financeConstructionProvider).monthlyPayment;
@@ -32,11 +32,11 @@ class FixFlipStatement extends ConsumerWidget {
 
     double totalMoneyToSell = ref.read(ffSellingCostsProvider).totalClosingCosts;
 
-    double afterRepairValue = ref.read(propertyProvider).afterRepairValue;
+    double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
     double totalProfit = afterRepairValue - totalMoneyToBuy - totalMoneyToHold
       - totalMoneyToRehab - totalMoneyToSell;
 
-    int numberOfInvestors = ref.read(propertyProvider).investors;
+    int numberOfInvestors = ref.read(brrrrProvider).investors;
     double profitPerInvestor = totalProfit / numberOfInvestors;
 
     double breakEvenSellPrice = totalMoneyToBuy + totalMoneyToHold

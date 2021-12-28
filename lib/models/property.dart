@@ -1,17 +1,14 @@
 // organizes all information for a property
 
-import 'package:calculators/models/calculator.dart';
 import 'package:flutter/material.dart';
 
-const String tableProperty = 'properties';
-
-class PropertyFields {
+class BRRRRFields {
   static final List<String> values = [
     id, calculator, address, listPrice, sqft, afterRepairValue, purchasePrice, monthsToRehabRent,
     units, investors
   ];
 
-  static const String id = '_id';
+  static const String id = 'id';
   static const String calculator = 'calculator';
   static const String address = 'address';
   static const String listPrice = 'listPrice';
@@ -23,9 +20,8 @@ class PropertyFields {
   static const String investors = 'investors';
 }
 
-class Property extends ChangeNotifier{
+class BRRRR extends ChangeNotifier{
   int? id;
-  Calculator calculator;
   String address;
   double listPrice;
   int? sqft;
@@ -35,14 +31,13 @@ class Property extends ChangeNotifier{
   int units;
   int investors;
 
-  Property({this.id, required this.calculator, required this.address, required this.listPrice, this.sqft,
+  BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
     this.units = 0, this.investors = 0,
   });
 
-  Property copy({
+  BRRRR copy({
     int? id,
-    Calculator? calculator,
     String? address,
     double? listPrice,
     int? sqft,
@@ -51,9 +46,8 @@ class Property extends ChangeNotifier{
     int? monthsToRehabRent,
     int? units,
     int? investors,
-}) => Property(
+}) => BRRRR(
       id: id ?? this.id,
-      calculator:  calculator ?? this.calculator,
       address: address ?? this.address,
       listPrice: listPrice ?? this.listPrice,
       sqft: sqft ?? this.sqft,
@@ -65,34 +59,31 @@ class Property extends ChangeNotifier{
   );
 
   Map<String, Object?> toJson() => {
-    PropertyFields.id: id,
-    PropertyFields.calculator: CalculatorUtils.getName(calculator),
-    PropertyFields.address: address,
-    PropertyFields.listPrice: listPrice,
-    PropertyFields.sqft: sqft,
-    PropertyFields.afterRepairValue: afterRepairValue,
-    PropertyFields.purchasePrice: purchasePrice,
-    PropertyFields.monthsToRehabRent: monthsToRehabRent,
-    PropertyFields.units: units,
-    PropertyFields.investors: investors,
+    BRRRRFields.id: id,
+    BRRRRFields.address: address,
+    BRRRRFields.listPrice: listPrice,
+    BRRRRFields.sqft: sqft,
+    BRRRRFields.afterRepairValue: afterRepairValue,
+    BRRRRFields.purchasePrice: purchasePrice,
+    BRRRRFields.monthsToRehabRent: monthsToRehabRent,
+    BRRRRFields.units: units,
+    BRRRRFields.investors: investors,
   };
 
-  static Property fromJson(Map<String, Object?> json) => Property(
-    id: json[PropertyFields.id] as int?,
-      calculator: CalculatorUtils.toType(json[PropertyFields.calculator] as String),
-      address: json[PropertyFields.address] as String,
-      listPrice: json[PropertyFields.listPrice] as double,
-      sqft: json[PropertyFields.sqft] as int?,
-      afterRepairValue: json[PropertyFields.afterRepairValue] as double,
-      purchasePrice:  json[PropertyFields.purchasePrice] as double,
-      monthsToRehabRent: json[PropertyFields.monthsToRehabRent] as int,
-      units: json[PropertyFields.units] as int,
-      investors: json[PropertyFields.investors] as int,
+  static BRRRR fromJson(Map<String, Object?> json) => BRRRR(
+    id: json[BRRRRFields.id] as int?,
+      address: json[BRRRRFields.address] as String,
+      listPrice: json[BRRRRFields.listPrice] as double,
+      sqft: json[BRRRRFields.sqft] as int?,
+      afterRepairValue: json[BRRRRFields.afterRepairValue] as double,
+      purchasePrice:  json[BRRRRFields.purchasePrice] as double,
+      monthsToRehabRent: json[BRRRRFields.monthsToRehabRent] as int,
+      units: json[BRRRRFields.units] as int,
+      investors: json[BRRRRFields.investors] as int,
   );
 
-  void updateProperty(Property newProperty) {
+  void updateProperty(BRRRR newProperty) {
     id = newProperty.id;
-    calculator = newProperty.calculator;
     address = newProperty.address;
     listPrice = newProperty.listPrice;
     sqft = newProperty.sqft;
@@ -103,10 +94,7 @@ class Property extends ChangeNotifier{
     investors = newProperty.investors;
     notifyListeners();
   }
-  void updateCalculator(Calculator newCalculator) {
-    calculator = newCalculator;
-    notifyListeners();
-  }
+
 
   void updateAddress(String newAddress) {
     address = newAddress;

@@ -13,7 +13,7 @@ class FixFlipHoldingCosts extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    int monthsToRehab = ref.read(propertyProvider).monthsToRehabRent;
+    int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
     double totalDebtServicePayments = ref.read(financeProvider).monthlyPayment
       + ref.read(sellerFinanceProvider).monthlyPayment +
         ref.read(financeConstructionProvider).monthlyPayment;

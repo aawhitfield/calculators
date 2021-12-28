@@ -25,22 +25,22 @@ class IsSellerFinanced extends ConsumerWidget {
         if (ref.read(optionsProvider).isSellerFinanced) {
           Get.to(() => const FinanceOptionDownPayment());
         } else {
-          if (ref.read(propertyProvider).calculator == Calculator.residentialREI) {
+          if (ref.read(calculatorProvider).type == Calculator.brrrr) {
             Get.to(() => const WantToRefinance());
           }
           else {
-            double realtorsFees = ref.watch(propertyProvider).afterRepairValue *
+            double realtorsFees = ref.watch(brrrrProvider).afterRepairValue *
                 ref.watch(ffSellingCostsProvider).realtorFeesPercentage;
             ref.read(ffSellingCostsProvider).updateRealtorFees(realtorsFees);
 
             int numberOfMonthsToRehabRent =
-                ref.read(propertyProvider).monthsToRehabRent;
+                ref.read(brrrrProvider).monthsToRehabRent;
             double taxes = ref.watch(expensesProvider).taxes;
             if (numberOfMonthsToRehabRent != 0) {
               taxes = taxes / numberOfMonthsToRehabRent;
             }
             ref.read(ffSellingCostsProvider).updateTaxes(taxes);
-            double other = ref.watch(propertyProvider).afterRepairValue * 0.02;
+            double other = ref.watch(brrrrProvider).afterRepairValue * 0.02;
             ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
             ref.read(ffSellingCostsProvider).calculateTotal();
             Get.to(() => const FixAndFlipSellingCostsInput());

@@ -52,11 +52,11 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
     Refinancing refinancingMethod =
         ref.watch(refinanceProvider).refinancingMethod;
 
-    double loanAmount = ref.watch(propertyProvider).afterRepairValue *
+    double loanAmount = ref.watch(brrrrProvider).afterRepairValue *
         ref.watch(refinanceProvider).loanPercentage;
 
     double downPaymentAmount =
-        ref.watch(propertyProvider).afterRepairValue - loanAmount;
+        ref.watch(brrrrProvider).afterRepairValue - loanAmount;
 
     double monthlyPayment =
         ref.watch(refinanceProvider).calculateMonthlyPayment(
@@ -114,7 +114,7 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
                     .read(refinanceProvider)
                     .updateLoanPercentage(loanPercentage);
                 double afterRepairValue =
-                    ref.read(propertyProvider).afterRepairValue;
+                    ref.read(brrrrProvider).afterRepairValue;
                 double loanAmount = afterRepairValue * loanPercentage;
 
                 ref.read(refinanceProvider).updateLoanAmount(loanAmount);

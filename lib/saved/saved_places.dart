@@ -4,7 +4,6 @@ import 'package:calculators/inputs/location.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/db/database_utils.dart';
 import 'package:calculators/providers.dart';
-import 'package:calculators/models/db/property_db.dart';
 import 'package:calculators/models/property.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -54,14 +53,14 @@ class _SavedPlacesState extends State<SavedPlaces> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: FutureBuilder<List<Property>>(
-                  future: PropertyDatabase.instance.readAllProperties(),
+              child: FutureBuilder<List<BRRRR>>(
+                  future: Future.delayed(const Duration(seconds: 2)), // PropertyDatabase.instance.readAllProperties(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Container();
                     }
-                    List<Property> properties =
-                        List.from(snapshot.data ?? <Property>[]);
+                    List<BRRRR> properties =
+                        List.from(snapshot.data ?? <BRRRR>[]);
 
                     double size = min(MediaQuery.of(context).size.width,
                             MediaQuery.of(context).size.height) *
@@ -188,10 +187,11 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                   ),
                                             title:
                                                 Text(properties[index].address),
-                                            subtitle: Text(
-                                                CalculatorUtils.getName(
-                                                    properties[index]
-                                                        .calculator)),
+                                            // subtitle:
+                                            // Text(
+                                            //     CalculatorUtils.getName(
+                                            //         properties[index]
+                                            //             .type)),
                                             trailing: const Icon(
                                                 CupertinoIcons.right_chevron),
                                             onTap: () async {
@@ -201,7 +201,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                     await DatabaseUtils
                                                         .loadDataByID(id, ref);
                                                 if (savedCalculator ==
-                                                    Calculator.residentialREI ||
+                                                    Calculator.brrrr ||
                                                   savedCalculator == Calculator.fixAndFlip) {
                                                   Get.to(() =>
                                                       Location(CalculatorUtils.getName(savedCalculator)));

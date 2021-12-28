@@ -12,8 +12,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'models/property.dart';
 import 'models/refinance.dart';
 
-final propertyProvider = ChangeNotifierProvider<Property>((ref) => Property(
-      calculator: Calculator.residentialREI,
+final brrrrProvider = ChangeNotifierProvider<BRRRR>((ref) => BRRRR(
       address: '',//Address(street: '', line2: '', city: '', state: '', zip: ''),
       listPrice: 0,
     ));
@@ -67,7 +66,7 @@ void resetAllData(WidgetRef ref) {
   ref.read(financeProvider).reset();
   ref.read(incomeProvider).reset();
   ref.read(optionsProvider).reset();
-  ref.read(propertyProvider).reset();
+  ref.read(brrrrProvider).reset();
   ref.read(refinanceProvider).reset();
   ref.read(renovationsProvider).reset();
   ref.read(sellerFinanceProvider).reset();

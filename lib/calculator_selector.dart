@@ -26,7 +26,7 @@ class CalculatorSelector extends ConsumerWidget {
         svgImage: 'images/residential.svg',
         imageSize: imageSize,
         onPressed: () {
-          ref.read(propertyProvider).updateCalculator(Calculator.residentialREI);
+          ref.read(calculatorProvider).updateCurrentCalculator(Calculator.brrrr);
           Get.to(() => Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat',));
         },
       ),
@@ -35,8 +35,8 @@ class CalculatorSelector extends ConsumerWidget {
         svgImage: 'images/fix-flip.svg',
         imageSize: imageSize,
         onPressed: () {
-          ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
-          Get.to(() => Location('Fix & Flip'));
+          // ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
+          // Get.to(() => Location('Fix & Flip'));
         },
       ),
       CardButton(
@@ -44,7 +44,7 @@ class CalculatorSelector extends ConsumerWidget {
         svgImage: 'images/offer.svg',
         imageSize: imageSize,
         onPressed: () {
-          ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
+          ref.read(calculatorProvider).updateCurrentCalculator(Calculator.fixAndFlip);
           Get.to(() => const QuickMaxOffer());
         },
       ),

@@ -23,7 +23,7 @@ class ReportInitialCashInvestment extends ConsumerWidget {
     double initialCashInvestment =
         totalDownPayment + constructionDownPayment + closingCosts;
     double costPerInvestor =
-        initialCashInvestment / ref.watch(propertyProvider).investors;
+        initialCashInvestment / ref.watch(brrrrProvider).investors;
 
     String loanDownPaymentString = kCurrencyFormat.format(totalDownPayment);
     String constructionDownPaymentString =

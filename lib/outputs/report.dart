@@ -25,7 +25,7 @@ class Report extends ConsumerWidget {
     bool shouldShow0inDeal = isRefinancing && isCashOut;
     bool shouldShowARVStatement = isRefinancing;
 
-    Calculator calculatorType = ref.read(propertyProvider).calculator;
+    Calculator calculatorType = ref.read(calculatorProvider).type;
 
     return MyInputPage(
       imageUri: 'images/report.svg',
@@ -39,12 +39,12 @@ class Report extends ConsumerWidget {
           (calculatorType == Calculator.fixAndFlip)
             ? const FixFlipHoldingCosts() : Container(),
           const ReportInitialCashInvestment(),
-          (calculatorType == Calculator.residentialREI)
+          (calculatorType == Calculator.brrrr)
             ? const CashFlowStatement()
             : (calculatorType == Calculator.fixAndFlip)
               ? const FixFlipStatement()
               : Container(),
-          (shouldShow0inDeal && calculatorType == Calculator.residentialREI) ? const ZeroInDeal() : Container(),
+          (shouldShow0inDeal && calculatorType == Calculator.brrrr) ? const ZeroInDeal() : Container(),
           (shouldShowARVStatement && calculatorType == Calculator.fixAndFlip) ? const ARVCashFlowStatement() : Container(),
           (calculatorType == Calculator.fixAndFlip) ? const ValueIndicators() : Container(),
         ],

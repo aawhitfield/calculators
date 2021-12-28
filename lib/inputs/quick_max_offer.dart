@@ -1,3 +1,5 @@
+// ignore_for_file: import_of_legacy_library_into_null_safe
+
 import 'package:calculators/globals.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/financing_type.dart';
