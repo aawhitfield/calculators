@@ -20,6 +20,7 @@ import 'package:calculators/models/refinance.dart';
 import 'package:calculators/models/renovations.dart';
 import 'package:calculators/models/seller_financing_type.dart';
 import 'package:calculators/providers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseUtils {
@@ -62,7 +63,7 @@ class DatabaseUtils {
     return savedProperty.calculator;
   }
 
-  static Future<void> saveDataToDatabase(WidgetRef ref) async {
+  static Future<void> saveDataToDatabase(WidgetRef ref, {String uid = ''}) async {
     // create property
     Property property = ref.read(propertyProvider);
     Renovation renovation = ref.read(renovationsProvider);
@@ -75,16 +76,16 @@ class DatabaseUtils {
     RefinanceOptions refinanceData = ref.read(refinanceProvider);
     FixFlipSellingCosts sellingCostsData = ref.read(ffSellingCostsProvider);
 
-    property = await PropertyDatabase.instance.create(property);
-    renovation = await RenovationsDatabase.instance.create(renovation);
-    income = await IncomeDatabase.instance.create(income);
-    expenses = await ExpensesDatabase.instance.create(expenses);
-    financeOptionData = await FinanceDatabase.instance.create(financeOptionData);
-    financeConstructionData = await FinanceConstructionDatabase.instance.create(financeConstructionData);
-    optionsData = await OptionsDatabase.instance.create(optionsData);
-    sellerFinanceOptionData = await SellerFinanceDatabase.instance.create(sellerFinanceOptionData);
-    refinanceData = await RefinanceDatabase.instance.create(refinanceData);
-    sellingCostsData = await SellingCostDatabase.instance.create(sellingCostsData);
+    // property = await PropertyDatabase.instance.create(property);
+    // renovation = await RenovationsDatabase.instance.create(renovation);
+    // income = await IncomeDatabase.instance.create(income);
+    // expenses = await ExpensesDatabase.instance.create(expenses);
+    // financeOptionData = await FinanceDatabase.instance.create(financeOptionData);
+    // financeConstructionData = await FinanceConstructionDatabase.instance.create(financeConstructionData);
+    // optionsData = await OptionsDatabase.instance.create(optionsData);
+    // sellerFinanceOptionData = await SellerFinanceDatabase.instance.create(sellerFinanceOptionData);
+    // refinanceData = await RefinanceDatabase.instance.create(refinanceData);
+    // sellingCostsData = await SellingCostDatabase.instance.create(sellingCostsData);
 
     Map<String, dynamic> data = {
       ...property.toJson(),
@@ -98,6 +99,12 @@ class DatabaseUtils {
       ...refinanceData.toJson(),
       ...sellingCostsData.toJson(),
     };
+
+    await FirebaseFirestore.instance.collection('users').doc(uid)
+      .collection('calculators')
+      .doc('${DateTime.now().toIso8601String()} ~ ${property.calculator.name}')
+      .set(data, SetOptions(merge: true));
+
 
 
   }
