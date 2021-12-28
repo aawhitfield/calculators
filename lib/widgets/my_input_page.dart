@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 
 class MyInputPage extends ConsumerWidget {
   final String? headlineText;
+  final String? subHeadlineText;
   final String imageUri;
   final String headerText;
   final String subheadText;
@@ -22,6 +23,7 @@ class MyInputPage extends ConsumerWidget {
   const MyInputPage({
     Key? key,
     this.headlineText,
+    this.subHeadlineText,
     required this.imageUri,
     required this.headerText,
     required this.subheadText,
@@ -41,6 +43,10 @@ class MyInputPage extends ConsumerWidget {
     TextStyle? headline = context.isTablet
         ? Theme.of(context).textTheme.headline2
         : Theme.of(context).textTheme.headline3;
+
+    TextStyle? subHeadline = context.isTablet
+        ? Theme.of(context).textTheme.headline4
+        : Theme.of(context).textTheme.headline5;
 
     TextStyle? header = context.isTablet
         ? Theme.of(context).textTheme.headline3
@@ -92,6 +98,12 @@ class MyInputPage extends ConsumerWidget {
                       headlineText!,
                       style: headline,
                     )
+                  : Container(),
+              (subHeadlineText != null)
+                  ? Text(
+                subHeadlineText!,
+                style: subHeadline,
+              )
                   : Container(),
               const SizedBox(height: 32),
               SvgPicture.asset(

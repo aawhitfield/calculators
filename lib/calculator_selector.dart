@@ -22,12 +22,12 @@ class CalculatorSelector extends ConsumerWidget {
 
     List<CardButton> calculators = [
       CardButton(
-        label: 'Residential REI',
+        label: 'BRRRR',
         svgImage: 'images/residential.svg',
         imageSize: imageSize,
         onPressed: () {
           ref.read(propertyProvider).updateCalculator(Calculator.residentialREI);
-          Get.to(() => Location('Residential REI'));
+          Get.to(() => Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat',));
         },
       ),
       CardButton(
