@@ -86,5 +86,19 @@ class DatabaseUtils {
     refinanceData = await RefinanceDatabase.instance.create(refinanceData);
     sellingCostsData = await SellingCostDatabase.instance.create(sellingCostsData);
 
+    Map<String, dynamic> data = {
+      ...property.toJson(),
+      ...renovation.toJson(),
+      ...income.toJson(),
+      ...expenses.toJson(),
+      ...financeOptionData.toJson(),
+      ...financeConstructionData.toJson(),
+      ...optionsData.toJson(),
+      ...sellerFinanceOptionData.toJson(),
+      ...refinanceData.toJson(),
+      ...sellingCostsData.toJson(),
+    };
+
+
   }
 }
