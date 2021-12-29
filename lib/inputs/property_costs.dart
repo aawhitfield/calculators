@@ -23,7 +23,6 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
   TextEditingController renovationsController = TextEditingController();
   TextEditingController afterRepairController = TextEditingController();
   TextEditingController purchasePriceController = TextEditingController();
-  TextEditingController monthsToRehabController = TextEditingController();
   TextEditingController unitsController = TextEditingController();
   TextEditingController investorsController = TextEditingController();
 
@@ -40,10 +39,6 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
     double purchasePrice = ref.read(brrrrProvider).purchasePrice;
     if (purchasePrice != 0) {
       purchasePriceController.text = kCurrencyFormat.format(purchasePrice);
-    }
-    int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
-    if (monthsToRehab != 0) {
-      monthsToRehabController.text = monthsToRehab.toString();
     }
     int units = ref.read(brrrrProvider).units;
     if (units != 0) {
@@ -120,15 +115,6 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   }
                 }
             ),
-            IntegerTextField(
-                labelText: 'Months to Rehab/Rent',
-                controller: monthsToRehabController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(brrrrProvider).updateMonthsToRehabRent(value);
-                  }
-                }),
             IntegerTextField(
                 labelText: 'Units',
                 controller: unitsController,

@@ -1,6 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/property_costs.dart';
 import 'package:calculators/providers.dart';
+import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
@@ -19,6 +20,7 @@ class RenovationsCalculator extends ConsumerStatefulWidget {
 class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
   bool enterTotal = true;
 
+  TextEditingController monthsToRehabController = TextEditingController();
   TextEditingController foundationController = TextEditingController();
   TextEditingController roofController = TextEditingController();
   TextEditingController airConditionerController = TextEditingController();
@@ -42,6 +44,10 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
   @override
   void initState() {
+    int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
+    if (monthsToRehab != 0) {
+      monthsToRehabController.text = monthsToRehab.toString();
+    }
     double foundation = ref.read(brrrrProvider).foundation;
     if (foundation != 0) {
       foundationController.text = kCurrencyFormat.format(foundation);
@@ -160,6 +166,17 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       }
                     },
                   ),
+                  IntegerTextField(
+                      labelText: 'Months to Rehab/Rent',
+                      controller: monthsToRehabController,
+                      onChanged: (String newValue) {
+                        int? value = int.tryParse(newValue);
+                        if (value != null) {
+                          ref
+                              .read(brrrrProvider)
+                              .updateMonthsToRehabRent(value);
+                        }
+                      }),
                   TextButton(
                     onPressed: () {
                       setState(() {
@@ -195,9 +212,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       newFoundation = newFoundation.replaceAll(',', '');
                       double? foundation = double.tryParse(newFoundation);
                       if (foundation != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateFoundation(foundation);
+                        ref.read(brrrrProvider).updateFoundation(foundation);
                       }
                     },
                   ),
@@ -296,9 +311,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? bathrooms = double.tryParse(newBathrooms);
                       if (bathrooms != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateBathrooms(bathrooms);
+                        ref.read(brrrrProvider).updateBathrooms(bathrooms);
                       }
                     },
                   ),
@@ -310,9 +323,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? appliances = double.tryParse(newAppliances);
                       if (appliances != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateAppliances(appliances);
+                        ref.read(brrrrProvider).updateAppliances(appliances);
                       }
                     },
                   ),
@@ -324,9 +335,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? electrical = double.tryParse(newElectrical);
                       if (electrical != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateElectrical(electrical);
+                        ref.read(brrrrProvider).updateElectrical(electrical);
                       }
                     },
                   ),
@@ -362,9 +371,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? baseboards = double.tryParse(newBaseboards);
                       if (baseboards != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateBaseboards(baseboards);
+                        ref.read(brrrrProvider).updateBaseboards(baseboards);
                       }
                     },
                   ),
@@ -400,9 +407,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? elevators = double.tryParse(newElevators);
                       if (elevators != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateElevators(elevators);
+                        ref.read(brrrrProvider).updateElevators(elevators);
                       }
                     },
                   ),
@@ -414,9 +419,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? buildUnits = double.tryParse(newBuildUnits);
                       if (buildUnits != null) {
-                        ref
-                            .read(brrrrProvider)
-                            .updateBuildUnits(buildUnits);
+                        ref.read(brrrrProvider).updateBuildUnits(buildUnits);
                       }
                     },
                   ),

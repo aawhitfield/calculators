@@ -1,5 +1,4 @@
 import 'package:calculators/calculator_selector.dart';
-import 'package:calculators/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
