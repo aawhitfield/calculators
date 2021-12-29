@@ -5,21 +5,16 @@ import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/fix_flip_selling_costs.dart';
 import 'package:calculators/models/income.dart';
 import 'package:calculators/models/options.dart';
-import 'package:calculators/models/renovations.dart';
 import 'package:calculators/models/seller_financing_type.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'models/property.dart';
+import 'models/brrrr.dart';
 import 'models/refinance.dart';
 
 final brrrrProvider = ChangeNotifierProvider<BRRRR>((ref) => BRRRR(
       address: '',//Address(street: '', line2: '', city: '', state: '', zip: ''),
       listPrice: 0,
     ));
-
-final renovationsProvider = ChangeNotifierProvider<Renovation>(
-  (ref) => Renovation(),
-);
 
 final incomeProvider = ChangeNotifierProvider<Income>(
   (ref) => Income(),
@@ -68,7 +63,6 @@ void resetAllData(WidgetRef ref) {
   ref.read(optionsProvider).reset();
   ref.read(brrrrProvider).reset();
   ref.read(refinanceProvider).reset();
-  ref.read(renovationsProvider).reset();
   ref.read(sellerFinanceProvider).reset();
   ref.read(ffSellingCostsProvider).reset();
 }

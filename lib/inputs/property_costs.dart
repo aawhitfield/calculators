@@ -31,8 +31,8 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
   void initState() {
     listPriceController.text = kCurrencyFormat.format(ref.read(brrrrProvider)
         .listPrice).toString();
-    renovationsController.text = kCurrencyFormat.format(ref.read(renovationsProvider)
-        .total).toString();
+    renovationsController.text = kCurrencyFormat.format(ref.read(brrrrProvider)
+        .totalRenovations).toString();
     double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
     if (afterRepairValue != 0) {
       afterRepairController.text = kCurrencyFormat.format(afterRepairValue);
@@ -94,7 +94,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   newTotal = newTotal.replaceAll(',', '');
                   double? total = double.tryParse(newTotal);
                   if(total != null) {
-                    ref.read(renovationsProvider).updateTotal(total);
+                    ref.read(brrrrProvider).updateTotalRenovations(total);
                   }
                 },
             ),

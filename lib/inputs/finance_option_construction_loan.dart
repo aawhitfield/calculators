@@ -46,10 +46,10 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
   Widget build(BuildContext context) {
     FinancingType value = ref.watch(financeProvider).financingType;
 
-    double loanAmount = ref.watch(renovationsProvider).total *
+    double loanAmount = ref.watch(brrrrProvider).totalRenovations *
         ref.watch(financeConstructionProvider).loanPercentage;
 
-    double downPaymentAmount = ref.watch(renovationsProvider).total -
+    double downPaymentAmount = ref.watch(brrrrProvider).totalRenovations -
         loanAmount;
 
     double monthlyPayment = ref.watch(financeConstructionProvider).calculateMonthlyPaymentInterestOnly(
@@ -90,7 +90,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                 if (newValue != null) {
                   double loanPercentage = newValue / 100;
                   ref.read(financeConstructionProvider).updateLoanPercentage(loanPercentage);
-                  double totalConstruction = ref.read(renovationsProvider).total;
+                  double totalConstruction = ref.read(brrrrProvider).totalRenovations;
                   double loanAmount = totalConstruction * loanPercentage;
 
                   ref.read(financeConstructionProvider).updateLoanAmount(loanAmount);

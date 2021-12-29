@@ -42,83 +42,83 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
   @override
   void initState() {
-    double foundation = ref.read(renovationsProvider).foundation;
+    double foundation = ref.read(brrrrProvider).foundation;
     if (foundation != 0) {
       foundationController.text = kCurrencyFormat.format(foundation);
     }
-    double roof = ref.read(renovationsProvider).roof;
+    double roof = ref.read(brrrrProvider).roof;
     if (roof != 0) {
       roofController.text = kCurrencyFormat.format(roof);
     }
-    double airConditioner = ref.read(renovationsProvider).airConditioner;
+    double airConditioner = ref.read(brrrrProvider).airConditioner;
     if (airConditioner != 0) {
       airConditionerController.text = kCurrencyFormat.format(airConditioner);
     }
-    double painting = ref.read(renovationsProvider).paintingPatching;
+    double painting = ref.read(brrrrProvider).paintingPatching;
     if (painting != 0) {
       paintingController.text = kCurrencyFormat.format(painting);
     }
-    double kitchen = ref.read(renovationsProvider).kitchen;
+    double kitchen = ref.read(brrrrProvider).kitchen;
     if (kitchen != 0) {
       kitchenController.text = kCurrencyFormat.format(kitchen);
     }
-    double windows = ref.read(renovationsProvider).windows;
+    double windows = ref.read(brrrrProvider).windows;
     if (windows != 0) {
       windowsController.text = kCurrencyFormat.format(windows);
     }
-    double plumbing = ref.read(renovationsProvider).plumbing;
+    double plumbing = ref.read(brrrrProvider).plumbing;
     if (plumbing != 0) {
       plumbingController.text = kCurrencyFormat.format(plumbing);
     }
-    double flooring = ref.read(renovationsProvider).flooring;
+    double flooring = ref.read(brrrrProvider).flooring;
     if (flooring != 0) {
       flooringController.text = kCurrencyFormat.format(flooring);
     }
-    double bathrooms = ref.read(renovationsProvider).bathrooms;
+    double bathrooms = ref.read(brrrrProvider).bathrooms;
     if (bathrooms != 0) {
       bathroomsController.text = kCurrencyFormat.format(bathrooms);
     }
-    double appliances = ref.read(renovationsProvider).appliances;
+    double appliances = ref.read(brrrrProvider).appliances;
     if (appliances != 0) {
       appliancesController.text = kCurrencyFormat.format(appliances);
     }
-    double electrical = ref.read(renovationsProvider).electrical;
+    double electrical = ref.read(brrrrProvider).electrical;
     if (electrical != 0) {
       electricalController.text = kCurrencyFormat.format(electrical);
     }
-    double yard = ref.read(renovationsProvider).yard;
+    double yard = ref.read(brrrrProvider).yard;
     if (yard != 0) {
       yardController.text = kCurrencyFormat.format(yard);
     }
-    double cleaning = ref.read(renovationsProvider).cleaning;
+    double cleaning = ref.read(brrrrProvider).cleaning;
     if (cleaning != 0) {
       cleaningController.text = kCurrencyFormat.format(cleaning);
     }
-    double baseboards = ref.read(renovationsProvider).baseboards;
+    double baseboards = ref.read(brrrrProvider).baseboards;
     if (baseboards != 0) {
       baseboardsController.text = kCurrencyFormat.format(baseboards);
     }
-    double exterior = ref.read(renovationsProvider).exterior;
+    double exterior = ref.read(brrrrProvider).exterior;
     if (exterior != 0) {
       exteriorController.text = kCurrencyFormat.format(exterior);
     }
-    double demo = ref.read(renovationsProvider).demo;
+    double demo = ref.read(brrrrProvider).demo;
     if (demo != 0) {
       demoController.text = kCurrencyFormat.format(demo);
     }
-    double elevators = ref.read(renovationsProvider).elevators;
+    double elevators = ref.read(brrrrProvider).elevators;
     if (elevators != 0) {
       elevatorsController.text = kCurrencyFormat.format(elevators);
     }
-    double build28 = ref.read(renovationsProvider).build28Units;
+    double build28 = ref.read(brrrrProvider).build28Units;
     if (build28 != 0) {
       build28Controller.text = kCurrencyFormat.format(build28);
     }
-    double other = ref.read(renovationsProvider).other;
+    double other = ref.read(brrrrProvider).otherRenovations;
     if (other != 0) {
       otherController.text = kCurrencyFormat.format(other);
     }
-    double total = ref.read(renovationsProvider).total;
+    double total = ref.read(brrrrProvider).totalRenovations;
     if (total != 0) {
       totalController.text = kCurrencyFormat.format(total);
     }
@@ -128,8 +128,8 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    double tenPercent = ref.watch(renovationsProvider).tenPercentExtra;
-    double total = ref.watch(renovationsProvider).total;
+    double tenPercent = ref.watch(brrrrProvider).tenPercentExtra;
+    double total = ref.watch(brrrrProvider).totalRenovations;
 
     String tenPercentString = kCurrencyFormat.format(tenPercent);
     String totalString = kCurrencyFormat.format(total);
@@ -140,7 +140,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
         subheadText: 'How much will it take to renovate the property?',
         onSubmit: () {
           if (!enterTotal) {
-            ref.read(renovationsProvider).calculateTotal();
+            ref.read(brrrrProvider).calculateTotalRenovations();
           }
           Get.to(() => const PropertyCosts());
         },
@@ -156,7 +156,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       newTotal = newTotal.replaceAll(',', '');
                       double? total = double.tryParse(newTotal);
                       if (total != null) {
-                        ref.read(renovationsProvider).updateTotal(total);
+                        ref.read(brrrrProvider).updateTotalRenovations(total);
                       }
                     },
                   ),
@@ -196,7 +196,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? foundation = double.tryParse(newFoundation);
                       if (foundation != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateFoundation(foundation);
                       }
                     },
@@ -208,7 +208,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       newRoof = newRoof.replaceAll(',', '');
                       double? roof = double.tryParse(newRoof);
                       if (roof != null) {
-                        ref.read(renovationsProvider).updateRoof(roof);
+                        ref.read(brrrrProvider).updateRoof(roof);
                       }
                     },
                   ),
@@ -221,7 +221,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                           double.tryParse(newAirConditioner);
                       if (airConditioner != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateAirConditioner(airConditioner);
                       }
                     },
@@ -235,7 +235,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? painting = double.tryParse(newPainting);
                       if (painting != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updatePaintingPatching(painting);
                       }
                     },
@@ -248,7 +248,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? kitchen = double.tryParse(newKitchen);
                       if (kitchen != null) {
-                        ref.read(renovationsProvider).updateKitchen(kitchen);
+                        ref.read(brrrrProvider).updateKitchen(kitchen);
                       }
                     },
                   ),
@@ -260,7 +260,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? windows = double.tryParse(newWindows);
                       if (windows != null) {
-                        ref.read(renovationsProvider).updateWindows(windows);
+                        ref.read(brrrrProvider).updateWindows(windows);
                       }
                     },
                   ),
@@ -272,7 +272,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? plumbing = double.tryParse(newPlumbing);
                       if (plumbing != null) {
-                        ref.read(renovationsProvider).updatePlumbing(plumbing);
+                        ref.read(brrrrProvider).updatePlumbing(plumbing);
                       }
                     },
                   ),
@@ -284,7 +284,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? flooring = double.tryParse(newFlooring);
                       if (flooring != null) {
-                        ref.read(renovationsProvider).updateFlooring(flooring);
+                        ref.read(brrrrProvider).updateFlooring(flooring);
                       }
                     },
                   ),
@@ -297,7 +297,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? bathrooms = double.tryParse(newBathrooms);
                       if (bathrooms != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateBathrooms(bathrooms);
                       }
                     },
@@ -311,7 +311,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? appliances = double.tryParse(newAppliances);
                       if (appliances != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateAppliances(appliances);
                       }
                     },
@@ -325,7 +325,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? electrical = double.tryParse(newElectrical);
                       if (electrical != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateElectrical(electrical);
                       }
                     },
@@ -338,7 +338,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? yard = double.tryParse(newYard);
                       if (yard != null) {
-                        ref.read(renovationsProvider).updateYard(yard);
+                        ref.read(brrrrProvider).updateYard(yard);
                       }
                     },
                   ),
@@ -350,7 +350,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? cleaning = double.tryParse(newCleaning);
                       if (cleaning != null) {
-                        ref.read(renovationsProvider).updateCleaning(cleaning);
+                        ref.read(brrrrProvider).updateCleaning(cleaning);
                       }
                     },
                   ),
@@ -363,7 +363,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? baseboards = double.tryParse(newBaseboards);
                       if (baseboards != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateBaseboards(baseboards);
                       }
                     },
@@ -376,7 +376,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? exterior = double.tryParse(newExterior);
                       if (exterior != null) {
-                        ref.read(renovationsProvider).updateExterior(exterior);
+                        ref.read(brrrrProvider).updateExterior(exterior);
                       }
                     },
                   ),
@@ -388,7 +388,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? demo = double.tryParse(newDemo);
                       if (demo != null) {
-                        ref.read(renovationsProvider).updateDemo(demo);
+                        ref.read(brrrrProvider).updateDemo(demo);
                       }
                     },
                   ),
@@ -401,7 +401,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? elevators = double.tryParse(newElevators);
                       if (elevators != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateElevators(elevators);
                       }
                     },
@@ -415,7 +415,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       double? buildUnits = double.tryParse(newBuildUnits);
                       if (buildUnits != null) {
                         ref
-                            .read(renovationsProvider)
+                            .read(brrrrProvider)
                             .updateBuildUnits(buildUnits);
                       }
                     },
@@ -428,7 +428,7 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
                       double? other = double.tryParse(newOther);
                       if (other != null) {
-                        ref.read(renovationsProvider).updateOther(other);
+                        ref.read(brrrrProvider).updateOtherRenovations(other);
                       }
                     },
                   ),
