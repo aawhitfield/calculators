@@ -116,7 +116,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 }
             ),
             IntegerTextField(
-                labelText: 'Units',
+                labelText: 'Number of Units',
                 controller: unitsController,
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
@@ -125,7 +125,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   }
                 }),
             IntegerTextField(
-                labelText: 'Investors',
+                labelText: 'Number of Investors',
                 controller: investorsController,
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
