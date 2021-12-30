@@ -1,11 +1,9 @@
 import 'package:calculators/models/calculator.dart';
-import 'package:calculators/models/db/expenses_db.dart';
 import 'package:calculators/models/db/ff_selling_cost_db.dart';
 import 'package:calculators/models/db/finance_construction_db.dart';
 import 'package:calculators/models/db/finance_db.dart';
 import 'package:calculators/models/db/finance_down_payment_db.dart';
 import 'package:calculators/models/db/refinance_db.dart';
-import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_option_construction_provider.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/fix_flip_selling_costs.dart';
@@ -19,7 +17,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseUtils {
   static void deletePlaceByID(int id) {
-    ExpensesDatabase.instance.delete(id);
     FinanceDatabase.instance.delete(id);
     FinanceConstructionDatabase.instance.delete(id);
     SellerFinanceDatabase.instance.delete(id);
@@ -43,7 +40,7 @@ class DatabaseUtils {
     // ref.read(brrrrProvider).updateProperty(savedProperty);
     // ref.read(renovationsProvider).updateRenovation(savedRenovation);
     // ref.read(incomeProvider).updateIncome(savedIncome);
-    // ref.read(expensesProvider).updateExpenses(savedExpenses);
+    // ref.read(brrrrProvider).updateExpenses(savedExpenses);
     // ref.read(financeProvider).updateFinanceOptionData(savedFinanceOptions);
     // ref.read(financeConstructionProvider).updateFinanceOptionConstruction(savedFinanceConstruction);
     // ref.read(optionsProvider).updateOptions(savedOptions);
@@ -57,7 +54,6 @@ class DatabaseUtils {
   static Future<void> saveDataToDatabase(WidgetRef ref, {String uid = '', String? docID}) async {
     // create property
     BRRRR property = ref.read(brrrrProvider);
-    Expenses expenses = ref.read(expensesProvider);
     FinanceOptionData financeOptionData = ref.read(financeProvider);
     FinanceOptionConstructionProvider financeConstructionData = ref.read(financeConstructionProvider);
     Options optionsData = ref.read(optionsProvider);
@@ -78,7 +74,6 @@ class DatabaseUtils {
 
     Map<String, dynamic> data = {
       ...property.toJson(),
-      ...expenses.toJson(),
       ...financeOptionData.toJson(),
       ...financeConstructionData.toJson(),
       ...optionsData.toJson(),

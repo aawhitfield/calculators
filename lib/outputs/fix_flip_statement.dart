@@ -23,7 +23,7 @@ class FixFlipStatement extends ConsumerWidget {
         ref.read(financeConstructionProvider).monthlyPayment;
     double totalDebtService = monthsToRehab * totalDebtServicePayments;
 
-    double totalMonthlyExpenses = ref.read(expensesProvider).totalMonthlyExpenses;
+    double totalMonthlyExpenses = ref.read(brrrrProvider).totalMonthlyExpenses;
     double totalHoldingExpenses = monthsToRehab * totalMonthlyExpenses;
 
     double totalMoneyToHold = totalDebtService + totalHoldingExpenses;

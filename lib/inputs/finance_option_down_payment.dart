@@ -85,7 +85,7 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionDownPaym
 
             int numberOfMonthsToRehabRent =
                 ref.read(brrrrProvider).monthsToRehabRent;
-            double taxes = ref.watch(expensesProvider).taxes;
+            double taxes = ref.watch(brrrrProvider).taxesYearly;
             if (numberOfMonthsToRehabRent != 0) {
               taxes = taxes / numberOfMonthsToRehabRent;
             }

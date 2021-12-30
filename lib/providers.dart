@@ -1,5 +1,4 @@
 import 'package:calculators/models/calculator.dart';
-import 'package:calculators/models/expenses.dart';
 import 'package:calculators/models/financing_option_construction_provider.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/fix_flip_selling_costs.dart';
@@ -15,7 +14,6 @@ final brrrrProvider = ChangeNotifierProvider<BRRRR>((ref) => BRRRR(
       listPrice: 0,
     ));
 
-
 final financeProvider = ChangeNotifierProvider<FinanceOptionData>(
   (ref) => FinanceOptionData(),
 );
@@ -26,10 +24,6 @@ final sellerFinanceProvider = ChangeNotifierProvider<SellerFinanceOptionData>(
 
 final refinanceProvider = ChangeNotifierProvider<RefinanceOptions>(
       (ref) => RefinanceOptions(),
-);
-
-final expensesProvider = ChangeNotifierProvider<Expenses>(
-  (ref) => Expenses(),
 );
 
 final financeConstructionProvider =
@@ -52,11 +46,10 @@ final ffSellingCostsProvider = ChangeNotifierProvider<FixFlipSellingCosts>(
 );
 
 void resetAllData(WidgetRef ref) {
-  ref.read(expensesProvider).reset();
+  ref.read(brrrrProvider).reset();
   ref.read(financeConstructionProvider).reset();
   ref.read(financeProvider).reset();
   ref.read(optionsProvider).reset();
-  ref.read(brrrrProvider).reset();
   ref.read(refinanceProvider).reset();
   ref.read(sellerFinanceProvider).reset();
   ref.read(ffSellingCostsProvider).reset();

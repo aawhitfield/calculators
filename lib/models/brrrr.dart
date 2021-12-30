@@ -10,6 +10,8 @@ class BRRRRFields {
     flooring, bathrooms, appliances, electrical, yard, cleaning, baseboards, exterior,
     demo, elevators, build28, otherRenovations, tenPercent, totalRenovations,
     rent, otherIncome, afterRepairRentPerMonth, afterRepairOtherIncome,
+    taxes, insurance, propertyManagementPercentage, vacancyPercentage, maintenancePercentage,
+    otherExpensesPercentage
   ];
 
   static const String id = 'id';
@@ -47,6 +49,12 @@ class BRRRRFields {
   static const String otherIncome = 'otherIncome';
   static const String afterRepairRentPerMonth = 'afterRepairRentPerMonth';
   static const String afterRepairOtherIncome = 'afterRepairOtherIncome';
+  static const String taxes = 'taxes';
+  static const String insurance = 'insurance';
+  static const String propertyManagementPercentage = 'propertyManagementPercentage';
+  static const String vacancyPercentage = 'vacancyPercentage';
+  static const String maintenancePercentage = 'maintenancePercentage';
+  static const String otherExpensesPercentage = 'otherExpensesPercentage';
 }
 
 class BRRRR extends ChangeNotifier{
@@ -88,6 +96,26 @@ class BRRRR extends ChangeNotifier{
   double afterRepairOtherIncome;
   double totalIncomeAfterRepair;
   double yearlyIncomeAfterRepair;
+  double taxesYearly;
+  double taxesMonthly;
+  double insuranceYearly;
+  double insuranceMonthly;
+  double propertyManagementPercentage;
+  double propertyManagementMonthly;
+  double vacancyPercentage;
+  double vacancyMonthly;
+  double maintenancePercentage;
+  double maintenanceMonthly;
+  double otherExpensesPercentage;
+  double otherExpensesMonthly;
+  double totalMonthlyExpenses;
+  double totalAnnualExpenses;
+  double noiMonthly;
+  double noiAnnual;
+  double afterRepairTotalExpensesMonthly;
+  double afterRepairTotalExpensesYearly;
+  double afterRepairNOIMonthly;
+  double afterRepairNOIYearly;
 
   BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
@@ -101,6 +129,13 @@ class BRRRR extends ChangeNotifier{
     this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
     this.yearlyIncome = 0, this.afterRepairRentPerMonth = 0, this.afterRepairOtherIncome = 0,
     this.totalIncomeAfterRepair = 0, this.yearlyIncomeAfterRepair = 0,
+    this.taxesYearly = 0, this.taxesMonthly = 0, this.propertyManagementPercentage = 0,
+    this.propertyManagementMonthly = 0, this.vacancyPercentage = 0, this.vacancyMonthly = 0,
+    this.maintenancePercentage = 0, this.maintenanceMonthly = 0, this.otherExpensesPercentage = 0,
+    this.otherExpensesMonthly = 0, this.totalMonthlyExpenses = 0, this.totalAnnualExpenses = 0,
+    this.noiMonthly = 0, this.noiAnnual = 0, this.insuranceMonthly = 0, this.insuranceYearly = 0,
+    this.afterRepairNOIMonthly = 0, this.afterRepairNOIYearly = 0, this.afterRepairTotalExpensesMonthly = 0, 
+    this.afterRepairTotalExpensesYearly = 0,
   });
   
 
@@ -135,6 +170,16 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.otherRenovations: otherRenovations,
     BRRRRFields.tenPercent: tenPercentExtra,
     BRRRRFields.totalRenovations: totalRenovations,
+    BRRRRFields.rent: rent,
+    BRRRRFields.otherIncome: otherIncome,
+    BRRRRFields.afterRepairRentPerMonth: afterRepairRentPerMonth,
+    BRRRRFields.afterRepairOtherIncome: afterRepairOtherIncome,
+    BRRRRFields.taxes: taxesYearly,
+    BRRRRFields.insurance: insuranceYearly,
+    BRRRRFields.propertyManagementPercentage: propertyManagementPercentage,
+    BRRRRFields.vacancyPercentage: vacancyPercentage,
+    BRRRRFields.maintenancePercentage: maintenancePercentage,
+    BRRRRFields.otherExpensesPercentage: otherExpensesPercentage,
   };
 
   static BRRRR fromJson(Map<String, Object?> json) => BRRRR(
@@ -172,6 +217,12 @@ class BRRRR extends ChangeNotifier{
       otherIncome:  json[BRRRRFields.otherIncome] as double,
       afterRepairRentPerMonth:  json[BRRRRFields.afterRepairRentPerMonth] as double,
       afterRepairOtherIncome:  json[BRRRRFields.afterRepairOtherIncome] as double,
+      taxesYearly: json[BRRRRFields.taxes] as double,
+      insuranceYearly: json[BRRRRFields.insurance] as double,
+      propertyManagementPercentage: json[BRRRRFields.propertyManagementPercentage] as double,
+      vacancyPercentage: json[BRRRRFields.vacancyPercentage] as double,
+      maintenancePercentage: json[BRRRRFields.maintenancePercentage] as double,
+      otherExpensesPercentage:  json[BRRRRFields.otherExpensesPercentage] as double,
   );
 
   void updateProperty(BRRRR newProperty) {
@@ -458,6 +509,197 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateExpenses(BRRRR newExpense) {
+    taxesYearly = newExpense.taxesYearly;
+    propertyManagementPercentage = newExpense.propertyManagementPercentage;
+    vacancyPercentage = newExpense.vacancyPercentage;
+    maintenancePercentage = newExpense.maintenancePercentage;
+    otherExpensesPercentage = newExpense.otherExpensesPercentage;
+    notifyListeners();
+  }
+
+  void updateTaxes(double newValue) {
+    taxesYearly = newValue;
+    taxesMonthly = taxesYearly / 12;
+    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateInsurance(double newValue) {
+    insuranceYearly = newValue;
+    insuranceMonthly = insuranceYearly / 12;
+    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updatePropertyManagement(double newValue) {
+    propertyManagementPercentage = newValue;
+    propertyManagementMonthly = propertyManagementPercentage * rent;
+    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateVacancy(double newValue) {
+    vacancyPercentage = newValue;
+    vacancyMonthly = vacancyPercentage * rent;
+    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateMaintenance(double newValue) {
+    maintenancePercentage = newValue;
+    maintenanceMonthly = maintenancePercentage * rent;
+    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateOther(double newValue) {
+    otherExpensesPercentage = newValue;
+    otherExpensesMonthly = otherExpensesPercentage * rent;
+    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateTotalMonthlyExpenses(double newValue) {
+    totalMonthlyExpenses = newValue;
+    notifyListeners();
+  }
+
+  void updateTotalAnnualExpenses(double newValue) {
+    totalAnnualExpenses = newValue;
+    notifyListeners();
+  }
+
+  void updateNOIMonthly(double newValue) {
+    noiMonthly = newValue;
+    notifyListeners();
+  }
+
+  void updateNOIAnnual(double newValue) {
+    noiAnnual = newValue;
+    notifyListeners();
+  }
+
+  double calculateMonthlyTaxes() {
+    taxesMonthly = taxesYearly / 12;
+    notifyListeners();
+    return taxesMonthly;
+  }
+
+  double calculateMonthlyInsurance() {
+    insuranceMonthly = insuranceYearly / 12;
+    notifyListeners();
+    return insuranceMonthly;
+  }
+
+  double calculatePropertyManagement() {
+    propertyManagementMonthly = propertyManagementPercentage * rent;
+    notifyListeners();
+    return propertyManagementMonthly;
+  }
+
+  double calculateVacancy() {
+    vacancyMonthly = vacancyPercentage * rent;
+    notifyListeners();
+    return vacancyMonthly;
+  }
+
+  double calculateMaintenance() {
+    maintenanceMonthly = maintenancePercentage * rent;
+    notifyListeners();
+    return maintenanceMonthly;
+  }
+
+  double calculateOtherExpenses() {
+    otherExpensesMonthly = otherExpensesPercentage * rent;
+    notifyListeners();
+    return otherExpensesMonthly;
+  }
+
+  double calculateTotalExpensesMonthly() {
+    totalMonthlyExpenses = taxesMonthly + insuranceMonthly +
+        propertyManagementMonthly + vacancyMonthly + maintenanceMonthly
+        + otherExpensesMonthly;
+    totalAnnualExpenses = totalMonthlyExpenses * 12;
+    updateTotalAnnualExpenses(totalAnnualExpenses);
+    return totalMonthlyExpenses;
+  }
+
+  double calculateTotalExpensesYearly() {
+    totalAnnualExpenses = totalMonthlyExpenses * 12;
+    notifyListeners();
+    return totalAnnualExpenses;
+  }
+
+  double calculateTotalAnnualExpenses() {
+    totalAnnualExpenses = totalMonthlyExpenses * 12;
+    return totalAnnualExpenses;
+  }
+
+  double calculateNOIMonthly() {
+    noiMonthly = totalIncome - totalMonthlyExpenses;
+    return noiMonthly;
+  }
+
+  double calculateNOIAnnually() {
+    noiAnnual = totalIncome * 12 - totalAnnualExpenses;
+    return noiAnnual;
+  }
+
+  double calculateAfterRepairTotalExpensesMonthly() {
+    afterRepairTotalExpensesMonthly = taxesMonthly + insuranceMonthly
+        + propertyManagementMonthly + vacancyMonthly + maintenanceMonthly
+        + otherExpensesMonthly;
+    notifyListeners();
+    return afterRepairTotalExpensesMonthly;
+  }
+
+  double calculateAfterRepairTotalExpensesYearly() {
+    afterRepairTotalExpensesYearly = afterRepairTotalExpensesMonthly * 12;
+    notifyListeners();
+    return afterRepairTotalExpensesYearly;
+  }
+
+  double calculateAfterRepairNOIMonthly() {
+    afterRepairNOIMonthly = afterRepairRentPerMonth - afterRepairTotalExpensesMonthly;
+    notifyListeners();
+    return afterRepairNOIMonthly;
+  }
+
+  double calculateAfterRepairNOIYearly() {
+    afterRepairNOIYearly = yearlyIncomeAfterRepair - afterRepairTotalExpensesYearly;
+    notifyListeners();
+    return afterRepairTotalExpensesYearly;
+  }
+
+
+  void calculateAllExpenses() {
+    calculateMonthlyTaxes();
+    calculateMonthlyInsurance();
+    calculatePropertyManagement();
+    calculateVacancy();
+    calculateMaintenance();
+    calculateOtherExpenses();
+    calculateTotalExpensesMonthly();
+    calculateTotalExpensesYearly();
+    calculateNOIMonthly();
+    calculateNOIAnnually();
+    calculateAfterRepairTotalExpensesMonthly();
+    calculateAfterRepairTotalExpensesYearly();
+    calculateAfterRepairNOIMonthly();
+    calculateAfterRepairNOIYearly();
+  }
+
+  void calculateAfterRepairExpenses() {
+    afterRepairTotalExpensesMonthly = taxesMonthly + insuranceMonthly
+        + propertyManagementMonthly + vacancyMonthly + maintenanceMonthly
+        + otherExpensesMonthly;
+    afterRepairTotalExpensesYearly = afterRepairTotalExpensesMonthly * 12;
+    afterRepairNOIMonthly = afterRepairRentPerMonth - afterRepairTotalExpensesMonthly;
+    afterRepairNOIYearly = yearlyIncome - afterRepairTotalExpensesYearly;
+    notifyListeners();
+  }
+
   void reset() {
     address = '';
     listPrice = 0;
@@ -474,6 +716,13 @@ class BRRRR extends ChangeNotifier{
     = otherRenovations = totalRenovations = tenPercentExtra = 0;
     rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
       = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
+    taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly =
+        propertyManagementPercentage = propertyManagementMonthly = vacancyPercentage
+    = vacancyMonthly = maintenancePercentage = maintenanceMonthly = otherExpensesPercentage
+    = otherExpensesMonthly = totalMonthlyExpenses = totalAnnualExpenses = noiMonthly = noiAnnual = 0;
+    afterRepairTotalExpensesMonthly = afterRepairTotalExpensesYearly =
+      afterRepairNOIMonthly = afterRepairNOIYearly = 0;
+
     notifyListeners();
   }
 }
