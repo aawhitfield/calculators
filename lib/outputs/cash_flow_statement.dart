@@ -11,7 +11,7 @@ class CashFlowStatement extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double totalMonthlyIncome = ref.watch(incomeProvider).total;
+    double totalMonthlyIncome = ref.watch(brrrrProvider).totalIncome;
     double totalAnnualIncome = totalMonthlyIncome * 12;
     double totalMonthlyExpenses =
         ref.watch(expensesProvider).totalMonthlyExpenses;

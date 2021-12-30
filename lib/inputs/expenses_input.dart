@@ -148,7 +148,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
                 .format(ref
                     .watch(expensesProvider)
                     .calculateTotalExpensesMonthly(
-                        ref.watch(incomeProvider).total))
+                        ref.watch(brrrrProvider).totalIncome))
                 .toString(),
             subtitle: 'Monthly',
           ),
@@ -169,7 +169,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
                           .format(ref
                               .watch(expensesProvider)
                               .calculateNOIMonthly(
-                                  ref.watch(incomeProvider).total))
+                                  ref.watch(brrrrProvider).totalIncome))
                           .toString(),
                       subtitle: 'Monthly',
                     ),
@@ -179,7 +179,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
                           .format(ref
                               .watch(expensesProvider)
                               .calculateNOIAnnually(
-                                  ref.watch(incomeProvider).total))
+                                  ref.watch(brrrrProvider).totalIncome))
                           .toString(),
                       subtitle: 'Annually',
                     ),

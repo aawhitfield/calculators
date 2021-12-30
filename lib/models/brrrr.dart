@@ -9,6 +9,7 @@ class BRRRRFields {
     foundation, roof, airConditioner, painting, kitchen, windows, plumbing,
     flooring, bathrooms, appliances, electrical, yard, cleaning, baseboards, exterior,
     demo, elevators, build28, otherRenovations, tenPercent, totalRenovations,
+    rent, otherIncome, afterRepairRentPerMonth, afterRepairOtherIncome,
   ];
 
   static const String id = 'id';
@@ -42,6 +43,10 @@ class BRRRRFields {
   static const String otherRenovations = 'otherRenovations';
   static const String tenPercent = 'tenPercent';
   static const String totalRenovations = 'totalRenovations';
+  static const String rent = 'rent';
+  static const String otherIncome = 'otherIncome';
+  static const String afterRepairRentPerMonth = 'afterRepairRentPerMonth';
+  static const String afterRepairOtherIncome = 'afterRepairOtherIncome';
 }
 
 class BRRRR extends ChangeNotifier{
@@ -75,6 +80,14 @@ class BRRRR extends ChangeNotifier{
   double otherRenovations;
   double totalRenovations;
   double tenPercentExtra;
+  double rent;
+  double otherIncome;
+  double totalIncome;
+  double yearlyIncome;
+  double afterRepairRentPerMonth;
+  double afterRepairOtherIncome;
+  double totalIncomeAfterRepair;
+  double yearlyIncomeAfterRepair;
 
   BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
@@ -85,6 +98,9 @@ class BRRRR extends ChangeNotifier{
     this.appliances = 0, this.electrical = 0, this.yard = 0, this.cleaning = 0,
     this.baseboards = 0, this.exterior = 0, this.demo = 0, this.elevators = 0,
     this.build28Units = 0, this.otherRenovations = 0, this.totalRenovations = 0, this.tenPercentExtra = 0,
+    this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
+    this.yearlyIncome = 0, this.afterRepairRentPerMonth = 0, this.afterRepairOtherIncome = 0,
+    this.totalIncomeAfterRepair = 0, this.yearlyIncomeAfterRepair = 0,
   });
   
 
@@ -152,6 +168,10 @@ class BRRRR extends ChangeNotifier{
       otherRenovations: json[BRRRRFields.otherRenovations] as double,
       tenPercentExtra: json[BRRRRFields.tenPercent] as double,
       totalRenovations: json[BRRRRFields.totalRenovations] as double,
+      rent: json[BRRRRFields.rent] as double,
+      otherIncome:  json[BRRRRFields.otherIncome] as double,
+      afterRepairRentPerMonth:  json[BRRRRFields.afterRepairRentPerMonth] as double,
+      afterRepairOtherIncome:  json[BRRRRFields.afterRepairOtherIncome] as double,
   );
 
   void updateProperty(BRRRR newProperty) {
@@ -390,6 +410,54 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateIncome(BRRRR newIncome) {
+    rent = newIncome.rent;
+    otherIncome = newIncome.otherIncome;
+    afterRepairRentPerMonth = newIncome.afterRepairRentPerMonth;
+    afterRepairOtherIncome = newIncome.afterRepairOtherIncome;
+    notifyListeners();
+  }
+
+  void updateRent(double newValue) {
+    rent = newValue;
+    notifyListeners();
+  }
+
+  void updateOtherIncome(double newValue) {
+    otherIncome = newValue;
+    notifyListeners();
+  }
+
+  void updateRepairRentPerMonth(double newValue) {
+    afterRepairRentPerMonth = newValue;
+    notifyListeners();
+  }
+
+  void updateAfterRepairOtherIncome(double newValue) {
+    afterRepairOtherIncome = newValue;
+    notifyListeners();
+  }
+
+  void calculateTotalIncome() {
+    totalIncome = rent + otherIncome;
+    notifyListeners();
+  }
+
+  void calculateYearlyIncome() {
+    yearlyIncome = totalIncome * 12;
+    notifyListeners();
+  }
+
+  void calculateTotalIncomeAfterRepair() {
+    totalIncomeAfterRepair = afterRepairRentPerMonth + afterRepairOtherIncome;
+    notifyListeners();
+  }
+
+  void calculateYearlyIncomeAfterRepair() {
+    yearlyIncomeAfterRepair = totalIncomeAfterRepair * 12;
+    notifyListeners();
+  }
+
   void reset() {
     address = '';
     listPrice = 0;
@@ -404,6 +472,8 @@ class BRRRR extends ChangeNotifier{
     = plumbing = flooring = bathrooms = appliances = electrical = yard
     = cleaning = baseboards = exterior = demo = elevators = build28Units
     = otherRenovations = totalRenovations = tenPercentExtra = 0;
+    rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
+      = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
     notifyListeners();
   }
 }
