@@ -44,7 +44,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
 
   @override
   Widget build(BuildContext context) {
-    FinancingType value = ref.watch(financeProvider).financingType;
+    FinancingType value = ref.watch(brrrrProvider).financingType;
 
     double loanAmount = ref.watch(brrrrProvider).totalRenovations *
         ref.watch(financeConstructionProvider).loanPercentage;

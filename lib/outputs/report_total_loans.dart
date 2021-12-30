@@ -12,12 +12,12 @@ class ReportTotalLoans extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double totalLoans = ref.watch(financeProvider).loanAmount +
+    double totalLoans = ref.watch(brrrrProvider).loanAmount +
         ref.watch(financeConstructionProvider).loanAmount +
         ref.watch(sellerFinanceProvider).loanAmount;
 
     double totalDebtServicePayments =
-        ref.watch(financeProvider).monthlyPayment +
+        ref.watch(brrrrProvider).monthlyPayment +
             ref.watch(financeConstructionProvider).monthlyPayment +
             ref.watch(sellerFinanceProvider).monthlyPayment;
 

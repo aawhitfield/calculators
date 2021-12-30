@@ -14,11 +14,11 @@ class FixFlipStatement extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
 
     double purchasePrice = ref.read(brrrrProvider).purchasePrice;
-    double closingCosts = ref.read(financeProvider).closingCosts;
+    double closingCosts = ref.read(brrrrProvider).closingCosts;
     double totalMoneyToBuy = purchasePrice + closingCosts;
 
     int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
-    double totalDebtServicePayments = ref.read(financeProvider).monthlyPayment
+    double totalDebtServicePayments = ref.read(brrrrProvider).monthlyPayment
         + ref.read(sellerFinanceProvider).monthlyPayment +
         ref.read(financeConstructionProvider).monthlyPayment;
     double totalDebtService = monthsToRehab * totalDebtServicePayments;

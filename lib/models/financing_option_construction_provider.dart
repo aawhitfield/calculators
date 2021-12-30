@@ -63,11 +63,11 @@ class FinanceOptionConstructionProvider extends ChangeNotifier {
   };
 
   static FinanceOptionConstructionProvider fromJson(Map<String, Object?> json) => FinanceOptionConstructionProvider(
-    id: json[FinanceFields.id] as int?,
-    financingType: FinancingTypeUtils.getFinancingType(json[FinanceFields.financingType] as String),
-    loanPercentage: json[FinanceFields.loanPercent] as double,
-    interestRate: json[FinanceFields.interestRate] as double,
-    term: json[FinanceFields.term] as int,
+    // id: json[FinanceFields.id] as int?,
+    // financingType: FinancingTypeUtils.getFinancingType(json[FinanceFields.financingType] as String),
+    // loanPercentage: json[FinanceFields.loanPercent] as double,
+    // interestRate: json[FinanceFields.interestRate] as double,
+    // term: json[FinanceFields.term] as int,
   );
 
   void updateFinanceOptionConstruction(FinanceOptionConstructionProvider newFinanceOptionConstructionProvider) {

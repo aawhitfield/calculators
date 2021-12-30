@@ -22,26 +22,26 @@ class FinanceOptions extends ConsumerStatefulWidget {
 }
 
 class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
-  TextEditingController loanPercentController = TextEditingController();
+  TextEditingController downPaymentPercentController = TextEditingController();
   TextEditingController interestRateController = TextEditingController();
   TextEditingController termController = TextEditingController();
   TextEditingController closingCostsController = TextEditingController();
 
   @override
   void initState() {
-    double loanPercent = ref.read(financeProvider).loanPercentage * 100;
+    double loanPercent = ref.read(brrrrProvider).downPaymentPercent * 100;
     if(loanPercent != 0) {
-      loanPercentController.text = kWholeNumber.format(loanPercent);
+      downPaymentPercentController.text = kWholeNumber.format(loanPercent);
     }
-    double interestRate = ref.read(financeProvider).interestRate * 100;
+    double interestRate = ref.read(brrrrProvider).interestRate * 100;
     if(interestRate != 0) {
       interestRateController.text = interestRate.toString();
     }
-    int term = ref.read(financeProvider).term;
+    int term = ref.read(brrrrProvider).term;
     if(term != 0) {
       termController.text = kWholeNumber.format(term);
     }
-    double closingCosts = ref.read(financeProvider).closingCosts;
+    double closingCosts = ref.read(brrrrProvider).closingCosts;
     if (closingCosts != 0) {
       closingCostsController.text = kCurrencyFormat.format(closingCosts);
     }
@@ -50,24 +50,23 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
 
   @override
   Widget build(BuildContext context) {
-    FinancingType value = ref.watch(financeProvider).financingType;
+    FinancingType value = ref.watch(brrrrProvider).financingType;
 
-    double loanAmount = ref.watch(brrrrProvider).purchasePrice *
-        ref.watch(financeProvider).loanPercentage;
+    double loanAmount = ref.watch(brrrrProvider).loanAmount;
 
     double downPaymentAmount = ref.watch(brrrrProvider).purchasePrice -
         loanAmount;
 
-    double monthlyPayment = (ref.watch(financeProvider).paymentType ==
+    double monthlyPayment = (ref.watch(brrrrProvider).paymentType ==
             PaymentType.principalAndInterest)
-        ? ref.watch(financeProvider).calculateMonthlyPayment(
-              rate: ref.watch(financeProvider).interestRate / 12,
-              nper: ref.watch(financeProvider).term * 12,
+        ? ref.watch(brrrrProvider).calculateMonthlyPayment(
+              rate: ref.watch(brrrrProvider).interestRate / 12,
+              nper: ref.watch(brrrrProvider).term * 12,
               pv: -1 * loanAmount,
             )
-        : ref.watch(financeProvider).calculateMonthlyPaymentInterestOnly(
-              rate: ref.watch(financeProvider).interestRate / 12,
-              nper: ref.watch(financeProvider).term,
+        : ref.watch(brrrrProvider).calculateMonthlyPaymentInterestOnly(
+              rate: ref.watch(brrrrProvider).interestRate / 12,
+              nper: ref.watch(brrrrProvider).term,
               pv: -1 * loanAmount,
               per: 1,
             );
@@ -81,10 +80,10 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
       headerText: 'Finance Options',
       subheadText: '',
       onSubmit: () {
-        ref.read(financeProvider).updateMonthlyPayment(monthlyPayment);
-        ref.read(financeProvider).updateDownPayment(downPaymentAmount);
-        ref.read(financeProvider).updateLoanAmount(loanAmount);
-        FinancingType financingType = ref.watch(financeProvider).financingType;
+        ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
+        ref.read(brrrrProvider).updateDownPayment(downPaymentAmount);
+        ref.read(brrrrProvider).updateLoanAmount(loanAmount);
+        FinancingType financingType = ref.watch(brrrrProvider).financingType;
         if (financingType == FinancingType.hardMoneyWithConstruction ||
             financingType == FinancingType.commercialWithConstruction) {
           Get.to(() => const FinanceOptionConstructionLoan());
@@ -115,25 +114,19 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
                   ],
                 ),
           PercentTextField(
-            labelText: 'Loan Percent',
-            controller: loanPercentController,
+            labelText: 'Down Payment Percent',
+            controller: downPaymentPercentController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
               double? newValue = double.tryParse(newPercentage);
               if (newValue != null) {
-                double loanPercentage = newValue / 100;
-                ref.read(financeProvider).updateLoanPercentage(loanPercentage);
-                double purchasePrice = ref.read(brrrrProvider).purchasePrice;
-                double loanAmount = purchasePrice * loanPercentage;
-
-                ref.read(financeProvider).updateLoanAmount(loanAmount);
-
-                double downPayment = purchasePrice - loanAmount;
-                ref.read(financeProvider).updateDownPayment(downPayment);
+                double downPaymentPercentage = newValue / 100;
+                ref.read(brrrrProvider).updateDownPaymentPercentage(downPaymentPercentage);
               }
               else {
-                ref.read(financeProvider).updateLoanPercentage(0);
+                ref.read(brrrrProvider).updateDownPaymentPercentage(0.0);
               }
+              ref.read(brrrrProvider).calculateAllFinanceOptions();
             },
           ),
           MoneyListTile(
@@ -154,15 +147,15 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               double? newValue = double.tryParse(newPercentage);
               if (newValue != null) {
                 double interestRate = newValue / 100;
-                ref.read(financeProvider).updateInterestRate(interestRate);
+                ref.read(brrrrProvider).updateInterestRate(interestRate);
               }
               else {
-                ref.read(financeProvider).updateInterestRate(0);
+                ref.read(brrrrProvider).updateInterestRate(0);
               }
             },
           ),
           IntegerTextField(
-            labelText: 'Term',
+            labelText: 'Term in Years',
             controller: termController,
             leftPadding: 8,
             rightPadding: 8,
@@ -170,10 +163,10 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               newTerm = newTerm.replaceAll(',', '');
               int? newValue = int.tryParse(newTerm);
               if (newValue != null) {
-                ref.read(financeProvider).updateTerm(newValue);
+                ref.read(brrrrProvider).updateTerm(newValue);
               }
               else {
-                ref.read(financeProvider).updateTerm(0);
+                ref.read(brrrrProvider).updateTerm(0);
               }
             },
           ),
@@ -184,32 +177,49 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               newCost = newCost.replaceAll(',', '');
               double? newValue = double.tryParse(newCost);
               if (newValue != null) {
-                ref.read(financeProvider).updateClosingCosts(newValue);
+                ref.read(brrrrProvider).updateClosingCosts(newValue);
               }
               else {
-                ref.read(financeProvider).updateClosingCosts(0);
+                ref.read(brrrrProvider).updateClosingCosts(0);
               }
             },
           ),
           CupertinoSlidingSegmentedControl<PaymentType>(
             thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
-            groupValue: ref.watch(financeProvider).paymentType,
+            groupValue: ref.watch(brrrrProvider).paymentType,
             children: const {
               PaymentType.principalAndInterest: Text('Principal & Interest'),
               PaymentType.interestOnly: Text('Interest Only'),
             },
             onValueChanged: (PaymentType? newValue) =>
-                ref.read(financeProvider).updatePaymentType(newValue!),
+                ref.read(brrrrProvider).updatePaymentType(newValue!),
           ),
           MoneyListTile(
               (MediaQuery.of(context).size.width < 640)
                   ? 'Monthly\nPayment'
                   : 'Monthly Payment',
               monthlyPaymentString),
-          ListTile(
-            title: const Text('Refinance'),
-            trailing: Text(
-              ref.watch(financeProvider).willRefinance ? 'YES' : 'NO',
+          const Divider(),
+          const SizedBox(height: 8),
+          Text('Would you like to refinance this property?', style: Theme.of(context).textTheme.headline6,),
+          Padding(
+            padding: const EdgeInsets.all(32.0),
+            child: CupertinoSlidingSegmentedControl<bool>(
+              groupValue: ref.watch(brrrrProvider).wantsToRefinance,
+              thumbColor: Theme.of(context).primaryColor.withOpacity(0.5),
+              children: const {
+                true: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('Yes'),
+                ),
+                false: Padding(
+                  padding: EdgeInsets.all(16),
+                  child: Text('No'),
+                ),
+              },
+              onValueChanged: (bool? newValue) {
+                ref.read(brrrrProvider).updateWantsToRefinance(newValue!);
+              },
             ),
           ),
         ],
@@ -239,8 +249,8 @@ class FinancingDropDown extends StatelessWidget {
                   child: Text(FinancingTypeUtils(financingType).name)))
           .toList(),
       onChanged: (FinancingType? newValue) {
-        ref.read(financeProvider).updateFinancingType(newValue);
-        ref.read(financeProvider).updateWillRefinance(
+        ref.read(brrrrProvider).updateFinancingType(newValue);
+        ref.read(brrrrProvider).updateWillRefinance(
             (newValue == FinancingType.conventional ||
                     newValue == FinancingType.commercial)
                 ? false

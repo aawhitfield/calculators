@@ -18,9 +18,9 @@ class WantToRefinance extends ConsumerWidget {
     return MyInputPage(
       imageUri: 'images/question.svg',
       headerText: 'Refinance',
-      subheadText: 'Would you like to refinance this property?',
+      subheadText: '',
       onSubmit: () {
-        if (ref.read(optionsProvider).wantsToRefinance) {
+        if (ref.read(brrrrProvider).wantsToRefinance) {
           Get.to(() => const RefinanceInput());
         } else {
           Get.to(() => const Report());
@@ -28,28 +28,9 @@ class WantToRefinance extends ConsumerWidget {
       },
       position: kResidentialREIQuestions.indexOf(WantToRefinance) + 1,
       totalQuestions: kResidentialREIQuestions.length,
-      child: ResponsiveLayout(
+      child: const ResponsiveLayout(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(32.0),
-            child: CupertinoSlidingSegmentedControl<bool>(
-              groupValue: ref.watch(optionsProvider).wantsToRefinance,
-              thumbColor: Theme.of(context).primaryColor.withOpacity(0.5),
-              children: const {
-                true: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('Yes'),
-                ),
-                false: Padding(
-                  padding: EdgeInsets.all(16),
-                  child: Text('No'),
-                ),
-              },
-              onValueChanged: (bool? newValue) {
-                ref.read(optionsProvider).updateWantsToRefinance(newValue!);
-              },
-            ),
-          ),
+
         ],
       ),
     );
