@@ -14,12 +14,12 @@ class ReportTotalLoans extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double totalLoans = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).constructionLoanAmount +
-        ref.watch(sellerFinanceProvider).loanAmount;
+        ref.watch(brrrrProvider).sellerLoanAmount;
 
     double totalDebtServicePayments =
         ref.watch(brrrrProvider).monthlyPayment +
             ref.watch(brrrrProvider).constructionMonthlyPayment +
-            ref.watch(sellerFinanceProvider).monthlyPayment;
+            ref.watch(brrrrProvider).sellerMonthlyPayment;
 
     String totalLoansString = kCurrencyFormat.format(totalLoans);
     String totalDebtServiceString =

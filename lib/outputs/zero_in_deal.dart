@@ -15,10 +15,10 @@ class ZeroInDeal extends ConsumerWidget {
     double arvLoan = ref.watch(refinanceProvider).loanAmount;
     double totalLoans = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).constructionLoanAmount +
-        ref.watch(sellerFinanceProvider).loanAmount;
+        ref.watch(brrrrProvider).sellerLoanAmount;
 
     double totalDownPayment = ref.watch(brrrrProvider).downPaymentAmount -
-        ref.watch(sellerFinanceProvider).loanAmount;
+        ref.watch(brrrrProvider).sellerLoanAmount;
 
     double constructionDownPayment =
         ref.watch(brrrrProvider).constructionDownPaymentAmount;

@@ -66,3 +66,29 @@ class PaymentTypeUtils {
     }
   }
 }
+
+enum SellerFinancingType {
+  payment,
+  interest,
+}
+
+class SellerFinancingTypeUtils {
+  final SellerFinancingType sellerFinancingType;
+
+  SellerFinancingTypeUtils(this.sellerFinancingType);
+
+  String get name {
+    switch(sellerFinancingType) {
+      case SellerFinancingType.payment : return 'Repayment';
+      case SellerFinancingType.interest : return 'Interest Only';
+    }
+  }
+
+  static SellerFinancingType getFinancingType(String name) {
+    if (name == 'Interest Only') {
+      return SellerFinancingType.interest;
+    } else {
+      return SellerFinancingType.payment;
+    }
+  }
+}

@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/finance_option_down_payment.dart';
+import 'package:calculators/inputs/finance_option_seller_financed.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/cupertino.dart';

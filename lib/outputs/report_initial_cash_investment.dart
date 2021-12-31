@@ -13,7 +13,7 @@ class ReportInitialCashInvestment extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     double totalDownPayment = ref.watch(brrrrProvider).downPaymentAmount -
-        ref.watch(sellerFinanceProvider).loanAmount;
+        ref.watch(brrrrProvider).sellerLoanAmount;
 
     double constructionDownPayment =
         ref.watch(brrrrProvider).constructionDownPaymentAmount;

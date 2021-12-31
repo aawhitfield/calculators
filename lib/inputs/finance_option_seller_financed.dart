@@ -2,13 +2,14 @@ import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/want_to_refinance.dart';
 import 'package:calculators/models/calculator.dart';
-import 'package:calculators/models/seller_financing_type.dart';
+import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -25,41 +26,44 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
   TextEditingController loanPercentController = TextEditingController();
   TextEditingController interestRateController = TextEditingController();
   TextEditingController termController = TextEditingController();
+  TextEditingController amortizationController = TextEditingController();
 
   @override
   void initState() {
-    double loanPercent = ref.read(sellerFinanceProvider).loanPercentage * 100;
+    double loanPercent = ref.read(brrrrProvider).sellerLoanPercentage * 100;
     if(loanPercent != 0) {
       loanPercentController.text = kWholeNumber.format(loanPercent);
     }
-    double interestRate = ref.read(sellerFinanceProvider).interestRate * 100;
+    double interestRate = ref.read(brrrrProvider).sellerInterestRate * 100;
     if(interestRate != 0) {
       interestRateController.text = interestRate.toString();
     }
-    int term = ref.read(sellerFinanceProvider).term;
+    int term = ref.read(brrrrProvider).sellerTerm;
     if(term != 0) {
       termController.text = kWholeNumber.format(term);
+    }
+    int amortization = ref.read(brrrrProvider).amortization;
+    if(amortization != 0) {
+      amortizationController.text = kWholeNumber.format(amortization);
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    SellerFinancingType value = ref.watch(sellerFinanceProvider).financingType;
 
-    double loanAmount = ref.watch(brrrrProvider).purchasePrice *
-        ref.watch(sellerFinanceProvider).loanPercentage;
+    double loanAmount = ref.watch(brrrrProvider).sellerLoanAmount;
 
-    double monthlyPayment = (ref.watch(sellerFinanceProvider).financingType ==
+    double monthlyPayment = (ref.watch(brrrrProvider).sellerFinancingType ==
             SellerFinancingType.payment)
-        ? ref.watch(sellerFinanceProvider).calculateMonthlyPayment(
-              rate: ref.watch(sellerFinanceProvider).interestRate / 12,
-              nper: ref.watch(sellerFinanceProvider).term * 12,
+        ? ref.watch(brrrrProvider).calculateMonthlyPayment(
+              rate: ref.watch(brrrrProvider).sellerInterestRate / 12,
+              nper: ref.watch(brrrrProvider).sellerTerm * 12,
               pv: -1 * loanAmount,
             )
-        : ref.watch(sellerFinanceProvider).calculateMonthlyPaymentInterestOnly(
-              rate: ref.watch(sellerFinanceProvider).interestRate / 12,
-              nper: ref.watch(sellerFinanceProvider).term,
+        : ref.watch(brrrrProvider).calculateMonthlyPaymentInterestOnly(
+              rate: ref.watch(brrrrProvider).sellerInterestRate / 12,
+              nper: ref.watch(brrrrProvider).sellerTerm,
               pv: -1 * loanAmount,
               per: 1,
             );
@@ -70,10 +74,10 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
     return MyInputPage(
         imageUri: 'images/transfer.svg',
         headerText: 'Finance Option',
-        subheadText: 'Down Payment',
+        subheadText: 'Seller Financed Loan',
         onSubmit: () {
-          ref.read(sellerFinanceProvider).updateMonthlyPayment(monthlyPayment);
-          ref.read(sellerFinanceProvider).updateLoanAmount(loanAmount);
+          ref.read(brrrrProvider).updateSellerMonthlyPayment(monthlyPayment);
+          ref.read(brrrrProvider).updateSellerLoanAmount(loanAmount);
           Calculator calculatorType = ref.read(calculatorProvider).type;
           if (calculatorType == Calculator.brrrr) {
             Get.to(() => const WantToRefinance());
@@ -107,7 +111,16 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
                       const Text('Financing Type'),
                       const SizedBox(width: 8),
                       Expanded(
-                        child: SellerDropdown(value: value, ref: ref),
+                        child: CupertinoSlidingSegmentedControl<SellerFinancingType>(
+                          thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+                          groupValue: ref.watch(brrrrProvider).sellerFinancingType,
+                          children: {
+                            SellerFinancingType.payment: Text(SellerFinancingTypeUtils(SellerFinancingType.payment).name),
+                            SellerFinancingType.interest: Text(SellerFinancingTypeUtils(SellerFinancingType.interest).name),
+                          },
+                          onValueChanged: (SellerFinancingType? newValue) =>
+                              ref.read(brrrrProvider).updateSellerFinancingType(newValue!),
+                        ),
                       )
                     ],
                   )
@@ -116,7 +129,16 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
                     children: [
                       const Text('Financing Type'),
                       const SizedBox(height: 8),
-                      SellerDropdown(value: value, ref: ref)
+                      CupertinoSlidingSegmentedControl<SellerFinancingType>(
+                        thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+                        groupValue: ref.watch(brrrrProvider).sellerFinancingType,
+                        children: {
+                          SellerFinancingType.payment: Text(SellerFinancingTypeUtils(SellerFinancingType.payment).name),
+                          SellerFinancingType.interest: Text(SellerFinancingTypeUtils(SellerFinancingType.interest).name),
+                        },
+                        onValueChanged: (SellerFinancingType? newValue) =>
+                            ref.read(brrrrProvider).updateSellerFinancingType(newValue!),
+                      ),
                     ],
                   ),
             PercentTextField(
@@ -126,11 +148,17 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
                 newPercentage = newPercentage.replaceAll(',', '');
                 double? newValue = double.tryParse(newPercentage);
                 if (newValue != null) {
-                  double loanPercentage = newValue / 100;
+                  double sellerLoanPercentage = newValue / 100;
                   ref
-                      .read(sellerFinanceProvider)
-                      .updateLoanPercentage(loanPercentage);
+                      .read(brrrrProvider)
+                      .updateSellerLoanPercentage(sellerLoanPercentage);
                 }
+                else {
+                  ref
+                      .read(brrrrProvider)
+                      .updateSellerLoanPercentage(0.0);
+                }
+                ref.read(brrrrProvider).calculateSellerFinanceCalculations();
               },
             ),
             MoneyListTile(
@@ -147,9 +175,32 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
                 if (newValue != null) {
                   double interestRate = newValue / 100;
                   ref
-                      .read(sellerFinanceProvider)
-                      .updateInterestRate(interestRate);
+                      .read(brrrrProvider)
+                      .updateSellerInterestRate(interestRate);
                 }
+                else {
+                  ref
+                      .read(brrrrProvider)
+                      .updateSellerInterestRate(0.0);
+                }
+                ref.read(brrrrProvider).calculateSellerFinanceCalculations();
+              },
+            ),
+            IntegerTextField(
+              labelText: 'Amortization',
+              controller: amortizationController,
+              leftPadding: 8,
+              rightPadding: 8,
+              onChanged: (String newTerm) {
+                newTerm = newTerm.replaceAll(',', '');
+                int? newValue = int.tryParse(newTerm);
+                if (newValue != null) {
+                  ref.read(brrrrProvider).updateAmortization(newValue);
+                }
+                else {
+                  ref.read(brrrrProvider).updateAmortization(0);
+                }
+                ref.read(brrrrProvider).calculateSellerFinanceCalculations();
               },
             ),
             IntegerTextField(
@@ -161,8 +212,12 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
                 newTerm = newTerm.replaceAll(',', '');
                 int? newValue = int.tryParse(newTerm);
                 if (newValue != null) {
-                  ref.read(sellerFinanceProvider).updateTerm(newValue);
+                  ref.read(brrrrProvider).updateSellerTerm(newValue);
                 }
+                else {
+                  ref.read(brrrrProvider).updateSellerTerm(0);
+                }
+                ref.read(brrrrProvider).calculateSellerFinanceCalculations();
               },
             ),
             MoneyListTile(
@@ -197,7 +252,7 @@ class SellerDropdown extends StatelessWidget {
                       Text(SellerFinancingTypeUtils(sellerFinancingType).name)))
           .toList(),
       onChanged: (SellerFinancingType? newValue) {
-        ref.read(sellerFinanceProvider).updateFinancingType(newValue);
+        ref.read(brrrrProvider).updateSellerFinancingType(newValue);
       },
     );
   }

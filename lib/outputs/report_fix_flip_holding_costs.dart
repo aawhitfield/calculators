@@ -15,7 +15,7 @@ class FixFlipHoldingCosts extends ConsumerWidget {
 
     int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
     double totalDebtServicePayments = ref.read(brrrrProvider).monthlyPayment
-      + ref.read(sellerFinanceProvider).monthlyPayment +
+      + ref.read(brrrrProvider).sellerMonthlyPayment +
         ref.read(brrrrProvider).constructionMonthlyPayment;
     double totalDebtService = monthsToRehab * totalDebtServicePayments;
 

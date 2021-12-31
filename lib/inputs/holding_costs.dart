@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/finance_option_down_payment.dart';
+import 'package:calculators/inputs/finance_option_seller_financed.dart';
 import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/outputs/report.dart';

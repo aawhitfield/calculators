@@ -23,7 +23,7 @@ class CashFlowStatement extends ConsumerWidget {
     double totalDebtServicePayments =
         ref.watch(brrrrProvider).monthlyPayment +
             ref.watch(brrrrProvider).constructionMonthlyPayment +
-            ref.watch(sellerFinanceProvider).monthlyPayment;
+            ref.watch(brrrrProvider).sellerMonthlyPayment;
 
     double netCashFlowMonthly = noiMonthly - totalDebtServicePayments;
     double netCashFlowAnnually = noiAnnually - totalDebtServicePayments * 12;

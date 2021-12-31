@@ -19,6 +19,7 @@ class BRRRRFields {
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType, wantsToRefinance,
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
     holdingCostsUtilities,
+    sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
   ];
 
   static const String id = 'id';
@@ -73,6 +74,11 @@ class BRRRRFields {
   static const String constructionInterestRate = 'constructionInterestRate';
   static const String constructionTerm = 'constructionTerm';
   static const String holdingCostsUtilities = 'holdingCostsUtilities';
+  static const String sellerFinancingType = 'sellerFinancingType';
+  static const String sellerLoanPercent = 'sellerLoanPercent';
+  static const String sellerInterestRate = 'sellerInterestRate';
+  static const String amortization = 'amortization';
+  static const String sellerTerm = 'sellerTerm';
 }
 
 class BRRRR extends ChangeNotifier{
@@ -155,6 +161,13 @@ class BRRRR extends ChangeNotifier{
   double insuranceAndTaxes;
   double holdingCostsUtilities;
   double totalHoldingCosts;
+  SellerFinancingType sellerFinancingType;
+  double sellerLoanPercentage;
+  double sellerLoanAmount;
+  double sellerInterestRate;
+  int amortization;
+  int sellerTerm;
+  double sellerMonthlyPayment;
 
   BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
@@ -184,6 +197,9 @@ class BRRRR extends ChangeNotifier{
     this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionMonthlyPayment = 0,
     this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
     this.totalHoldingCosts = 0,
+    this.sellerFinancingType = SellerFinancingType.payment,
+    this.sellerLoanPercentage = 0, this.sellerLoanAmount = 0,
+    this.sellerInterestRate = 0, this.amortization = 0, this.sellerTerm = 0, this.sellerMonthlyPayment = 0,
   });
   
 
@@ -239,6 +255,11 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.constructionInterestRate: constructionInterestRate,
     BRRRRFields.constructionTerm: constructionTerm,
     BRRRRFields.holdingCostsUtilities: holdingCostsUtilities,
+    BRRRRFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
+    BRRRRFields.sellerLoanPercent: sellerLoanPercentage,
+    BRRRRFields.sellerInterestRate: sellerInterestRate,
+    BRRRRFields.amortization: amortization,
+    BRRRRFields.sellerTerm: sellerTerm,
   };
 
   static BRRRR fromJson(Map<String, Object?> json) => BRRRR(
@@ -293,6 +314,11 @@ class BRRRR extends ChangeNotifier{
       constructionInterestRate: json[BRRRRFields.constructionInterestRate] as double,
       constructionTerm: json[BRRRRFields.constructionTerm] as int,
       holdingCostsUtilities: json[BRRRRFields.holdingCostsUtilities] as double,
+      sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[BRRRRFields.financingType] as String),
+      sellerLoanPercentage: json[BRRRRFields.sellerLoanPercent] as double,
+      sellerInterestRate: json[BRRRRFields.sellerInterestRate] as double,
+      amortization: json[BRRRRFields.amortization] as int,
+      sellerTerm: json[BRRRRFields.sellerTerm] as int,
   );
 
   void updateProperty(BRRRR newProperty) {
@@ -908,6 +934,61 @@ class BRRRR extends ChangeNotifier{
     // debtService = interestOnlyPayment + // TODO finish holding costs
   }
 
+  void updateSellerFinanceOptionData(BRRRR newFinanceOptionData) {
+    sellerFinancingType = newFinanceOptionData.sellerFinancingType;
+    sellerLoanPercentage = newFinanceOptionData.sellerLoanPercentage;
+    sellerInterestRate = newFinanceOptionData.sellerInterestRate;
+    sellerTerm = newFinanceOptionData.sellerTerm;
+    notifyListeners();
+  }
+
+  void updateSellerFinancingType(newValue) {
+    sellerFinancingType = newValue;
+    notifyListeners();
+  }
+
+  void updateSellerLoanPercentage(newValue) {
+    sellerLoanPercentage = newValue;
+    notifyListeners();
+  }
+
+  void updateSellerLoanAmount(newValue) {
+    sellerLoanAmount = newValue;
+    notifyListeners();
+  }
+
+  void updateSellerInterestRate(newValue) {
+    sellerInterestRate = newValue;
+    notifyListeners();
+  }
+
+  void updateAmortization(newValue) {
+    amortization = newValue;
+    notifyListeners();
+  }
+
+  void updateSellerTerm(newValue) {
+    sellerTerm = newValue;
+    notifyListeners();
+  }
+
+  void updateSellerMonthlyPayment(newValue) {
+    sellerMonthlyPayment = newValue;
+    notifyListeners();
+  }
+
+  void calculateSellerFinanceCalculations() {
+    sellerLoanAmount = sellerLoanPercentage * downPaymentAmount;
+    if(sellerFinancingType == SellerFinancingType.payment) {
+      sellerMonthlyPayment = calculateMonthlyPayment(rate: sellerInterestRate / 12, nper: sellerTerm * 12, pv: -1 * sellerLoanAmount);
+    }
+    else {
+      sellerMonthlyPayment = calculateMonthlyPaymentInterestOnly(rate: sellerInterestRate / 12, nper: 1, pv: amortization, per: -1 * sellerLoanAmount);
+    }
+    notifyListeners();
+  }
+
+
   void reset() {
     address = '';
     listPrice = 0;
@@ -947,6 +1028,9 @@ class BRRRR extends ChangeNotifier{
     constructionInterestRate = 0;
     constructionTerm = 0;
     constructionMonthlyPayment = 0;
+    sellerFinancingType = SellerFinancingType.payment;
+    sellerLoanPercentage = sellerLoanAmount = sellerInterestRate = 0;
+    sellerTerm = 0;
     notifyListeners();
   }
 }

@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/finance_option_seller_financed.dart';
 import 'package:calculators/inputs/refinance_input.dart';
-import 'package:calculators/models/seller_financing_type.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -91,7 +91,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
             financingType == FinancingType.commercialWithConstruction) {
           Get.to(() => const FinanceOptionConstructionLoan());
         } else if(financingType == FinancingType.sellerFinancing){
-          Get.to(() => SellerFinanceOptionData());
+          Get.to(() => const FinanceOptionSellerFinanced());
         }
         else if(ref.read(brrrrProvider).wantsToRefinance) {
           Get.to(() => const RefinanceInput());

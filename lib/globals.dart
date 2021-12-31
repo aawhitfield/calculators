@@ -1,6 +1,6 @@
 import 'package:calculators/inputs/expenses_input.dart';
 import 'package:calculators/inputs/finance_option_construction_loan.dart';
-import 'package:calculators/inputs/finance_option_down_payment.dart';
+import 'package:calculators/inputs/finance_option_seller_financed.dart';
 import 'package:calculators/inputs/finance_options.dart';
 import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/holding_costs.dart';

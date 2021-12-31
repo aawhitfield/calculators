@@ -16,7 +16,7 @@ class ValueIndicators extends ConsumerWidget {
 
     int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
     double totalDebtServicePayments = ref.read(brrrrProvider).monthlyPayment
-        + ref.read(sellerFinanceProvider).monthlyPayment +
+        + ref.read(brrrrProvider).sellerMonthlyPayment +
         ref.read(brrrrProvider).constructionMonthlyPayment;
     double totalDebtService = monthsToRehab * totalDebtServicePayments;
 
@@ -37,7 +37,7 @@ class ValueIndicators extends ConsumerWidget {
     double profitPerInvestor = totalProfit / numberOfInvestors;
 
     double totalDownPayment = ref.watch(brrrrProvider).downPaymentAmount -
-        ref.watch(sellerFinanceProvider).loanAmount;
+        ref.watch(brrrrProvider).sellerLoanAmount;
 
     double constructionDownPayment =
         ref.watch(brrrrProvider).constructionDownPaymentAmount;
