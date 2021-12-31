@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/holding_costs.dart';
-import 'package:calculators/inputs/want_to_refinance.dart';
+import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';
@@ -82,7 +82,7 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
           Calculator calculatorType = ref.read(calculatorProvider).type;
           if (calculatorType == Calculator.brrrr) {
             if (ref.read(brrrrProvider).wantsToRefinance) {
-              Get.to(() => const WantToRefinance());
+              Get.to(() => const RefinanceInput());
             }
             else {
               Get.to(() => const HoldingCosts());
