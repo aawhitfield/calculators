@@ -1,6 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/finance_option_construction_loan.dart';
-import 'package:calculators/inputs/is_seller_financed.dart';
+import 'package:calculators/models/seller_financing_type.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -13,6 +13,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+
+import 'holding_costs.dart';
 
 class FinanceOptions extends ConsumerStatefulWidget {
   const FinanceOptions({Key? key}) : super(key: key);
@@ -87,8 +89,11 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
         if (financingType == FinancingType.hardMoneyWithConstruction ||
             financingType == FinancingType.commercialWithConstruction) {
           Get.to(() => const FinanceOptionConstructionLoan());
-        } else {
-          Get.to(() => const IsSellerFinanced());
+        } else if(financingType == FinancingType.sellerFinancing){
+          Get.to(() => SellerFinanceOptionData());
+        }
+        else {
+          Get.to(() => const HoldingCosts());
         }
       },
       position: kResidentialREIQuestions.indexOf(FinanceOptions) + 1,

@@ -20,21 +20,21 @@ class FinanceOptionConstructionLoan extends ConsumerStatefulWidget {
 
 class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionConstructionLoan> {
 
-  TextEditingController loanPercentController = TextEditingController();
+  TextEditingController downPaymentPercentageController = TextEditingController();
   TextEditingController interestRateController = TextEditingController();
   TextEditingController termController = TextEditingController();
 
   @override
   void initState() {
-    double loanPercent = ref.read(financeConstructionProvider).loanPercentage * 100;
+    double loanPercent = ref.read(brrrrProvider).constructionDownPaymentPercentage * 100;
     if(loanPercent != 0) {
-      loanPercentController.text = kWholeNumber.format(loanPercent);
+      downPaymentPercentageController.text = kWholeNumber.format(loanPercent);
     }
-    double interestRate = ref.read(financeConstructionProvider).interestRate * 100;
+    double interestRate = ref.read(brrrrProvider).constructionInterestRate;
     if(interestRate != 0) {
       interestRateController.text = interestRate.toString();
     }
-    int term = ref.read(financeConstructionProvider).term;
+    int term = ref.read(brrrrProvider).constructionTerm;
     if(term != 0) {
       termController.text = kWholeNumber.format(term);
     }
@@ -46,15 +46,13 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
   Widget build(BuildContext context) {
     FinancingType value = ref.watch(brrrrProvider).financingType;
 
-    double loanAmount = ref.watch(brrrrProvider).totalRenovations *
-        ref.watch(financeConstructionProvider).loanPercentage;
+    double loanAmount = ref.watch(brrrrProvider).constructionLoanAmount;
 
-    double downPaymentAmount = ref.watch(brrrrProvider).totalRenovations -
-        loanAmount;
+    double downPaymentAmount = ref.watch(brrrrProvider).constructionDownPaymentAmount;
 
-    double monthlyPayment = ref.watch(financeConstructionProvider).calculateMonthlyPaymentInterestOnly(
-      rate: ref.watch(financeConstructionProvider).interestRate / 12,
-      nper: ref.watch(financeConstructionProvider).term,
+    double monthlyPayment = ref.watch(brrrrProvider).calculateMonthlyPaymentInterestOnly(
+      rate: ref.watch(brrrrProvider).constructionInterestRate / 12,
+      nper: ref.watch(brrrrProvider).constructionTerm,
       pv: -1 * loanAmount,
       per: 1,
     );
@@ -67,9 +65,9 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
         imageUri: 'images/finance-construction.svg',
         headerText: 'Finance Option', subheadText: 'Construction Loan',
         onSubmit: () {
-          ref.read(financeConstructionProvider).updateMonthlyPayment(monthlyPayment);
-          ref.read(financeConstructionProvider).updateDownPayment(downPaymentAmount);
-          ref.read(financeConstructionProvider).updateLoanAmount(loanAmount);
+          ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
+          ref.read(brrrrProvider).updateConstructionDownPayment(downPaymentAmount);
+          ref.read(brrrrProvider).updateConstructionLoanAmount(loanAmount);
           Get.to(() => const IsSellerFinanced());
         },
         position: kResidentialREIQuestions.indexOf(FinanceOptionConstructionLoan) + 1,
@@ -82,28 +80,24 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                           title: Text(FinancingTypeUtils(value).name)
             ),
             PercentTextField(
-              labelText: 'Loan Percent',
-              controller: loanPercentController,
+              labelText: 'Down Payment Percentage',
+              controller: downPaymentPercentageController,
               onChanged: (String newPercentage) {
                 newPercentage = newPercentage.replaceAll(',', '');
                 double? newValue = double.tryParse(newPercentage);
                 if (newValue != null) {
                   double loanPercentage = newValue / 100;
-                  ref.read(financeConstructionProvider).updateLoanPercentage(loanPercentage);
-                  double totalConstruction = ref.read(brrrrProvider).totalRenovations;
-                  double loanAmount = totalConstruction * loanPercentage;
-
-                  ref.read(financeConstructionProvider).updateLoanAmount(loanAmount);
-
-                  double downPayment = totalConstruction - loanAmount;
-                  ref.read(financeConstructionProvider).updateDownPayment(downPayment);
+                  ref.read(brrrrProvider).updateConstructionDownPaymentPercentage(loanPercentage);
+                } else {
+                  ref.read(brrrrProvider).updateConstructionDownPaymentPercentage(0.0);
                 }
+                ref.read(brrrrProvider).calculateAllConstructionCalculations();
               },
             ),
             MoneyListTile(
     (MediaQuery.of(context).size.width < 640)
                 ? 'Loan\nAmount'
-                : 'Loan Amount', loanAmountString),
+                : 'Loan Amount', loanAmountString, subtitle: 'Construction',),
             MoneyListTile(
     (MediaQuery.of(context).size.width < 640)
                 ? 'Down\nPayment'
@@ -116,12 +110,12 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                 double? newValue = double.tryParse(newPercentage);
                 if (newValue != null) {
                   double interestRate = newValue / 100;
-                  ref.read(financeConstructionProvider).updateInterestRate(interestRate);
+                  ref.read(brrrrProvider).updateConstructionInterestRate(interestRate);
                 }
               },
             ),
             IntegerTextField(
-              labelText: 'Term',
+              labelText: 'Term in Years',
               controller: termController,
               leftPadding: 8,
               rightPadding: 8,
@@ -129,10 +123,10 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                 newTerm = newTerm.replaceAll(',', '');
                 int? newValue = int.tryParse(newTerm);
                 if (newValue != null) {
-                  ref.read(financeConstructionProvider).updateTerm(newValue);
+                  ref.read(brrrrProvider).updateConstructionTerm(newValue);
                 }
                 else {
-                  ref.read(financeConstructionProvider).updateTerm(0);
+                  ref.read(brrrrProvider).updateConstructionTerm(0);
                 }
               },
             ),
