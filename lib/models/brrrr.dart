@@ -18,7 +18,7 @@ class BRRRRFields {
     otherExpensesPercentage,
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType, wantsToRefinance,
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
-
+    holdingCostsUtilities,
   ];
 
   static const String id = 'id';
@@ -72,6 +72,7 @@ class BRRRRFields {
   static const String constructionDownPaymentPercentage = 'constructionDownPaymentPercentage';
   static const String constructionInterestRate = 'constructionInterestRate';
   static const String constructionTerm = 'constructionTerm';
+  static const String holdingCostsUtilities = 'holdingCostsUtilities';
 }
 
 class BRRRR extends ChangeNotifier{
@@ -150,6 +151,10 @@ class BRRRR extends ChangeNotifier{
   double constructionInterestRate;
   int constructionTerm;
   double constructionMonthlyPayment;
+  double debtService;
+  double insuranceAndTaxes;
+  double holdingCostsUtilities;
+  double totalHoldingCosts;
 
   BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
@@ -177,6 +182,8 @@ class BRRRR extends ChangeNotifier{
     this.wantsToRefinance = false,
     this.constructionDownPaymentPercentage = 0, this.constructionLoanAmount = 0, this.constructionDownPaymentAmount = 0,
     this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionMonthlyPayment = 0,
+    this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
+    this.totalHoldingCosts = 0,
   });
   
 
@@ -231,6 +238,7 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.constructionDownPaymentPercentage: constructionDownPaymentPercentage,
     BRRRRFields.constructionInterestRate: constructionInterestRate,
     BRRRRFields.constructionTerm: constructionTerm,
+    BRRRRFields.holdingCostsUtilities: holdingCostsUtilities,
   };
 
   static BRRRR fromJson(Map<String, Object?> json) => BRRRR(
@@ -284,6 +292,7 @@ class BRRRR extends ChangeNotifier{
       constructionDownPaymentPercentage: json[BRRRRFields.constructionDownPaymentPercentage] as double,
       constructionInterestRate: json[BRRRRFields.constructionInterestRate] as double,
       constructionTerm: json[BRRRRFields.constructionTerm] as int,
+      holdingCostsUtilities: json[BRRRRFields.holdingCostsUtilities] as double,
   );
 
   void updateProperty(BRRRR newProperty) {
@@ -887,6 +896,16 @@ class BRRRR extends ChangeNotifier{
     constructionLoanAmount = (1 - constructionDownPaymentPercentage) * totalRenovations;
     constructionDownPaymentAmount = totalRenovations - constructionLoanAmount;
     notifyListeners();
+  }
+
+  void updateHoldingCostsUtilities(newValue) {
+    holdingCostsUtilities = newValue;
+    notifyListeners();
+  }
+
+  void calculateAllHoldingCosts() {
+    // double interestOnlyPayment = calculateMonthlyPaymentInterestOnly(rate: interestRate / 12, nper: 1, pv: term, per: -1 * loanAmount);
+    // debtService = interestOnlyPayment + // TODO finish holding costs
   }
 
   void reset() {

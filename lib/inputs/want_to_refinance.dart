@@ -26,8 +26,8 @@ class WantToRefinance extends ConsumerWidget {
           Get.to(() => const Report());
         }
       },
-      position: kResidentialREIQuestions.indexOf(WantToRefinance) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      position: kBRRRRQuestions.indexOf(WantToRefinance) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       child: const ResponsiveLayout(
         children: [
 

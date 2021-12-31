@@ -81,8 +81,8 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
       imageUri: 'images/expenses.svg',
       headerText: 'Expenses',
       subheadText: '',
-      position: kResidentialREIQuestions.indexOf(ExpensesInput) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      position: kBRRRRQuestions.indexOf(ExpensesInput) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       onSubmit: () {
         Get.to(() => const FinanceOptions());
       },

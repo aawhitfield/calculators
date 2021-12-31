@@ -18,7 +18,7 @@ class IsSellerFinanced extends ConsumerWidget {
       subheadText: 'Is any part of this loan seller financed?',
       onSubmit: () {
         if (true) {
-          Get.to(() => const FinanceOptionDownPayment());
+          Get.to(() => const FinanceOptionSellerFinanced());
         }
         // else {
         //   if (ref.read(calculatorProvider).type == Calculator.brrrr) {
@@ -43,8 +43,8 @@ class IsSellerFinanced extends ConsumerWidget {
         //   }
         // }
       },
-      position: kResidentialREIQuestions.indexOf(IsSellerFinanced) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      position: kBRRRRQuestions.indexOf(IsSellerFinanced) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       child: const ResponsiveLayout(
         children: [
           // Padding(

@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/models/seller_financing_type.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
@@ -92,12 +93,15 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
         } else if(financingType == FinancingType.sellerFinancing){
           Get.to(() => SellerFinanceOptionData());
         }
+        else if(ref.read(brrrrProvider).wantsToRefinance) {
+          Get.to(() => const RefinanceInput());
+        }
         else {
           Get.to(() => const HoldingCosts());
         }
       },
-      position: kResidentialREIQuestions.indexOf(FinanceOptions) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      position: kBRRRRQuestions.indexOf(FinanceOptions) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       child: ResponsiveLayout(
         children: [
           (MediaQuery.of(context).size.width > 640)

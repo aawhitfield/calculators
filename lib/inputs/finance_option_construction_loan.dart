@@ -1,5 +1,7 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/is_seller_financed.dart';
+import 'package:calculators/inputs/finance_option_down_payment.dart';
+import 'package:calculators/inputs/holding_costs.dart';
+import 'package:calculators/inputs/refinance_input.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -68,10 +70,18 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
           ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
           ref.read(brrrrProvider).updateConstructionDownPayment(downPaymentAmount);
           ref.read(brrrrProvider).updateConstructionLoanAmount(loanAmount);
-          Get.to(() => const IsSellerFinanced());
+          if(ref.read(brrrrProvider).financingType == FinancingType.sellerFinancing) {
+            Get.to(() => const FinanceOptionSellerFinanced());
+          }
+          else if(ref.read(brrrrProvider).wantsToRefinance) {
+            Get.to(() => const RefinanceInput());
+          }
+          else {
+            Get.to(() => const HoldingCosts());
+          }
         },
-        position: kResidentialREIQuestions.indexOf(FinanceOptionConstructionLoan) + 1,
-        totalQuestions: kResidentialREIQuestions.length,
+        position: kBRRRRQuestions.indexOf(FinanceOptionConstructionLoan) + 1,
+        totalQuestions: kBRRRRQuestions.length,
         child: ResponsiveLayout(
           children: [
             ListTile(

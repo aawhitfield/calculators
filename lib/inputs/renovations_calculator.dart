@@ -150,8 +150,8 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
           }
           Get.to(() => const PropertyCosts());
         },
-        position: kResidentialREIQuestions.indexOf(RenovationsCalculator) + 1,
-        totalQuestions: kResidentialREIQuestions.length,
+        position: kBRRRRQuestions.indexOf(RenovationsCalculator) + 1,
+        totalQuestions: kBRRRRQuestions.length,
         child: ResponsiveLayout(
           children: (enterTotal)
               ? [

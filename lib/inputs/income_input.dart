@@ -52,8 +52,8 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
           ref.read(brrrrProvider).calculateTotalIncome();
           Get.to(() => const ExpensesInput());
         },
-        position: kResidentialREIQuestions.indexOf(IncomeInput) + 1,
-        totalQuestions: kResidentialREIQuestions.length,
+        position: kBRRRRQuestions.indexOf(IncomeInput) + 1,
+        totalQuestions: kBRRRRQuestions.length,
         child: ResponsiveLayout(
           children: [
             MoneyTextField(

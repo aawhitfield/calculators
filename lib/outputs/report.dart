@@ -31,8 +31,8 @@ class Report extends ConsumerWidget {
       imageUri: 'images/report.svg',
       headerText: 'Report',
       subheadText: '',
-      position: kResidentialREIQuestions.indexOf(Report) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      position: kBRRRRQuestions.indexOf(Report) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       onSubmit: () {},
       child: ResponsiveLayout(
         children: [

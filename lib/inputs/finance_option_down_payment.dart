@@ -13,14 +13,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class FinanceOptionDownPayment extends ConsumerStatefulWidget {
-  const FinanceOptionDownPayment({Key? key}) : super(key: key);
+class FinanceOptionSellerFinanced extends ConsumerStatefulWidget {
+  const FinanceOptionSellerFinanced({Key? key}) : super(key: key);
 
   @override
   _FinanceOptionDownPaymentState createState() => _FinanceOptionDownPaymentState();
 }
 
-class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionDownPayment> {
+class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFinanced> {
 
   TextEditingController loanPercentController = TextEditingController();
   TextEditingController interestRateController = TextEditingController();
@@ -97,8 +97,8 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionDownPaym
           }
         },
         position:
-            kResidentialREIQuestions.indexOf(FinanceOptionDownPayment) + 1,
-        totalQuestions: kResidentialREIQuestions.length,
+            kBRRRRQuestions.indexOf(FinanceOptionSellerFinanced) + 1,
+        totalQuestions: kBRRRRQuestions.length,
         child: ResponsiveLayout(
           children: [
             ((MediaQuery.of(context).size.width > 640))

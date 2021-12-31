@@ -71,8 +71,8 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
       headerText: 'Fix and Flip',
       subheadText: 'Selling Costs',
       position:
-          kResidentialREIQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+          kBRRRRQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       onSubmit: () {
         ref.read(ffSellingCostsProvider).calculateTotal();
         Get.to(() => const Report());

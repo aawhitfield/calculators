@@ -31,7 +31,7 @@ class Location extends ConsumerWidget {
         Get.to(() => const RenovationsCalculator());
       },
       position: 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      totalQuestions: kBRRRRQuestions.length,
     );
   }
 }

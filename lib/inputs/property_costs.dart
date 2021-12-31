@@ -67,8 +67,8 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
             Get.to(() => const ExpensesInput());
           }
         },
-        position: kResidentialREIQuestions.indexOf(PropertyCosts) + 1,
-        totalQuestions: kResidentialREIQuestions.length,
+        position: kBRRRRQuestions.indexOf(PropertyCosts) + 1,
+        totalQuestions: kBRRRRQuestions.length,
         child: ResponsiveLayout(
           children: [
             MoneyTextField(

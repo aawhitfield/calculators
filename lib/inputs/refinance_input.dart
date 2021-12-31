@@ -77,8 +77,8 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
         ref.read(refinanceProvider).updateMonthlyPayment(monthlyPayment);
         Get.to(() => const Report());
       },
-      position: kResidentialREIQuestions.indexOf(RefinanceInput) + 1,
-      totalQuestions: kResidentialREIQuestions.length,
+      position: kBRRRRQuestions.indexOf(RefinanceInput) + 1,
+      totalQuestions: kBRRRRQuestions.length,
       child: ResponsiveLayout(
         children: [
           Row(
