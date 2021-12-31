@@ -21,7 +21,7 @@ class Report extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     bool isRefinancing = ref.watch(brrrrProvider).wantsToRefinance;
-    bool isCashOut = ref.watch(refinanceProvider).refinancingMethod == Refinancing.cashOut;
+    bool isCashOut = ref.watch(brrrrProvider).refinancingType == Refinancing.cashOut;
     bool shouldShow0inDeal = isRefinancing && isCashOut;
     bool shouldShowARVStatement = isRefinancing;
 

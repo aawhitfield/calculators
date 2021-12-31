@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/holding_costs.dart';
 import 'package:calculators/models/refinance.dart';
 import 'package:calculators/providers.dart';
-import 'package:calculators/outputs/report.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -28,19 +28,19 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
 
   @override
   void initState() {
-    double loanPercent = ref.read(refinanceProvider).loanPercentage * 100;
+    double loanPercent = ref.read(brrrrProvider).refinancingLoanToValue * 100;
     if(loanPercent != 0) {
       loanPercentController.text = kWholeNumber.format(loanPercent);
     }
-    double interestRate = ref.read(refinanceProvider).interestRate * 100;
+    double interestRate = ref.read(brrrrProvider).refinancingInterestRate * 100;
     if(interestRate != 0) {
       interestRateController.text = interestRate.toString();
     }
-    int term = ref.read(refinanceProvider).term;
+    int term = ref.read(brrrrProvider).refinancingTerm;
     if(term != 0) {
       termController.text = kWholeNumber.format(term);
     }
-    double closingCosts = ref.read(refinanceProvider).closingCosts;
+    double closingCosts = ref.read(brrrrProvider).refinancingClosingCosts;
     if (closingCosts != 0) {
       closingCostsController.text = kCurrencyFormat.format(closingCosts);
     }
@@ -50,20 +50,15 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
   @override
   Widget build(BuildContext context) {
     Refinancing refinancingMethod =
-        ref.watch(refinanceProvider).refinancingMethod;
+        ref.watch(brrrrProvider).refinancingType;
 
     double loanAmount = ref.watch(brrrrProvider).afterRepairValue *
-        ref.watch(refinanceProvider).loanPercentage;
+        ref.watch(brrrrProvider).refinancingLoanToValue;
 
     double downPaymentAmount =
         ref.watch(brrrrProvider).afterRepairValue - loanAmount;
 
-    double monthlyPayment =
-        ref.watch(refinanceProvider).calculateMonthlyPayment(
-              rate: ref.watch(refinanceProvider).interestRate / 12,
-              nper: ref.watch(refinanceProvider).term * 12,
-              pv: -1 * loanAmount,
-            );
+    double monthlyPayment = ref.watch(brrrrProvider).refinancingMonthlyPayment;
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -74,8 +69,8 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
       headerText: 'Refinance Options',
       subheadText: '',
       onSubmit: () {
-        ref.read(refinanceProvider).updateMonthlyPayment(monthlyPayment);
-        Get.to(() => const Report());
+        ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
+        Get.to(() => const HoldingCosts());
       },
       position: kBRRRRQuestions.indexOf(RefinanceInput) + 1,
       totalQuestions: kBRRRRQuestions.length,
@@ -96,14 +91,14 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
                                   RefinancingUtils(refinancingMethod).name)))
                       .toList(),
                   onChanged: (Refinancing? newValue) {
-                    ref.read(refinanceProvider).updateFinancingType(newValue!);
+                    ref.read(brrrrProvider).updateRefinancingType(newValue!);
                   },
                 ),
               )
             ],
           ),
           PercentTextField(
-            labelText: 'Loan Percent',
+            labelText: 'Loan to Value',
             controller: loanPercentController,
             onChanged: (String newPercentage) {
               newPercentage = newPercentage.replaceAll(',', '');
@@ -111,17 +106,21 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
               if (newValue != null) {
                 double loanPercentage = newValue / 100;
                 ref
-                    .read(refinanceProvider)
-                    .updateLoanPercentage(loanPercentage);
+                    .read(brrrrProvider)
+                    .updateRefinancingLoanToValue(loanPercentage);
                 double afterRepairValue =
                     ref.read(brrrrProvider).afterRepairValue;
                 double loanAmount = afterRepairValue * loanPercentage;
 
-                ref.read(refinanceProvider).updateLoanAmount(loanAmount);
+                ref.read(brrrrProvider).updateRefinancingLoanAmount(loanAmount);
 
                 double downPayment = afterRepairValue - loanAmount;
-                ref.read(refinanceProvider).updateDownPayment(downPayment);
+                ref.read(brrrrProvider).updateRefinancingDownPayment(downPayment);
               }
+              else {
+                ref.read(brrrrProvider).updateRefinancingLoanToValue(0.0);
+              }
+              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
             },
           ),
           MoneyListTile(
@@ -142,8 +141,12 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
               double? newValue = double.tryParse(newPercentage);
               if (newValue != null) {
                 double interestRate = newValue / 100;
-                ref.read(refinanceProvider).updateInterestRate(interestRate);
+                ref.read(brrrrProvider).updateRefinancingInterestRate(interestRate);
               }
+              else {
+                ref.read(brrrrProvider).updateRefinancingInterestRate(0.0);
+              }
+              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
             },
           ),
           IntegerTextField(
@@ -155,8 +158,12 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
               newTerm = newTerm.replaceAll(',', '');
               int? newValue = int.tryParse(newTerm);
               if (newValue != null) {
-                ref.read(refinanceProvider).updateTerm(newValue);
+                ref.read(brrrrProvider).updateRefinancingTerm(newValue);
               }
+              else {
+                ref.read(brrrrProvider).updateRefinancingTerm(0);
+              }
+              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
             },
           ),
           MoneyTextField(
@@ -166,8 +173,12 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
               newCost = newCost.replaceAll(',', '');
               double? newValue = double.tryParse(newCost);
               if (newValue != null) {
-                ref.read(refinanceProvider).updateClosingCosts(newValue);
+                ref.read(brrrrProvider).updateRefinancingClosingCosts(newValue);
               }
+              else {
+                ref.read(brrrrProvider).updateRefinancingClosingCosts(0.0);
+              }
+              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
             },
           ),
           MoneyListTile(

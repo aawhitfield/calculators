@@ -21,7 +21,7 @@ class ARVCashFlowStatement extends ConsumerWidget {
     double noiAnnually = totalAnnualIncome - totalAnnualExpenses;
 
     double totalDebtServicePayments =
-        ref.watch(refinanceProvider).monthlyPayment;
+        ref.watch(brrrrProvider).refinancingMonthlyPayment;
 
     double netCashFlowMonthly = noiMonthly - totalDebtServicePayments;
     double netCashFlowAnnually = noiAnnually - totalDebtServicePayments * 12;

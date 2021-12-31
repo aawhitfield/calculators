@@ -3,6 +3,7 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 
 import 'package:calculators/models/financing_type.dart';
+import 'package:calculators/models/refinance.dart';
 import 'package:finance/finance.dart';
 import 'package:flutter/material.dart';
 
@@ -20,6 +21,7 @@ class BRRRRFields {
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
     holdingCostsUtilities,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
+    refinancingType, refinancingLoanToValue, refinancingInterestRate, refinancingTerm, refinancingClosingCosts,
   ];
 
   static const String id = 'id';
@@ -79,6 +81,11 @@ class BRRRRFields {
   static const String sellerInterestRate = 'sellerInterestRate';
   static const String amortization = 'amortization';
   static const String sellerTerm = 'sellerTerm';
+  static const String refinancingType = 'refinancingType';
+  static const String refinancingLoanToValue = 'refinancingLoanToValue';
+  static const String refinancingInterestRate = 'refinancingInterestRate';
+  static const String refinancingTerm = 'refinancingTerm';
+  static const String refinancingClosingCosts = 'refinancingClosingCosts';
 }
 
 class BRRRR extends ChangeNotifier{
@@ -168,6 +175,14 @@ class BRRRR extends ChangeNotifier{
   int amortization;
   int sellerTerm;
   double sellerMonthlyPayment;
+  Refinancing refinancingType;
+  double refinancingLoanToValue;
+  double refinancingLoanAmount;
+  double refinancingDownPaymentAmount;
+  double refinancingInterestRate;
+  int refinancingTerm;
+  double refinancingClosingCosts;
+  double refinancingMonthlyPayment;
 
   BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
@@ -200,6 +215,9 @@ class BRRRR extends ChangeNotifier{
     this.sellerFinancingType = SellerFinancingType.payment,
     this.sellerLoanPercentage = 0, this.sellerLoanAmount = 0,
     this.sellerInterestRate = 0, this.amortization = 0, this.sellerTerm = 0, this.sellerMonthlyPayment = 0,
+    this.refinancingType = Refinancing.cashOut,
+    this.refinancingLoanToValue = 0, this.refinancingLoanAmount = 0, this.refinancingDownPaymentAmount = 0,
+    this.refinancingInterestRate = 0, this.refinancingTerm = 0, this.refinancingClosingCosts = 0, this.refinancingMonthlyPayment = 0,
   });
   
 
@@ -260,6 +278,11 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.sellerInterestRate: sellerInterestRate,
     BRRRRFields.amortization: amortization,
     BRRRRFields.sellerTerm: sellerTerm,
+    BRRRRFields.refinancingType: RefinancingUtils(refinancingType).name,
+    BRRRRFields.refinancingLoanToValue: refinancingLoanToValue,
+    BRRRRFields.refinancingInterestRate: refinancingInterestRate,
+    BRRRRFields.refinancingTerm: refinancingTerm,
+    BRRRRFields.refinancingClosingCosts: refinancingClosingCosts,
   };
 
   static BRRRR fromJson(Map<String, Object?> json) => BRRRR(
@@ -319,6 +342,11 @@ class BRRRR extends ChangeNotifier{
       sellerInterestRate: json[BRRRRFields.sellerInterestRate] as double,
       amortization: json[BRRRRFields.amortization] as int,
       sellerTerm: json[BRRRRFields.sellerTerm] as int,
+      refinancingType: RefinancingUtils.getFinancingType(json[BRRRRFields.financingType] as String),
+      refinancingLoanToValue: json[BRRRRFields.refinancingLoanToValue] as double,
+      refinancingInterestRate: json[BRRRRFields.refinancingInterestRate] as double,
+      refinancingTerm: json[BRRRRFields.refinancingTerm] as int,
+      refinancingClosingCosts: json[BRRRRFields.refinancingClosingCosts] as double,
   );
 
   void updateProperty(BRRRR newProperty) {
@@ -988,6 +1016,54 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateRefinancingType(Refinancing newValue) {
+    refinancingType = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingLoanToValue(newValue) {
+    refinancingLoanToValue = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingLoanAmount(newValue) {
+    refinancingLoanAmount = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingDownPayment(newValue) {
+    refinancingDownPaymentAmount = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingInterestRate(newValue) {
+    refinancingInterestRate = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingTerm(newValue) {
+    refinancingTerm = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingClosingCosts(newValue) {
+    refinancingClosingCosts = newValue;
+    notifyListeners();
+  }
+
+  void updateRefinancingMonthlyPayment(newValue) {
+    refinancingMonthlyPayment = newValue;
+    notifyListeners();
+  }
+
+  void calculateAllRefinanceCalculations() {
+    refinancingMonthlyPayment = Finance.pmt(
+      rate: refinancingInterestRate / 12,
+      nper: refinancingTerm * 12,
+      pv: -1 * refinancingLoanAmount,
+    ) as double;
+    notifyListeners();
+  }
 
   void reset() {
     address = '';
@@ -1031,6 +1107,11 @@ class BRRRR extends ChangeNotifier{
     sellerFinancingType = SellerFinancingType.payment;
     sellerLoanPercentage = sellerLoanAmount = sellerInterestRate = 0;
     sellerTerm = 0;
+    refinancingType = Refinancing.cashOut;
+    refinancingLoanToValue = refinancingLoanAmount = refinancingDownPaymentAmount = 0;
+    refinancingInterestRate = 0;
+    refinancingTerm = 0;
+    refinancingClosingCosts = refinancingMonthlyPayment = 0;
     notifyListeners();
   }
 }

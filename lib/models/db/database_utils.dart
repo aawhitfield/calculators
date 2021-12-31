@@ -1,16 +1,13 @@
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/db/ff_selling_cost_db.dart';
-import 'package:calculators/models/db/refinance_db.dart';
 import 'package:calculators/models/fix_flip_selling_costs.dart';
 import 'package:calculators/models/brrrr.dart';
-import 'package:calculators/models/refinance.dart';
 import 'package:calculators/providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseUtils {
   static void deletePlaceByID(int id) {
-    RefinanceDatabase.instance.delete(id);
     SellingCostDatabase.instance.delete(id);
   }
 
@@ -44,7 +41,6 @@ class DatabaseUtils {
   static Future<void> saveDataToDatabase(WidgetRef ref, {String uid = '', String? docID}) async {
     // create property
     BRRRR property = ref.read(brrrrProvider);
-    RefinanceOptions refinanceData = ref.read(refinanceProvider);
     FixFlipSellingCosts sellingCostsData = ref.read(ffSellingCostsProvider);
 
     // property = await PropertyDatabase.instance.create(property);
@@ -60,7 +56,6 @@ class DatabaseUtils {
 
     Map<String, dynamic> data = {
       ...property.toJson(),
-      ...refinanceData.toJson(),
       ...sellingCostsData.toJson(),
     };
 

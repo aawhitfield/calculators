@@ -12,7 +12,7 @@ class ZeroInDeal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double arvLoan = ref.watch(refinanceProvider).loanAmount;
+    double arvLoan = ref.watch(brrrrProvider).refinancingLoanAmount;
     double totalLoans = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).constructionLoanAmount +
         ref.watch(brrrrProvider).sellerLoanAmount;
