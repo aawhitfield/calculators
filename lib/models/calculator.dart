@@ -11,7 +11,7 @@ class CalculatorUtils {
   static String getName(Calculator calculator) {
     switch (calculator) {
       case Calculator.brrrr :
-        return 'Residential REI';
+        return 'BRRRR';
       case Calculator.fixAndFlip :
         return 'Fix and Flip';
       case Calculator.quickMaxOffer :

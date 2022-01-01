@@ -283,6 +283,7 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.refinancingInterestRate: refinancingInterestRate,
     BRRRRFields.refinancingTerm: refinancingTerm,
     BRRRRFields.refinancingClosingCosts: refinancingClosingCosts,
+    'calculatorType': 'BRRRR',
   };
 
   static BRRRR fromJson(Map<String, Object?> json) => BRRRR(

@@ -36,9 +36,9 @@ class MyInputPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double width = context.isTablet
-        ? MediaQuery.of(context).size.width * 0.6
-        : MediaQuery.of(context).size.width;
+    // double width = context.isTablet
+    //     ? MediaQuery.of(context).size.width * 0.6
+    //     : MediaQuery.of(context).size.width;
 
     TextStyle? headline = context.isTablet
         ? Theme.of(context).textTheme.headline2
@@ -127,13 +127,12 @@ class MyInputPage extends ConsumerWidget {
               child,
               (position != totalQuestions)
                   ? MyElevatedButton(
-                      width: width,
                       onPressed: onSubmit,
                       label: (position == totalQuestions - 1)
                           ? 'Generate report'
                           : 'Continue',
                     )
-                  : FinalOptionsButtons(width: width,), // show on final report page
+                  : FinalOptionsButtons(), // show on final report page
               const SizedBox(height: 16),
             ],
           ),

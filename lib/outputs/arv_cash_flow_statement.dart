@@ -5,6 +5,7 @@ import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/numerical_list_tile.dart';
 import 'package:calculators/widgets/percent_list_tile.dart';
 import 'package:calculators/widgets/report_header.dart';
+// ignore: import_of_legacy_library_into_null_safe
 import 'package:finance/finance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
