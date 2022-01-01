@@ -17,32 +17,34 @@ class FinalOptionsButtons extends ConsumerWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        MyOutlinedButton(
-          width: width * 0.4,
-          onPressed: () {
-            resetAllData(ref);
-            Get.offAll(() => const MyHomePage(title: '', startingTab: 0,));
-          },
-          label: 'Start over',
+        Expanded(
+          child: MyOutlinedButton(
+            width: width * 0.4,
+            onPressed: () {
+              resetAllData(ref);
+              Get.offAll(() => const MyHomePage(title: '', startingTab: 0,));
+            },
+            label: 'Start over',
+          ),
         ),
-        const Spacer(),
-        MyElevatedButton(
-          width: width * 0.4,
-          onPressed: () async {
-            await DatabaseUtils.saveDataToDatabase(ref, uid: FirebaseAuth.instance.currentUser?.uid ?? '');
-            resetAllData(ref);
-            Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: const [
-                Icon(Icons.check, color: Colors.white),
-                SizedBox(width: 4),
-                Text('Place saved!',),
-              ],
-            ), shape: const StadiumBorder(), behavior: SnackBarBehavior.floating,));
-          },
-          label: 'Save Info',
-        ),
+        // const Spacer(),
+        // MyElevatedButton(
+        //   width: width * 0.4,
+        //   onPressed: () async {
+        //     await DatabaseUtils.saveDataToDatabase(ref, uid: FirebaseAuth.instance.currentUser?.uid ?? '');
+        //     resetAllData(ref);
+        //     Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
+        //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(
+        //       mainAxisSize: MainAxisSize.min,
+        //       children: const [
+        //         Icon(Icons.check, color: Colors.white),
+        //         SizedBox(width: 4),
+        //         Text('Place saved!',),
+        //       ],
+        //     ), shape: const StadiumBorder(), behavior: SnackBarBehavior.floating,));
+        //   },
+        //   label: 'Save Info',
+        // ),
       ],
     );
   }

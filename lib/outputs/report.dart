@@ -13,8 +13,6 @@ import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'fix_flip_statement.dart';
-
 class Report extends ConsumerWidget {
   const Report({Key? key}) : super(key: key);
 
@@ -39,13 +37,9 @@ class Report extends ConsumerWidget {
           (calculatorType == Calculator.fixAndFlip)
             ? const FixFlipHoldingCosts() : Container(),
           const ReportInitialCashInvestment(),
-          (calculatorType == Calculator.brrrr)
-            ? const CashFlowStatement()
-            : (calculatorType == Calculator.fixAndFlip)
-              ? const FixFlipStatement()
-              : Container(),
+          const CashFlowStatement(),
           (shouldShow0inDeal && calculatorType == Calculator.brrrr) ? const ZeroInDeal() : Container(),
-          (shouldShowARVStatement && calculatorType == Calculator.fixAndFlip) ? const ARVCashFlowStatement() : Container(),
+          (shouldShowARVStatement) ? const ARVCashFlowStatement() : Container(),
           (calculatorType == Calculator.fixAndFlip) ? const ValueIndicators() : Container(),
         ],
       ),

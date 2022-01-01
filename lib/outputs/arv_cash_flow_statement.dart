@@ -1,6 +1,11 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/providers.dart';
+import 'package:calculators/widgets/money_list_tile.dart';
+import 'package:calculators/widgets/numerical_list_tile.dart';
+import 'package:calculators/widgets/percent_list_tile.dart';
 import 'package:calculators/widgets/report_header.dart';
+import 'package:finance/finance.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,111 +16,48 @@ class ARVCashFlowStatement extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    double totalMonthlyIncome = ref.watch(brrrrProvider).totalIncome;
-    double totalAnnualIncome = totalMonthlyIncome * 12;
-    double totalMonthlyExpenses =
-        ref.watch(brrrrProvider).totalMonthlyExpenses;
-    double totalAnnualExpenses =
-        ref.watch(brrrrProvider).totalAnnualExpenses;
-    double noiMonthly = totalMonthlyIncome - totalMonthlyExpenses;
-    double noiAnnually = totalAnnualIncome - totalAnnualExpenses;
+    BRRRR provider = ref.read(brrrrProvider);
+    double income = provider.afterRepairRentPerMonth;
+    double expenses = provider.afterRepairTotalExpensesMonthly;
+    double noi = income - expenses;
+    double debtService = Finance.pmt(
+      rate: provider.refinancingInterestRate / 12,
+      nper: provider.refinancingTerm * 12,
+      pv: -1 * provider.refinancingLoanAmount,
+    ) as double;
+    double cashFlow = noi - debtService;
+    double yearlyCashFlow = cashFlow * 12;
+    double initialCash = provider.downPaymentAmount + provider.constructionDownPaymentAmount + provider.closingCosts;
+    double cashOnCashReturn = yearlyCashFlow / initialCash * 100;
+    double dscr = noi / debtService;
+    double onePercentRule = provider.afterRepairRentPerMonth / provider.afterRepairValue * 100;
 
-    double totalDebtServicePayments =
-        ref.watch(brrrrProvider).refinancingMonthlyPayment;
 
-    double netCashFlowMonthly = noiMonthly - totalDebtServicePayments;
-    double netCashFlowAnnually = noiAnnually - totalDebtServicePayments * 12;
-
-    bool cashFlowIsPositive =
-        (netCashFlowMonthly > 0 && netCashFlowAnnually > 0);
-    bool cashFlowIsNegative =
-        (netCashFlowMonthly < 0 || netCashFlowAnnually < 0);
+    String incomeString = kCurrencyFormat.format(income);
+    String expensesString = kCurrencyFormat.format(expenses);
+    String noiString = kCurrencyFormat.format(noi);
+    String debtServiceString = kCurrencyFormat.format(debtService);
+    String cashFlowString = kCurrencyFormat.format(cashFlow);
+    String yearlyCashFlowString = kCurrencyFormat.format(yearlyCashFlow);
+    String cashOnCashReturnString = cashOnCashReturn.toStringAsFixed(2);
+    String dscrString = dscr.toStringAsFixed(2);
+    String onePercentRuleString = onePercentRule.toStringAsFixed(3);
 
     return Column(
       children: [
         const ReportHeader('ARV Cash Flow Statement'),
         const SizedBox(height: 16),
-        Table(
-          border: TableBorder.all(),
-          children: [
-            const TableRow(
-              children: [
-                Text(''),
-                Center(child: Text('Monthly')),
-                Center(child: Text('Annually')),
-              ],
-            ),
-            TableRow(
-              children: [
-                const Text('Income'),
-                Center(
-                    child: Text(
-                        '\$ ' + kCurrencyFormat.format(totalMonthlyIncome))),
-                Center(
-                    child: Text(
-                        '\$ ' + kCurrencyFormat.format(totalAnnualIncome))),
-              ],
-            ),
-            TableRow(
-              children: [
-                const Text('Expenses'),
-                Center(
-                    child: Text(
-                        '\$ ' + kCurrencyFormat.format(totalMonthlyExpenses))),
-                Center(
-                    child: Text(
-                        '\$ ' + kCurrencyFormat.format(totalAnnualExpenses))),
-              ],
-            ),
-            TableRow(
-              children: [
-                const Text('NOI'),
-                Center(child: Text('\$ ' + kCurrencyFormat.format(noiMonthly))),
-                Center(
-                    child: Text('\$ ' + kCurrencyFormat.format(noiAnnually))),
-              ],
-            ),
-            TableRow(
-              children: [
-                const Text('Debt Service'),
-                Center(
-                    child: Text('\$ ' +
-                        kCurrencyFormat.format(totalDebtServicePayments))),
-                Center(
-                    child: Text('\$ ' +
-                        kCurrencyFormat.format(totalDebtServicePayments * 12))),
-              ],
-            ),
-            const TableRow(
-              children: [
-                Text(''),
-                Text(''),
-                Text(''),
-              ],
-            ),
-            TableRow(
-              decoration: BoxDecoration(
-                color: (cashFlowIsPositive)
-                    ? Colors.green.withOpacity(0.6)
-                    : (cashFlowIsNegative)
-                        ? Colors.red.withOpacity(0.6)
-                        : Colors.transparent,
-              ),
-              children: [
-                const Text(
-                  'Net Cash Flow',
-                  style: TextStyle(fontWeight: FontWeight.w700),
-                ),
-                Center(
-                    child: Text(
-                        '\$ ' + kCurrencyFormat.format(netCashFlowMonthly))),
-                Center(
-                    child: Text(
-                        '\$ ' + kCurrencyFormat.format(netCashFlowAnnually))),
-              ],
-            ),
-          ],
-        ),
+        MoneyListTile('Income', incomeString),
+        MoneyListTile('Expenses', expensesString),
+        MoneyListTile('NOI', noiString),
+        MoneyListTile('Debt Service', debtServiceString),
+        MoneyListTile('Cashflow', cashFlowString),
+        MoneyListTile('Yearly Cashflow', yearlyCashFlowString),
+        Text('Refinance Metrics', style: Theme.of(context).textTheme.headline5),
+        const Divider(),
+        PercentListTile('Cash on Cash Return', cashOnCashReturnString),
+        NumericalListTile('Debt Service\nCoverage Ratio', dscrString),
+        PercentListTile('1% Rule', onePercentRuleString),
         const SizedBox(height: 32),
       ],
     );
