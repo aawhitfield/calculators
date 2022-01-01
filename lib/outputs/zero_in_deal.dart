@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/report_header.dart';
@@ -27,9 +28,10 @@ class ZeroInDeal extends ConsumerWidget {
         totalDownPayment + constructionDownPayment + closingCosts;
     double initialCashPerInvestor =
         initialCashInvestment / ref.watch(brrrrProvider).investors;
-    double afterRepairValue = ref.watch(brrrrProvider).afterRepairValue;
-    double equity = afterRepairValue - arvLoan;
-    double afterRefinance = arvLoan - totalLoans - initialCashInvestment;
+    double equity = arvLoan - totalLoans;
+    BRRRR provider = ref.read(brrrrProvider);
+    double holdingCost = provider.totalHoldingCosts;
+    double afterRefinance = arvLoan - totalLoans - initialCashInvestment - holdingCost;
 
     String arvLoanString = kCurrencyFormat.format(arvLoan);
     String totalLoansString = kCurrencyFormat.format(totalLoans);
@@ -39,10 +41,11 @@ class ZeroInDeal extends ConsumerWidget {
         kCurrencyFormat.format(initialCashPerInvestor);
     String equityString = kCurrencyFormat.format(equity);
     String afterRefinanceString = kCurrencyFormat.format(afterRefinance);
+    String holdingCostString = kCurrencyFormat.format(holdingCost);
 
     return Column(
       children: [
-        const ReportHeader('0 in Deal?'),
+        const ReportHeader('Refinance 0 in Deal?'),
         const SizedBox(height: 16),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
@@ -59,6 +62,10 @@ class ZeroInDeal extends ConsumerWidget {
                 ? 'Initial\ncash'
                 : 'Initial \nCash Investment',
             initialCashInvestmentString),
+        MoneyListTile((MediaQuery.of(context).size.width < 640)
+            ? 'Holding\ncost'
+            : 'Holding Cost',
+            holdingCostString),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'Per\nInvestor'
@@ -74,8 +81,12 @@ class ZeroInDeal extends ConsumerWidget {
             child: MoneyListTile(
                 (MediaQuery.of(context).size.width < 640)
                     ? 'After\nrefinance'
-                    : 'After refinance \n0 in deal?',
-                afterRefinanceString)),
+                    : 'After refinance \n0 IN',
+                afterRefinanceString,
+              subtitle: (MediaQuery.of(context).size.width < 640)
+                ? '0 IN' : '',
+            ),
+        ),
         const SizedBox(height: 16),
       ],
     );
