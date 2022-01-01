@@ -85,6 +85,7 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
               Get.to(() => const RefinanceInput());
             }
             else {
+              ref.read(brrrrProvider).calculateAllHoldingCosts();
               Get.to(() => const HoldingCosts());
             }
           }

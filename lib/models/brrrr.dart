@@ -949,6 +949,12 @@ class BRRRR extends ChangeNotifier{
   void calculateAllConstructionCalculations() {
     constructionLoanAmount = (1 - constructionDownPaymentPercentage) * totalRenovations;
     constructionDownPaymentAmount = totalRenovations - constructionLoanAmount;
+    constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
+      rate: constructionInterestRate / 12,
+      nper: constructionTerm,
+      pv: -1 * constructionLoanAmount,
+      per: 1,
+    );
     notifyListeners();
   }
 
@@ -958,8 +964,19 @@ class BRRRR extends ChangeNotifier{
   }
 
   void calculateAllHoldingCosts() {
-    // double interestOnlyPayment = calculateMonthlyPaymentInterestOnly(rate: interestRate / 12, nper: 1, pv: term, per: -1 * loanAmount);
-    // debtService = interestOnlyPayment + // TODO finish holding costs
+    double mp = (calculateMonthlyPaymentInterestOnly(
+      rate: interestRate / 12,
+      nper: term,
+      pv: -1 * loanAmount,
+      per: 1,
+    ));
+
+    debtService =
+        (mp + sellerMonthlyPayment + constructionMonthlyPayment) * monthsToRehabRent;
+
+    insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
+    totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities) * monthsToRehabRent;
+    notifyListeners();
   }
 
   void updateSellerFinanceOptionData(BRRRR newFinanceOptionData) {

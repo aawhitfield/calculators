@@ -97,6 +97,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
           Get.to(() => const RefinanceInput());
         }
         else {
+          ref.read(brrrrProvider).calculateAllHoldingCosts();
           Get.to(() => const HoldingCosts());
         }
       },

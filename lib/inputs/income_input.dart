@@ -19,6 +19,8 @@ class IncomeInput extends ConsumerStatefulWidget {
 class _IncomeInputState extends ConsumerState<IncomeInput> {
   TextEditingController rentController = TextEditingController();
   TextEditingController otherController = TextEditingController();
+  TextEditingController afterRepairRentController = TextEditingController();
+  TextEditingController afterRepairOtherController = TextEditingController();
 
   @override
   void initState() {
@@ -29,6 +31,14 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
     double other = ref.read(brrrrProvider).otherIncome;
     if (other != 0) {
       otherController.text = kCurrencyFormat.format(other);
+    }
+    double afterRepairRent = ref.read(brrrrProvider).afterRepairRentPerMonth;
+    if (afterRepairRent != 0) {
+      afterRepairRentController.text = kCurrencyFormat.format(afterRepairRent);
+    }
+    double afterRepairOther = ref.read(brrrrProvider).afterRepairOtherIncome;
+    if (afterRepairOther != 0) {
+      afterRepairOtherController.text = kCurrencyFormat.format(afterRepairOther);
     }
     super.initState();
   }
@@ -93,7 +103,9 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
             MoneyListTile('Total Income', totalIncomeString),
             MoneyListTile('Yearly Income', totalYearlyIncomeString),
             const Divider(),
-            MoneyTextField(labelText: 'After Repair Rent Per Month', onChanged: (String newValue) {
+            MoneyTextField(
+                controller: afterRepairRentController,
+                labelText: 'After Repair Rent Per Month', onChanged: (String newValue) {
               newValue = newValue.replaceAll(',', '');
               double? value = double.tryParse(newValue);
               if(value != null) {
@@ -107,7 +119,9 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
                 ref.read(brrrrProvider).calculateYearlyIncomeAfterRepair();
               }
             }),
-            MoneyTextField(labelText: 'After Repair Other Income', onChanged: (String newValue) {
+            MoneyTextField(
+                controller: afterRepairOtherController,
+                labelText: 'After Repair Other Income', onChanged: (String newValue) {
               newValue = newValue.replaceAll(',', '');
               double? value = double.tryParse(newValue);
               if(value != null) {

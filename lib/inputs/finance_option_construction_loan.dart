@@ -77,6 +77,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
             Get.to(() => const RefinanceInput());
           }
           else {
+            ref.read(brrrrProvider).calculateAllHoldingCosts();
             Get.to(() => const HoldingCosts());
           }
         },
@@ -122,6 +123,10 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                   double interestRate = newValue / 100;
                   ref.read(brrrrProvider).updateConstructionInterestRate(interestRate);
                 }
+                else {
+                  ref.read(brrrrProvider).updateConstructionInterestRate(0.0);
+                }
+                ref.read(brrrrProvider).calculateAllConstructionCalculations();
               },
             ),
             IntegerTextField(
@@ -138,6 +143,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                 else {
                   ref.read(brrrrProvider).updateConstructionTerm(0);
                 }
+                ref.read(brrrrProvider).calculateAllConstructionCalculations();
               },
             ),
             MoneyListTile(
