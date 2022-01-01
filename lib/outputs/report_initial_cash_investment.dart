@@ -36,7 +36,7 @@ class ReportInitialCashInvestment extends ConsumerWidget {
 
     return Column(
       children: [
-        const ReportHeader('Initial Cash Investment'),
+        const ReportHeader('Initial Purchase'),
         const SizedBox(height: 16),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
