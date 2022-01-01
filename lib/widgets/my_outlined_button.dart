@@ -25,9 +25,12 @@ class MyOutlinedButton extends StatelessWidget {
             side: MaterialStateProperty.all(BorderSide(color: Theme.of(context).primaryColor))
           ),
           onPressed: onPressed,
-          child: Text(
-            label,
-            style: const TextStyle(fontSize: 20),
+          child: Center(
+            child: Text(
+              label,
+              textAlign: TextAlign.center,
+              style: const TextStyle(fontSize: 20),
+            ),
           ),
         ),
       ),

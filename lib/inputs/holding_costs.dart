@@ -40,7 +40,9 @@ class _HoldingCostsState extends ConsumerState<HoldingCosts> {
       child: ResponsiveLayout(
         children: [
           MoneyListTile('Debt Service', debtServiceString),
-          MoneyListTile('Insurance and Taxes', insuranceTaxesString),
+          MoneyListTile((MediaQuery.of(context).size.width < 640)
+              ? 'Insurance\n& Taxes'
+              : 'Insurance and Taxes', insuranceTaxesString),
           MoneyTextField(labelText: 'Utilities', onChanged: (String newValue) {
             newValue = newValue.replaceAll(',', '');
             double? value = double.tryParse(newValue);
@@ -52,7 +54,9 @@ class _HoldingCostsState extends ConsumerState<HoldingCosts> {
             }
             ref.read(brrrrProvider).calculateAllHoldingCosts();
           }),
-          MoneyListTile('Total Holding Costs', totalHoldingCostsString),
+          MoneyListTile((MediaQuery.of(context).size.width < 640)
+              ? 'Holding\nCosts'
+              : 'Total\nHolding Costs', totalHoldingCostsString),
         ],
       ),
     );

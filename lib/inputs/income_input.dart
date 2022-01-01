@@ -100,8 +100,12 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
                     ref.read(brrrrProvider).calculateYearlyIncome();
                   }
                 }),
-            MoneyListTile('Total Income', totalIncomeString),
-            MoneyListTile('Yearly Income', totalYearlyIncomeString),
+            MoneyListTile((MediaQuery.of(context).size.width < 640)
+                ? 'Total\nIncome'
+                : 'Total Income', totalIncomeString),
+            MoneyListTile((MediaQuery.of(context).size.width < 640)
+                ? 'Yearly\nIncome'
+                : 'Yearly Income', totalYearlyIncomeString),
             const Divider(),
             MoneyTextField(
                 controller: afterRepairRentController,
@@ -135,8 +139,12 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
                 ref.read(brrrrProvider).calculateYearlyIncomeAfterRepair();
               }
             }),
-            MoneyListTile('Total Income', totalIncomeAfterRepairString),
-            MoneyListTile('Yearly Income', totalYearlyIncomeAfterRepairString),
+            MoneyListTile((MediaQuery.of(context).size.width < 640)
+                ? 'Total\nIncome'
+                : 'Total Income', totalIncomeAfterRepairString),
+            MoneyListTile((MediaQuery.of(context).size.width < 640)
+                ? 'Yearly\nIncome'
+                : 'Yearly Income', totalYearlyIncomeAfterRepairString),
           ],
         ),
     );

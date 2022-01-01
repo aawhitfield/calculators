@@ -47,10 +47,14 @@ class CashFlowStatement extends ConsumerWidget {
         MoneyListTile('NOI', noiString),
         MoneyListTile('Debt Service', debtServiceString),
         MoneyListTile('Cashflow', cashFlowString),
-        MoneyListTile('Yearly Cashflow', yearlyCashFlowString),
+        MoneyListTile((MediaQuery.of(context).size.width < 640)
+            ? 'Yearly\nCashflow'
+            : 'Yearly Cashflow', yearlyCashFlowString),
         Text('Initial Purchase Metrics', style: Theme.of(context).textTheme.headline5),
         const Divider(),
-        PercentListTile('Cash on Cash Return', cashOnCashReturnString),
+        PercentListTile((MediaQuery.of(context).size.width < 640)
+            ? 'Cash on\nCash Return'
+            : 'Cash on Cash Return', cashOnCashReturnString),
         NumericalListTile('Debt Service\n Coverage Ratio', dscrString),
         PercentListTile('1% Rule', onePercentRuleString),
         const SizedBox(height: 32),

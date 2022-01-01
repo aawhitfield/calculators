@@ -132,7 +132,9 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
                 }
                 ref.read(brrrrProvider).calculateAllExpenses();
               }),
-          MoneyListTile('Property Management', propertyManagementMonthlyString,
+          MoneyListTile((MediaQuery.of(context).size.width < 640)
+              ? 'Property\nManagement'
+              : 'Property Management', propertyManagementMonthlyString,
               subtitle: 'Monthly'),
           PercentTextField(
               labelText: 'Vacancy',
