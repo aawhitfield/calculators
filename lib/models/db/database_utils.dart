@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseUtils {
-  static void deletePlaceByID(int id) {
+  static void deletePlaceByID(String id) {
   }
 
-  static Future<Calculator> loadDataByID(int id, WidgetRef ref) async {
+  static Future<Calculator> loadDataByID(String id, WidgetRef ref) async {
     // BRRRR savedProperty = await PropertyDatabase.instance.readProperty(id);
     // Renovation savedRenovation =
     //     await RenovationsDatabase.instance.readRenovation(id);
@@ -43,4 +43,9 @@ class DatabaseUtils {
 
 
   }
+}
+
+class FirestoreCollections {
+  static const String users = 'users';
+  static const String calculators = 'calculators';
 }

@@ -1,4 +1,4 @@
-import 'package:calculators/calculator_selector.dart';
+import 'package:calculators/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
@@ -33,7 +33,7 @@ class AuthGate extends StatelessWidget {
         }
 
         // Render your application if authenticated
-        return const CalculatorSelector();//MyHomePage(title: 'Vereifi');
+        return const MyHomePage(title: 'Vereifi');
       },
     );
   }

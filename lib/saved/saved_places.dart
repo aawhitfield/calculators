@@ -3,8 +3,11 @@ import 'dart:math';
 import 'package:calculators/inputs/location.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/db/database_utils.dart';
+import 'package:calculators/models/saved_calculator.dart';
 import 'package:calculators/providers.dart';
-import 'package:calculators/models/brrrr.dart';
+import 'package:calculators/widgets/waiting.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,14 +28,12 @@ class _SavedPlacesState extends State<SavedPlaces> {
   @override
   Widget build(BuildContext context) {
     List<int> colors = [
-      0xFF0059BF,
-      0xFF29578A,
-      0xFF29abe2 ,
-      0xFF3978BF,
-      0xFF001E40
+      0xFF29abe2,
+      0xFF0071bc,
+      0xFF003673,
     ];
 
-    void deletePlace(int id, WidgetRef ref) {
+    void deletePlace(String id, WidgetRef ref) {
       DatabaseUtils.deletePlaceByID(id);
       resetAllData(ref);
       setState(() {});
@@ -53,14 +54,28 @@ class _SavedPlacesState extends State<SavedPlaces> {
             ),
             const SizedBox(height: 16),
             Expanded(
-              child: FutureBuilder<List<BRRRR>>(
-                  future: Future.delayed(const Duration(seconds: 2)), // PropertyDatabase.instance.readAllProperties(),
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  stream: FirebaseFirestore.instance.collection(FirestoreCollections.users)
+                    .doc(FirebaseAuth.instance.currentUser!.uid)
+                    .collection(FirestoreCollections.calculators)
+                    .snapshots(),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Container();
+                      return const Center(child: Waiting(label: 'Loading saved properties'));
                     }
-                    List<BRRRR> properties =
-                        List.from(snapshot.data ?? <BRRRR>[]);
+
+                    List<SavedCalculator> properties = <SavedCalculator>[];
+
+                    if (snapshot.data != null) {
+                      for(DocumentSnapshot<Map<String, dynamic>> document in snapshot.data!.docs) {
+                        Map<String, dynamic>? data = document.data();
+                        if(data != null) {
+                          SavedCalculator newCalculator = SavedCalculator(address: data['address'], calculatorType: data['calculatorType'], uid: document.id);
+                          properties.add(newCalculator);
+                        }
+                      }
+                    }
+
 
                     double size = min(MediaQuery.of(context).size.width,
                             MediaQuery.of(context).size.height) *
@@ -115,10 +130,8 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                         motion: const BehindMotion(),
                                         dismissible:
                                             DismissiblePane(onDismissed: () {
-                                          if (properties[index].id != null) {
                                             deletePlace(
-                                                properties[index].id!, ref);
-                                          }
+                                                properties[index].uid, ref);
                                         }),
                                         children: [
                                           SlidableAction(
@@ -127,11 +140,8 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                             icon: Icons.archive,
                                             label: 'Delete',
                                             onPressed: (context) {
-                                              if (properties[index].id !=
-                                                  null) {
                                                 deletePlace(
-                                                    properties[index].id!, ref);
-                                              }
+                                                    properties[index].uid, ref);
                                             },
                                           ),
                                         ],
@@ -152,10 +162,9 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                     )),
                                               ),
                                             onPressed: () {
-                                              if (properties[index].id != null) {
                                                 deletePlace(
-                                                    properties[index].id!, ref);
-                                              }
+                                                    properties[index].uid, ref);
+
                                               Navigator.of(context).pop();
                                             },
                                           )
@@ -169,14 +178,11 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                             .minus_circle_fill,
                                                         color: Colors.red),
                                                     onPressed: () {
-                                                      if (properties[index]
-                                                              .id !=
-                                                          null) {
                                                         deletePlace(
                                                             properties[index]
-                                                                .id!,
+                                                                .uid,
                                                             ref);
-                                                      }
+
                                                     },
                                                   )
                                                 : Icon(
@@ -187,16 +193,13 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                   ),
                                             title:
                                                 Text(properties[index].address),
-                                            // subtitle:
-                                            // Text(
-                                            //     CalculatorUtils.getName(
-                                            //         properties[index]
-                                            //             .type)),
+                                            subtitle:
+                                            Text(properties[index].calculatorType),
                                             trailing: const Icon(
                                                 CupertinoIcons.right_chevron),
                                             onTap: () async {
-                                              int? id = properties[index].id;
-                                              if (id != null) {
+                                              String id = properties[index].uid;
+
                                                 Calculator savedCalculator =
                                                     await DatabaseUtils
                                                         .loadDataByID(id, ref);
@@ -207,7 +210,6 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                       Location(CalculatorUtils.getName(savedCalculator)));
                                                 }
                                               }
-                                            },
                                           ),
                                         ),
                                       ),
