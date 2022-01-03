@@ -350,6 +350,126 @@ class BRRRR extends ChangeNotifier{
       refinancingClosingCosts: json[BRRRRFields.refinancingClosingCosts] as double,
   );
 
+  void updateAll(BRRRR data) {
+    id = data.id;
+    address = data.address;
+    listPrice = data.listPrice;
+    sqft = data.sqft;
+    afterRepairValue = data.afterRepairValue;
+    purchasePrice = data.purchasePrice;
+    monthsToRehabRent = data.monthsToRehabRent;
+    units = data.units;
+    investors = data.investors;
+    foundation = data.foundation;
+    roof = data.roof;
+    airConditioner = data.airConditioner;
+    paintingPatching = data.paintingPatching;
+    kitchen = data.kitchen;
+    windows = data.windows;
+    plumbing = data.plumbing;
+    flooring = data.flooring;
+    bathrooms = data.bathrooms;
+    appliances = data.appliances;
+    electrical = data.electrical;
+    yard = data.yard;
+    cleaning = data.cleaning;
+    baseboards = data.baseboards;
+    exterior = data.exterior;
+    demo = data.demo;
+    elevators = data.elevators;
+    build28Units = data.build28Units;
+    otherRenovations = data.otherRenovations;
+    totalRenovations = data.totalRenovations;
+    tenPercentExtra = data.tenPercentExtra;
+    rent = data.rent;
+    otherIncome = data.otherIncome;
+    totalIncome = data.totalIncome;
+    yearlyIncome = data.yearlyIncome;
+    afterRepairRentPerMonth = data.afterRepairRentPerMonth;
+    afterRepairOtherIncome = data.afterRepairOtherIncome;
+    totalIncomeAfterRepair = data.totalIncomeAfterRepair;
+    yearlyIncomeAfterRepair = data.yearlyIncomeAfterRepair;
+    taxesYearly = data.taxesYearly;
+    taxesMonthly = data.taxesMonthly;
+    propertyManagementPercentage = data.propertyManagementPercentage;
+    propertyManagementMonthly = data.propertyManagementMonthly;
+    vacancyPercentage = data.vacancyPercentage;
+    vacancyMonthly = data.vacancyMonthly;
+    maintenancePercentage = data.maintenancePercentage;
+    maintenanceMonthly = data.maintenanceMonthly;
+    otherExpensesPercentage = data.otherExpensesPercentage;
+    otherExpensesMonthly = data.otherExpensesMonthly;
+    totalMonthlyExpenses = data.totalMonthlyExpenses;
+    totalAnnualExpenses = data.totalAnnualExpenses;
+    noiMonthly = data.noiMonthly;
+    noiAnnual = data.noiAnnual;
+    insuranceMonthly = data.insuranceMonthly;
+    insuranceYearly = data.insuranceYearly;
+    afterRepairNOIMonthly = data.afterRepairNOIMonthly;
+    afterRepairNOIYearly = data.afterRepairNOIYearly;
+    afterRepairTotalExpensesMonthly = data.afterRepairTotalExpensesMonthly;
+    afterRepairTotalExpensesYearly = data.afterRepairTotalExpensesYearly;
+    financingType = data.financingType;
+    downPaymentPercent = data.downPaymentPercent;
+    loanAmount = data.loanAmount;
+    downPaymentAmount = data.downPaymentAmount;
+    interestRate = data.interestRate;
+    term = data.term;
+    closingCosts = data.closingCosts;
+    monthlyPayment = data.monthlyPayment;
+    willRefinance = data.willRefinance;
+    paymentType = data.paymentType;
+    wantsToRefinance = data.wantsToRefinance;
+    constructionDownPaymentPercentage = data.constructionDownPaymentPercentage;
+    constructionLoanAmount = data.constructionLoanAmount;
+    constructionDownPaymentAmount = data.constructionDownPaymentAmount;
+    constructionInterestRate = data.constructionInterestRate;
+    constructionTerm = data.constructionTerm;
+    constructionMonthlyPayment = data.constructionMonthlyPayment;
+    debtService = data.debtService;
+    insuranceAndTaxes = data.insuranceAndTaxes;
+    holdingCostsUtilities = data.holdingCostsUtilities;
+    totalHoldingCosts = data.totalHoldingCosts;
+    sellerFinancingType = data.sellerFinancingType;
+    sellerLoanPercentage = data.sellerLoanPercentage;
+    sellerLoanAmount = data.sellerLoanAmount;
+    sellerInterestRate = data.sellerInterestRate;
+    amortization = data.amortization;
+    sellerTerm = data.sellerTerm;
+    sellerMonthlyPayment = data.sellerMonthlyPayment;
+    refinancingType = data.refinancingType;
+    refinancingLoanToValue = data.refinancingLoanToValue;
+    refinancingLoanAmount = data.refinancingLoanAmount;
+    refinancingDownPaymentAmount = data.refinancingDownPaymentAmount;
+    refinancingInterestRate = data.refinancingInterestRate;
+    refinancingTerm = data.refinancingTerm;
+    refinancingClosingCosts = data.refinancingClosingCosts;
+    refinancingMonthlyPayment = data.refinancingMonthlyPayment;
+    calculateAll();
+    notifyListeners();
+  }
+
+  void calculateAll() {
+    calculateAllExpenses();
+    calculateTenPercentExtra();
+    if (totalRenovations == 0) {
+      calculateTotalRenovations();
+    }
+    calculateTotalIncome();
+    calculateYearlyIncome();
+    calculateTotalIncomeAfterRepair();
+    calculateYearlyIncomeAfterRepair();
+    calculateAfterRepairTotalExpensesMonthly();
+    calculateNOIMonthly();
+    calculateNOIAnnually();
+    calculateAfterRepairNOIMonthly();
+    calculateAfterRepairNOIYearly();
+    calculateLoanAmount();
+    calculateAllRefinanceCalculations();
+    calculateSellerFinanceCalculations();
+    calculateAllHoldingCosts();
+  }
+
   void updateProperty(BRRRR newProperty) {
     id = newProperty.id;
     address = newProperty.address;
@@ -1025,11 +1145,13 @@ class BRRRR extends ChangeNotifier{
 
   void calculateSellerFinanceCalculations() {
     sellerLoanAmount = sellerLoanPercentage * downPaymentAmount;
-    if(sellerFinancingType == SellerFinancingType.payment) {
-      sellerMonthlyPayment = calculateMonthlyPayment(rate: sellerInterestRate / 12, nper: sellerTerm * 12, pv: -1 * sellerLoanAmount);
-    }
-    else {
-      sellerMonthlyPayment = calculateMonthlyPaymentInterestOnly(rate: sellerInterestRate / 12, nper: 1, pv: amortization, per: -1 * sellerLoanAmount);
+    if (sellerInterestRate != 0 && sellerTerm != 0 && sellerLoanAmount != 0) {
+      if(sellerFinancingType == SellerFinancingType.payment) {
+        sellerMonthlyPayment = calculateMonthlyPayment(rate: sellerInterestRate / 12, nper: sellerTerm * 12, pv: -1 * sellerLoanAmount);
+      }
+      else {
+        sellerMonthlyPayment = calculateMonthlyPaymentInterestOnly(rate: sellerInterestRate / 12, nper: 1, pv: amortization, per: -1 * sellerLoanAmount);
+      }
     }
     notifyListeners();
   }

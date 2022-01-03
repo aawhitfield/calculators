@@ -132,7 +132,7 @@ class MyInputPage extends ConsumerWidget {
                           ? 'Generate report'
                           : 'Continue',
                     )
-                  : FinalOptionsButtons(), // show on final report page
+                  : const FinalOptionsButtons(), // show on final report page
               const SizedBox(height: 16),
             ],
           ),

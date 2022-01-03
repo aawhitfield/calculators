@@ -198,16 +198,17 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                             trailing: const Icon(
                                                 CupertinoIcons.right_chevron),
                                             onTap: () async {
-                                              String id = properties[index].uid;
+                                              ref.read(savedCalculatorProvider).updateAll(properties[index]);
 
-                                                Calculator savedCalculator =
-                                                    await DatabaseUtils
-                                                        .loadDataByID(id, ref);
-                                                if (savedCalculator ==
-                                                    Calculator.brrrr ||
-                                                  savedCalculator == Calculator.fixAndFlip) {
+                                              String id = properties[index].uid;
+                                              Calculator calculatorType = CalculatorUtils.toType(properties[index].calculatorType);
+
+                                              await DatabaseUtils
+                                                        .loadDataByID(id, ref, calculatorType);
+                                                if (calculatorType ==
+                                                    Calculator.brrrr) {
                                                   Get.to(() =>
-                                                      Location(CalculatorUtils.getName(savedCalculator)));
+                                                      Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat',));
                                                 }
                                               }
                                           ),

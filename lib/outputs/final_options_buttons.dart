@@ -27,7 +27,10 @@ class FinalOptionsButtons extends ConsumerWidget {
         MyElevatedButton(
           onPressed: () async {
             Map<String, dynamic> data = ref.read(brrrrProvider).toJson();
-            await DatabaseUtils.saveDataToDatabase(uid: FirebaseAuth.instance.currentUser!.uid, data: data);
+
+            // get the document ID to update the record, otherwise create a new document
+            String docID = ref.read(savedCalculatorProvider).uid;
+            await DatabaseUtils.saveDataToDatabase(uid: FirebaseAuth.instance.currentUser!.uid, data: data, docID: (docID != '' ? docID : null));
             resetAllData(ref);
             Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(

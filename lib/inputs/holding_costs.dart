@@ -18,6 +18,17 @@ class HoldingCosts extends ConsumerStatefulWidget {
 
 class _HoldingCostsState extends ConsumerState<HoldingCosts> {
 
+  TextEditingController utilitiesController = TextEditingController();
+
+  @override
+  void initState() {
+    double utilities = ref.read(brrrrProvider).holdingCostsUtilities;
+    if (utilities != 0) {
+      utilitiesController.text = kCurrencyFormat.format(utilities);
+    }
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     double debtService = ref.watch(brrrrProvider).debtService;
@@ -43,7 +54,9 @@ class _HoldingCostsState extends ConsumerState<HoldingCosts> {
           MoneyListTile((MediaQuery.of(context).size.width < 640)
               ? 'Insurance\n& Taxes'
               : 'Insurance and Taxes', insuranceTaxesString),
-          MoneyTextField(labelText: 'Utilities', onChanged: (String newValue) {
+          MoneyTextField(
+              controller: utilitiesController,
+              labelText: 'Utilities', onChanged: (String newValue) {
             newValue = newValue.replaceAll(',', '');
             double? value = double.tryParse(newValue);
             if(value != null) {

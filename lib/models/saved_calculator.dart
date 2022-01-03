@@ -4,16 +4,18 @@
 
 import 'dart:convert';
 
-class SavedCalculator {
+import 'package:flutter/foundation.dart';
+
+class SavedCalculator with ChangeNotifier{
   SavedCalculator({
     required this.address,
     required this.calculatorType,
     required this.uid,
   });
 
-  final String address;
-  final String calculatorType;
-  final String uid;
+  String address;
+  String calculatorType;
+  String uid;
 
   factory SavedCalculator.fromJson(String str) => SavedCalculator.fromMap(json.decode(str));
 
@@ -30,4 +32,18 @@ class SavedCalculator {
     "calculatorType": calculatorType,
     "uid": uid,
   };
+
+  void updateAll(SavedCalculator newValues) {
+    address = newValues.address;
+    calculatorType = newValues.calculatorType;
+    uid = newValues.uid;
+    notifyListeners();
+  }
+
+  void reset() {
+    address = '';
+    calculatorType = 'BRRRR';
+    uid = '';
+    notifyListeners();
+  }
 }
