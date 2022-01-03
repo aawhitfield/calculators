@@ -1,9 +1,18 @@
 import 'package:calculators/models/calculator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class DatabaseUtils {
-  static void deletePlaceByID(String id) {
+  static Future<void> deletePlaceByID(String id) async{
+
+    await FirebaseFirestore.instance.collection(FirestoreCollections.users)
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection(FirestoreCollections.calculators)
+        .doc(id)
+        .delete();
+
+    return;
   }
 
   static Future<Calculator> loadDataByID(String id, WidgetRef ref) async {
