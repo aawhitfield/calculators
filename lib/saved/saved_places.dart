@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:calculators/inputs/location.dart';
+import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/db/database_utils.dart';
 import 'package:calculators/models/saved_calculator.dart';
@@ -209,6 +210,10 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                     Calculator.brrrr) {
                                                   Get.to(() =>
                                                       Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat',));
+                                                }
+                                                else if(calculatorType == Calculator.quickMaxOffer) {
+                                                  ref.read(quickMaxProvider).calculateAllQuickMaxOffer();
+                                                  Get.to(() => const QuickMaxOffer());
                                                 }
                                               }
                                           ),

@@ -44,7 +44,7 @@ class CalculatorSelector extends ConsumerWidget {
         svgImage: 'images/offer.svg',
         imageSize: imageSize,
         onPressed: () {
-          ref.read(calculatorProvider).updateCurrentCalculator(Calculator.fixAndFlip);
+          ref.read(calculatorProvider).updateCurrentCalculator(Calculator.quickMaxOffer);
           Get.to(() => const QuickMaxOffer());
         },
       ),

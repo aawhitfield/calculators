@@ -1,5 +1,6 @@
 import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/models/calculator.dart';
+import 'package:calculators/models/quick_max_offer.dart';
 import 'package:calculators/providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -30,6 +31,11 @@ class DatabaseUtils {
       if(calculatorType == Calculator.brrrr) {
         BRRRR brrrrData = BRRRR.fromJson(data);
         ref.read(brrrrProvider).updateAll(brrrrData);
+      }
+      else if(calculatorType == Calculator.quickMaxOffer) {
+        QuickMaxOffer quickMaxOfferData = QuickMaxOffer.fromJson(data);
+        ref.read(quickMaxProvider).updateAll(quickMaxOfferData);
+        ref.read(quickMaxProvider).calculateAllQuickMaxOffer();
       }
     }
 

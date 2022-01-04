@@ -1,4 +1,5 @@
 import 'package:calculators/home.dart';
+import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/db/database_utils.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
@@ -26,7 +27,14 @@ class FinalOptionsButtons extends ConsumerWidget {
         const Spacer(),
         MyElevatedButton(
           onPressed: () async {
-            Map<String, dynamic> data = ref.read(brrrrProvider).toJson();
+            Calculator currentCalculator = ref.read(calculatorProvider).type;
+            Map<String, dynamic> data = {};
+            if(currentCalculator == Calculator.brrrr) {
+              data = ref.read(brrrrProvider).toJson();
+            }
+            else if(currentCalculator == Calculator.quickMaxOffer) {
+              data = ref.read(quickMaxProvider).toJson();
+            }
 
             // get the document ID to update the record, otherwise create a new document
             String docID = ref.read(savedCalculatorProvider).uid;
