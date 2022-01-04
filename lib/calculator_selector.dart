@@ -30,15 +30,15 @@ class CalculatorSelector extends ConsumerWidget {
           Get.to(() => Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat',));
         },
       ),
-      // CardButton(
-      //   label: 'Fix & Flip',
-      //   svgImage: 'images/fix-flip.svg',
-      //   imageSize: imageSize,
-      //   onPressed: () {
-      //     // ref.read(propertyProvider).updateCalculator(Calculator.fixAndFlip);
-      //     // Get.to(() => Location('Fix & Flip'));
-      //   },
-      // ),
+      CardButton(
+        label: 'Fix & Flip',
+        svgImage: 'images/fix-flip.svg',
+        imageSize: imageSize,
+        onPressed: () {
+          ref.read(calculatorProvider).updateCurrentCalculator(Calculator.fixAndFlip);
+          // Get.to(() => Location('Fix & Flip'));
+        },
+      ),
       CardButton(
         label: CalculatorUtils.getName(Calculator.quickMaxOffer),
         svgImage: 'images/offer.svg',
