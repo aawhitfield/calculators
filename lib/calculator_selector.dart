@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:calculators/inputs/brrrr/location.dart';
+import 'package:calculators/inputs/fixflip/ff_location.dart';
 import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';
@@ -36,7 +37,7 @@ class CalculatorSelector extends ConsumerWidget {
         imageSize: imageSize,
         onPressed: () {
           ref.read(calculatorProvider).updateCurrentCalculator(Calculator.fixAndFlip);
-          // Get.to(() => Location('Fix & Flip'));
+          Get.to(() => FixFlipLocation('Fix & Flip'));
         },
       ),
       CardButton(

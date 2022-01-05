@@ -1,7 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/brrrr/expenses_input.dart';
-import 'package:calculators/inputs/brrrr/income_input.dart';
-import 'package:calculators/models/calculator.dart';
+import 'package:calculators/inputs/fixflip/ff_expenses_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
@@ -12,14 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class PropertyCosts extends ConsumerStatefulWidget {
-  const PropertyCosts({Key? key}) : super(key: key);
+class FixFlipPropertyCosts extends ConsumerStatefulWidget {
+  const FixFlipPropertyCosts({Key? key}) : super(key: key);
 
   @override
   PropertyCostsState createState() => PropertyCostsState();
 }
 
-class PropertyCostsState extends ConsumerState<PropertyCosts> {
+class PropertyCostsState extends ConsumerState<FixFlipPropertyCosts> {
   TextEditingController listPriceController = TextEditingController();
   TextEditingController renovationsController = TextEditingController();
   TextEditingController afterRepairController = TextEditingController();
@@ -29,19 +27,19 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
 
   @override
   void initState() {
-    double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
+    double afterRepairValue = ref.read(fixFlipProvider).afterRepairValue;
     if (afterRepairValue != 0) {
       afterRepairController.text = kCurrencyFormat.format(afterRepairValue);
     }
-    double purchasePrice = ref.read(brrrrProvider).purchasePrice;
+    double purchasePrice = ref.read(fixFlipProvider).purchasePrice;
     if (purchasePrice != 0) {
       purchasePriceController.text = kCurrencyFormat.format(purchasePrice);
     }
-    int units = ref.read(brrrrProvider).units;
+    int units = ref.read(fixFlipProvider).units;
     if (units != 0) {
       unitsController.text = units.toString();
     }
-    int investors = ref.read(brrrrProvider).investors;
+    int investors = ref.read(fixFlipProvider).investors;
     if (investors != 0) {
       investorsController.text = investors.toString();
     }
@@ -49,8 +47,8 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
   }
   @override
   Widget build(BuildContext context) {
-    double listPrice = ref.read(brrrrProvider).listPrice;
-    double renovations = ref.read(brrrrProvider).totalRenovations;
+    double listPrice = ref.read(fixFlipProvider).listPrice;
+    double renovations = ref.read(fixFlipProvider).totalRenovations;
 
     String listPriceString = kCurrencyFormat.format(listPrice);
     String renovationsString = kCurrencyFormat.format(renovations);
@@ -61,25 +59,19 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
         subheadText: 'Now let\'s get some information about costs associated '
             'with this property.',
         onSubmit: () {
-          Calculator calculatorType = ref.read(calculatorProvider).type;
-          if (calculatorType == Calculator.brrrr) {
-            Get.to(() => const IncomeInput());
-          }
-          else {
-            Get.to(() => const ExpensesInput());
-          }
+            Get.to(() => const FixFlipExpensesInput());
         },
-        position: kBRRRRQuestions.indexOf(PropertyCosts) + 1,
-        totalQuestions: kBRRRRQuestions.length,
+        position: kFixFlipQuestions.indexOf(FixFlipPropertyCosts) + 1,
+        totalQuestions: kFixFlipQuestions.length,
         child: ResponsiveLayout(
           children: [
             MoneyListTile(
-              'List Price',
-              listPriceString,
+                'List Price',
+                listPriceString,
             ),
             MoneyListTile(
-              'Rehab',
-              renovationsString,
+                'Rehab',
+                renovationsString,
             ),
             MoneyTextField(
                 labelText: 'After Repair Value',
@@ -88,7 +80,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);
                   if(price != null) {
-                    ref.read(brrrrProvider).updateAfterRepairValue(price);
+                    ref.read(fixFlipProvider).updateAfterRepairValue(price);
                   }
                 }
             ),
@@ -99,7 +91,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                   newPrice = newPrice.replaceAll(',', '');
                   double? price = double.tryParse(newPrice);
                   if(price != null) {
-                    ref.read(brrrrProvider).updatePurchasePrice(price);
+                    ref.read(fixFlipProvider).updatePurchasePrice(price);
                   }
                 }
             ),
@@ -109,7 +101,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
-                    ref.read(brrrrProvider).updateUnits(value);
+                    ref.read(fixFlipProvider).updateUnits(value);
                   }
                 }),
             IntegerTextField(
@@ -118,7 +110,7 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
                 onChanged: (String newValue) {
                   int? value = int.tryParse(newValue);
                   if(value != null) {
-                    ref.read(brrrrProvider).updateInvestors(value);
+                    ref.read(fixFlipProvider).updateInvestors(value);
                   }
                 }),
           ],),

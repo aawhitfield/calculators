@@ -7,11 +7,15 @@ import 'package:calculators/inputs/brrrr/holding_costs.dart';
 import 'package:calculators/inputs/brrrr/income_input.dart';
 import 'package:calculators/inputs/brrrr/location.dart';
 import 'package:calculators/inputs/brrrr/property_costs.dart';
+import 'package:calculators/inputs/brrrr/refinance_input.dart';
 import 'package:calculators/inputs/brrrr/renovations_calculator.dart';
+import 'package:calculators/inputs/fixflip/ff_expenses_input.dart';
+import 'package:calculators/inputs/fixflip/ff_location.dart';
+import 'package:calculators/inputs/fixflip/ff_property_costs.dart';
+import 'package:calculators/inputs/fixflip/ff_renovations_calculator.dart';
 import 'package:calculators/outputs/report.dart';
 import 'package:intl/intl.dart';
 
-import 'inputs/brrrr/refinance_input.dart';
 
 List<Type> kBRRRRQuestions = [
   Location,
@@ -29,11 +33,10 @@ List<Type> kBRRRRQuestions = [
 ];
 
 List<Type> kFixFlipQuestions = [
-  Location,
-  RenovationsCalculator,
-  PropertyCosts,
-  IncomeInput,
-  ExpensesInput,
+  FixFlipLocation,
+  FixFlipRenovationsCalculator,
+  FixFlipPropertyCosts,
+  FixFlipExpensesInput,
   FinanceOptions,
   FinanceOptionConstructionLoan,
   FinanceOptionSellerFinanced,
