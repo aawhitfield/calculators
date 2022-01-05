@@ -1,6 +1,6 @@
 import 'package:calculators/home.dart';
 import 'package:calculators/models/calculator.dart';
-import 'package:calculators/models/db/database_utils.dart';
+import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
 import 'package:calculators/widgets/my_outlined_button.dart';

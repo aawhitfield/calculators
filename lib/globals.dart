@@ -28,6 +28,21 @@ List<Type> kBRRRRQuestions = [
   Report,
 ];
 
+List<Type> kFixFlipQuestions = [
+  Location,
+  RenovationsCalculator,
+  PropertyCosts,
+  IncomeInput,
+  ExpensesInput,
+  FinanceOptions,
+  FinanceOptionConstructionLoan,
+  FinanceOptionSellerFinanced,
+  RefinanceInput,
+  HoldingCosts,
+  FixAndFlipSellingCostsInput,
+  Report,
+];
+
 NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");
 NumberFormat kWholeNumber = NumberFormat("###.#", "en_US");
 

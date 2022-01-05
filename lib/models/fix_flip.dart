@@ -7,7 +7,7 @@ import 'package:calculators/models/refinance.dart';
 import 'package:finance/finance.dart';
 import 'package:flutter/material.dart';
 
-class BRRRRFields {
+class FixFlipFields {
   static final List<String> values = [
     id, calculator, address, listPrice, sqft, afterRepairValue, purchasePrice, monthsToRehabRent,
     units, investors,
@@ -88,7 +88,7 @@ class BRRRRFields {
   static const String refinancingClosingCosts = 'refinancingClosingCosts';
 }
 
-class BRRRR extends ChangeNotifier{
+class FixFlip extends ChangeNotifier{
   int? id;
   String address;
   double listPrice;
@@ -184,7 +184,7 @@ class BRRRR extends ChangeNotifier{
   double refinancingClosingCosts;
   double refinancingMonthlyPayment;
 
-  BRRRR({this.id, required this.address, required this.listPrice, this.sqft,
+  FixFlip({this.id, this.address = '', this.listPrice = 0, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
     this.units = 0, this.investors = 0,
     this.foundation = 0, this.roof = 0, this.airConditioner = 0,
@@ -222,135 +222,135 @@ class BRRRR extends ChangeNotifier{
   
 
   Map<String, Object?> toJson() => {
-    BRRRRFields.id: id,
-    BRRRRFields.address: address,
-    BRRRRFields.listPrice: listPrice,
-    BRRRRFields.sqft: sqft,
-    BRRRRFields.afterRepairValue: afterRepairValue,
-    BRRRRFields.purchasePrice: purchasePrice,
-    BRRRRFields.monthsToRehabRent: monthsToRehabRent,
-    BRRRRFields.units: units,
-    BRRRRFields.investors: investors,
-    BRRRRFields.foundation: foundation,
-    BRRRRFields.roof: roof,
-    BRRRRFields.airConditioner: airConditioner,
-    BRRRRFields.painting: paintingPatching,
-    BRRRRFields.kitchen: kitchen,
-    BRRRRFields.windows: windows,
-    BRRRRFields.plumbing: plumbing,
-    BRRRRFields.flooring: flooring,
-    BRRRRFields.bathrooms: bathrooms,
-    BRRRRFields.appliances: appliances,
-    BRRRRFields.electrical: electrical,
-    BRRRRFields.yard: yard,
-    BRRRRFields.cleaning: cleaning,
-    BRRRRFields.baseboards: baseboards,
-    BRRRRFields.exterior: exterior,
-    BRRRRFields.demo: demo,
-    BRRRRFields.elevators: elevators,
-    BRRRRFields.build28: build28Units,
-    BRRRRFields.otherRenovations: otherRenovations,
-    BRRRRFields.tenPercent: tenPercentExtra,
-    BRRRRFields.totalRenovations: totalRenovations,
-    BRRRRFields.rent: rent,
-    BRRRRFields.otherIncome: otherIncome,
-    BRRRRFields.afterRepairRentPerMonth: afterRepairRentPerMonth,
-    BRRRRFields.afterRepairOtherIncome: afterRepairOtherIncome,
-    BRRRRFields.taxes: taxesYearly,
-    BRRRRFields.insurance: insuranceYearly,
-    BRRRRFields.propertyManagementPercentage: propertyManagementPercentage,
-    BRRRRFields.vacancyPercentage: vacancyPercentage,
-    BRRRRFields.maintenancePercentage: maintenancePercentage,
-    BRRRRFields.otherExpensesPercentage: otherExpensesPercentage,
-    BRRRRFields.financingType: FinancingTypeUtils(financingType).name,
-    BRRRRFields.downPaymentPercent: downPaymentPercent,
-    BRRRRFields.interestRate: interestRate,
-    BRRRRFields.term: term,
-    BRRRRFields.closingCosts: closingCosts,
-    BRRRRFields.paymentTypeType: PaymentTypeUtils(paymentType).name,
-    BRRRRFields.wantsToRefinance: wantsToRefinance,
-    BRRRRFields.constructionDownPaymentPercentage: constructionDownPaymentPercentage,
-    BRRRRFields.constructionInterestRate: constructionInterestRate,
-    BRRRRFields.constructionTerm: constructionTerm,
-    BRRRRFields.holdingCostsUtilities: holdingCostsUtilities,
-    BRRRRFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
-    BRRRRFields.sellerLoanPercent: sellerLoanPercentage,
-    BRRRRFields.sellerInterestRate: sellerInterestRate,
-    BRRRRFields.amortization: amortization,
-    BRRRRFields.sellerTerm: sellerTerm,
-    BRRRRFields.refinancingType: RefinancingUtils(refinancingType).name,
-    BRRRRFields.refinancingLoanToValue: refinancingLoanToValue,
-    BRRRRFields.refinancingInterestRate: refinancingInterestRate,
-    BRRRRFields.refinancingTerm: refinancingTerm,
-    BRRRRFields.refinancingClosingCosts: refinancingClosingCosts,
+    FixFlipFields.id: id,
+    FixFlipFields.address: address,
+    FixFlipFields.listPrice: listPrice,
+    FixFlipFields.sqft: sqft,
+    FixFlipFields.afterRepairValue: afterRepairValue,
+    FixFlipFields.purchasePrice: purchasePrice,
+    FixFlipFields.monthsToRehabRent: monthsToRehabRent,
+    FixFlipFields.units: units,
+    FixFlipFields.investors: investors,
+    FixFlipFields.foundation: foundation,
+    FixFlipFields.roof: roof,
+    FixFlipFields.airConditioner: airConditioner,
+    FixFlipFields.painting: paintingPatching,
+    FixFlipFields.kitchen: kitchen,
+    FixFlipFields.windows: windows,
+    FixFlipFields.plumbing: plumbing,
+    FixFlipFields.flooring: flooring,
+    FixFlipFields.bathrooms: bathrooms,
+    FixFlipFields.appliances: appliances,
+    FixFlipFields.electrical: electrical,
+    FixFlipFields.yard: yard,
+    FixFlipFields.cleaning: cleaning,
+    FixFlipFields.baseboards: baseboards,
+    FixFlipFields.exterior: exterior,
+    FixFlipFields.demo: demo,
+    FixFlipFields.elevators: elevators,
+    FixFlipFields.build28: build28Units,
+    FixFlipFields.otherRenovations: otherRenovations,
+    FixFlipFields.tenPercent: tenPercentExtra,
+    FixFlipFields.totalRenovations: totalRenovations,
+    FixFlipFields.rent: rent,
+    FixFlipFields.otherIncome: otherIncome,
+    FixFlipFields.afterRepairRentPerMonth: afterRepairRentPerMonth,
+    FixFlipFields.afterRepairOtherIncome: afterRepairOtherIncome,
+    FixFlipFields.taxes: taxesYearly,
+    FixFlipFields.insurance: insuranceYearly,
+    FixFlipFields.propertyManagementPercentage: propertyManagementPercentage,
+    FixFlipFields.vacancyPercentage: vacancyPercentage,
+    FixFlipFields.maintenancePercentage: maintenancePercentage,
+    FixFlipFields.otherExpensesPercentage: otherExpensesPercentage,
+    FixFlipFields.financingType: FinancingTypeUtils(financingType).name,
+    FixFlipFields.downPaymentPercent: downPaymentPercent,
+    FixFlipFields.interestRate: interestRate,
+    FixFlipFields.term: term,
+    FixFlipFields.closingCosts: closingCosts,
+    FixFlipFields.paymentTypeType: PaymentTypeUtils(paymentType).name,
+    FixFlipFields.wantsToRefinance: wantsToRefinance,
+    FixFlipFields.constructionDownPaymentPercentage: constructionDownPaymentPercentage,
+    FixFlipFields.constructionInterestRate: constructionInterestRate,
+    FixFlipFields.constructionTerm: constructionTerm,
+    FixFlipFields.holdingCostsUtilities: holdingCostsUtilities,
+    FixFlipFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
+    FixFlipFields.sellerLoanPercent: sellerLoanPercentage,
+    FixFlipFields.sellerInterestRate: sellerInterestRate,
+    FixFlipFields.amortization: amortization,
+    FixFlipFields.sellerTerm: sellerTerm,
+    FixFlipFields.refinancingType: RefinancingUtils(refinancingType).name,
+    FixFlipFields.refinancingLoanToValue: refinancingLoanToValue,
+    FixFlipFields.refinancingInterestRate: refinancingInterestRate,
+    FixFlipFields.refinancingTerm: refinancingTerm,
+    FixFlipFields.refinancingClosingCosts: refinancingClosingCosts,
     'calculatorType': 'BRRRR',
   };
 
-  static BRRRR fromJson(Map<String, Object?> json) => BRRRR(
-    id: json[BRRRRFields.id] as int?,
-      address: json[BRRRRFields.address] as String,
-      listPrice: json[BRRRRFields.listPrice] as double,
-      sqft: json[BRRRRFields.sqft] as int?,
-      afterRepairValue: json[BRRRRFields.afterRepairValue] as double,
-      purchasePrice:  json[BRRRRFields.purchasePrice] as double,
-      monthsToRehabRent: json[BRRRRFields.monthsToRehabRent] as int,
-      units: json[BRRRRFields.units] as int,
-      investors: json[BRRRRFields.investors] as int,
-      foundation: json[BRRRRFields.foundation] as double,
-      roof: json[BRRRRFields.roof] as double,
-      airConditioner: json[BRRRRFields.airConditioner] as double,
-      paintingPatching: json[BRRRRFields.painting] as double,
-      kitchen: json[BRRRRFields.kitchen] as double,
-      windows: json[BRRRRFields.windows] as double,
-      plumbing: json[BRRRRFields.plumbing] as double,
-      flooring: json[BRRRRFields.flooring] as double,
-      bathrooms: json[BRRRRFields.bathrooms] as double,
-      appliances: json[BRRRRFields.appliances] as double,
-      electrical: json[BRRRRFields.electrical] as double,
-      yard: json[BRRRRFields.yard] as double,
-      cleaning: json[BRRRRFields.cleaning] as double,
-      baseboards: json[BRRRRFields.baseboards] as double,
-      exterior: json[BRRRRFields.exterior] as double,
-      demo: json[BRRRRFields.demo] as double,
-      elevators: json[BRRRRFields.elevators] as double,
-      build28Units: json[BRRRRFields.build28] as double,
-      otherRenovations: json[BRRRRFields.otherRenovations] as double,
-      tenPercentExtra: json[BRRRRFields.tenPercent] as double,
-      totalRenovations: json[BRRRRFields.totalRenovations] as double,
-      rent: json[BRRRRFields.rent] as double,
-      otherIncome:  json[BRRRRFields.otherIncome] as double,
-      afterRepairRentPerMonth:  json[BRRRRFields.afterRepairRentPerMonth] as double,
-      afterRepairOtherIncome:  json[BRRRRFields.afterRepairOtherIncome] as double,
-      taxesYearly: json[BRRRRFields.taxes] as double,
-      insuranceYearly: json[BRRRRFields.insurance] as double,
-      propertyManagementPercentage: json[BRRRRFields.propertyManagementPercentage] as double,
-      vacancyPercentage: json[BRRRRFields.vacancyPercentage] as double,
-      maintenancePercentage: json[BRRRRFields.maintenancePercentage] as double,
-      otherExpensesPercentage:  json[BRRRRFields.otherExpensesPercentage] as double,
-      financingType: FinancingTypeUtils.getFinancingType(json[BRRRRFields.financingType] as String),
-      downPaymentPercent: json[BRRRRFields.downPaymentPercent] as double,
-      interestRate: json[BRRRRFields.interestRate] as double,
-      term: json[BRRRRFields.term] as int,
-      closingCosts: json[BRRRRFields.closingCosts] as double,
-      paymentType: PaymentTypeUtils.getPaymentType(json[BRRRRFields.paymentTypeType] as String),
-      wantsToRefinance: (json[BRRRRFields.wantsToRefinance] as bool),
-      constructionDownPaymentPercentage: json[BRRRRFields.constructionDownPaymentPercentage] as double,
-      constructionInterestRate: json[BRRRRFields.constructionInterestRate] as double,
-      constructionTerm: json[BRRRRFields.constructionTerm] as int,
-      holdingCostsUtilities: json[BRRRRFields.holdingCostsUtilities] as double,
-      sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[BRRRRFields.financingType] as String),
-      sellerLoanPercentage: json[BRRRRFields.sellerLoanPercent] as double,
-      sellerInterestRate: json[BRRRRFields.sellerInterestRate] as double,
-      amortization: json[BRRRRFields.amortization] as int,
-      sellerTerm: json[BRRRRFields.sellerTerm] as int,
-      refinancingType: RefinancingUtils.getFinancingType(json[BRRRRFields.financingType] as String),
-      refinancingLoanToValue: json[BRRRRFields.refinancingLoanToValue] as double,
-      refinancingInterestRate: json[BRRRRFields.refinancingInterestRate] as double,
-      refinancingTerm: json[BRRRRFields.refinancingTerm] as int,
-      refinancingClosingCosts: json[BRRRRFields.refinancingClosingCosts] as double,
+  static FixFlip fromJson(Map<String, Object?> json) => FixFlip(
+    id: json[FixFlipFields.id] as int?,
+      address: json[FixFlipFields.address] as String,
+      listPrice: json[FixFlipFields.listPrice] as double,
+      sqft: json[FixFlipFields.sqft] as int?,
+      afterRepairValue: json[FixFlipFields.afterRepairValue] as double,
+      purchasePrice:  json[FixFlipFields.purchasePrice] as double,
+      monthsToRehabRent: json[FixFlipFields.monthsToRehabRent] as int,
+      units: json[FixFlipFields.units] as int,
+      investors: json[FixFlipFields.investors] as int,
+      foundation: json[FixFlipFields.foundation] as double,
+      roof: json[FixFlipFields.roof] as double,
+      airConditioner: json[FixFlipFields.airConditioner] as double,
+      paintingPatching: json[FixFlipFields.painting] as double,
+      kitchen: json[FixFlipFields.kitchen] as double,
+      windows: json[FixFlipFields.windows] as double,
+      plumbing: json[FixFlipFields.plumbing] as double,
+      flooring: json[FixFlipFields.flooring] as double,
+      bathrooms: json[FixFlipFields.bathrooms] as double,
+      appliances: json[FixFlipFields.appliances] as double,
+      electrical: json[FixFlipFields.electrical] as double,
+      yard: json[FixFlipFields.yard] as double,
+      cleaning: json[FixFlipFields.cleaning] as double,
+      baseboards: json[FixFlipFields.baseboards] as double,
+      exterior: json[FixFlipFields.exterior] as double,
+      demo: json[FixFlipFields.demo] as double,
+      elevators: json[FixFlipFields.elevators] as double,
+      build28Units: json[FixFlipFields.build28] as double,
+      otherRenovations: json[FixFlipFields.otherRenovations] as double,
+      tenPercentExtra: json[FixFlipFields.tenPercent] as double,
+      totalRenovations: json[FixFlipFields.totalRenovations] as double,
+      rent: json[FixFlipFields.rent] as double,
+      otherIncome:  json[FixFlipFields.otherIncome] as double,
+      afterRepairRentPerMonth:  json[FixFlipFields.afterRepairRentPerMonth] as double,
+      afterRepairOtherIncome:  json[FixFlipFields.afterRepairOtherIncome] as double,
+      taxesYearly: json[FixFlipFields.taxes] as double,
+      insuranceYearly: json[FixFlipFields.insurance] as double,
+      propertyManagementPercentage: json[FixFlipFields.propertyManagementPercentage] as double,
+      vacancyPercentage: json[FixFlipFields.vacancyPercentage] as double,
+      maintenancePercentage: json[FixFlipFields.maintenancePercentage] as double,
+      otherExpensesPercentage:  json[FixFlipFields.otherExpensesPercentage] as double,
+      financingType: FinancingTypeUtils.getFinancingType(json[FixFlipFields.financingType] as String),
+      downPaymentPercent: json[FixFlipFields.downPaymentPercent] as double,
+      interestRate: json[FixFlipFields.interestRate] as double,
+      term: json[FixFlipFields.term] as int,
+      closingCosts: json[FixFlipFields.closingCosts] as double,
+      paymentType: PaymentTypeUtils.getPaymentType(json[FixFlipFields.paymentTypeType] as String),
+      wantsToRefinance: (json[FixFlipFields.wantsToRefinance] as bool),
+      constructionDownPaymentPercentage: json[FixFlipFields.constructionDownPaymentPercentage] as double,
+      constructionInterestRate: json[FixFlipFields.constructionInterestRate] as double,
+      constructionTerm: json[FixFlipFields.constructionTerm] as int,
+      holdingCostsUtilities: json[FixFlipFields.holdingCostsUtilities] as double,
+      sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[FixFlipFields.financingType] as String),
+      sellerLoanPercentage: json[FixFlipFields.sellerLoanPercent] as double,
+      sellerInterestRate: json[FixFlipFields.sellerInterestRate] as double,
+      amortization: json[FixFlipFields.amortization] as int,
+      sellerTerm: json[FixFlipFields.sellerTerm] as int,
+      refinancingType: RefinancingUtils.getFinancingType(json[FixFlipFields.financingType] as String),
+      refinancingLoanToValue: json[FixFlipFields.refinancingLoanToValue] as double,
+      refinancingInterestRate: json[FixFlipFields.refinancingInterestRate] as double,
+      refinancingTerm: json[FixFlipFields.refinancingTerm] as int,
+      refinancingClosingCosts: json[FixFlipFields.refinancingClosingCosts] as double,
   );
 
-  void updateAll(BRRRR data) {
+  void updateAll(FixFlip data) {
     id = data.id;
     address = data.address;
     listPrice = data.listPrice;
@@ -470,7 +470,7 @@ class BRRRR extends ChangeNotifier{
     calculateAllHoldingCosts();
   }
 
-  void updateProperty(BRRRR newProperty) {
+  void updateProperty(FixFlip newProperty) {
     id = newProperty.id;
     address = newProperty.address;
     listPrice = newProperty.listPrice;
@@ -681,7 +681,7 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateRenovation(BRRRR newRenovation) {
+  void updateRenovation(FixFlip newRenovation) {
     foundation = newRenovation.foundation;
     roof = newRenovation.roof;
     airConditioner = newRenovation.airConditioner;
@@ -706,7 +706,7 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateIncome(BRRRR newIncome) {
+  void updateIncome(FixFlip newIncome) {
     rent = newIncome.rent;
     otherIncome = newIncome.otherIncome;
     afterRepairRentPerMonth = newIncome.afterRepairRentPerMonth;
@@ -754,7 +754,7 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateExpenses(BRRRR newExpense) {
+  void updateExpenses(FixFlip newExpense) {
     taxesYearly = newExpense.taxesYearly;
     propertyManagementPercentage = newExpense.propertyManagementPercentage;
     vacancyPercentage = newExpense.vacancyPercentage;
@@ -945,7 +945,7 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateFinanceOptionData(BRRRR newFinanceOptionData) {
+  void updateFinanceOptionData(FixFlip newFinanceOptionData) {
     id = newFinanceOptionData.id;
     financingType = newFinanceOptionData.financingType;
     downPaymentPercent = newFinanceOptionData.downPaymentPercent;
@@ -1030,7 +1030,7 @@ class BRRRR extends ChangeNotifier{
     calculateLoanAmount();
   }
 
-  void updateFinanceOptionConstruction(BRRRR newFinanceOptionConstructionProvider) {
+  void updateFinanceOptionConstruction(FixFlip newFinanceOptionConstructionProvider) {
     constructionDownPaymentPercentage = newFinanceOptionConstructionProvider.constructionDownPaymentPercentage;
     constructionInterestRate = newFinanceOptionConstructionProvider.constructionInterestRate;
     constructionTerm = newFinanceOptionConstructionProvider.constructionTerm;
@@ -1100,7 +1100,7 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updateSellerFinanceOptionData(BRRRR newFinanceOptionData) {
+  void updateSellerFinanceOptionData(FixFlip newFinanceOptionData) {
     sellerFinancingType = newFinanceOptionData.sellerFinancingType;
     sellerLoanPercentage = newFinanceOptionData.sellerLoanPercentage;
     sellerInterestRate = newFinanceOptionData.sellerInterestRate;

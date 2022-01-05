@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:calculators/inputs/brrrr/location.dart';
 import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
-import 'package:calculators/models/db/database_utils.dart';
+import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/models/saved_calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/waiting.dart';
