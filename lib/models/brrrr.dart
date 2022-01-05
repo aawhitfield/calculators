@@ -113,12 +113,7 @@ class BRRRR extends ChangeNotifier{
   double cleaning;
   double baseboards;
   double exterior;
-  double demo;
-  double elevators;
-  double build28Units;
-  double otherRenovations;
   double totalRenovations;
-  double tenPercentExtra;
   double rent;
   double otherIncome;
   double totalIncome;
@@ -191,8 +186,8 @@ class BRRRR extends ChangeNotifier{
     this.paintingPatching = 0, this.kitchen = 0, this.windows = 0,
     this. plumbing = 0, this.flooring = 0, this.bathrooms = 0,
     this.appliances = 0, this.electrical = 0, this.yard = 0, this.cleaning = 0,
-    this.baseboards = 0, this.exterior = 0, this.demo = 0, this.elevators = 0,
-    this.build28Units = 0, this.otherRenovations = 0, this.totalRenovations = 0, this.tenPercentExtra = 0,
+    this.baseboards = 0, this.exterior = 0,
+    this.totalRenovations = 0,
     this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
     this.yearlyIncome = 0, this.afterRepairRentPerMonth = 0, this.afterRepairOtherIncome = 0,
     this.totalIncomeAfterRepair = 0, this.yearlyIncomeAfterRepair = 0,
@@ -246,11 +241,6 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.cleaning: cleaning,
     BRRRRFields.baseboards: baseboards,
     BRRRRFields.exterior: exterior,
-    BRRRRFields.demo: demo,
-    BRRRRFields.elevators: elevators,
-    BRRRRFields.build28: build28Units,
-    BRRRRFields.otherRenovations: otherRenovations,
-    BRRRRFields.tenPercent: tenPercentExtra,
     BRRRRFields.totalRenovations: totalRenovations,
     BRRRRFields.rent: rent,
     BRRRRFields.otherIncome: otherIncome,
@@ -311,11 +301,6 @@ class BRRRR extends ChangeNotifier{
       cleaning: json[BRRRRFields.cleaning] as double,
       baseboards: json[BRRRRFields.baseboards] as double,
       exterior: json[BRRRRFields.exterior] as double,
-      demo: json[BRRRRFields.demo] as double,
-      elevators: json[BRRRRFields.elevators] as double,
-      build28Units: json[BRRRRFields.build28] as double,
-      otherRenovations: json[BRRRRFields.otherRenovations] as double,
-      tenPercentExtra: json[BRRRRFields.tenPercent] as double,
       totalRenovations: json[BRRRRFields.totalRenovations] as double,
       rent: json[BRRRRFields.rent] as double,
       otherIncome:  json[BRRRRFields.otherIncome] as double,
@@ -375,12 +360,7 @@ class BRRRR extends ChangeNotifier{
     cleaning = data.cleaning;
     baseboards = data.baseboards;
     exterior = data.exterior;
-    demo = data.demo;
-    elevators = data.elevators;
-    build28Units = data.build28Units;
-    otherRenovations = data.otherRenovations;
     totalRenovations = data.totalRenovations;
-    tenPercentExtra = data.tenPercentExtra;
     rent = data.rent;
     otherIncome = data.otherIncome;
     totalIncome = data.totalIncome;
@@ -451,7 +431,6 @@ class BRRRR extends ChangeNotifier{
 
   void calculateAll() {
     calculateAllExpenses();
-    calculateTenPercentExtra();
     if (totalRenovations == 0) {
       calculateTotalRenovations();
     }
@@ -532,151 +511,97 @@ class BRRRR extends ChangeNotifier{
   double calculateTotalRenovations() {
     totalRenovations = foundation + roof + airConditioner + paintingPatching + kitchen
         + windows + plumbing + flooring + bathrooms + appliances + electrical
-        + yard + cleaning + baseboards + exterior + demo + elevators + build28Units
-        + otherRenovations + tenPercentExtra;
+        + yard + cleaning + baseboards + exterior;
     notifyListeners();
     return totalRenovations;
   }
 
-  double calculateTenPercentExtra() {
-    double subtotal = foundation + roof + airConditioner + paintingPatching + kitchen
-        + windows + plumbing + flooring + bathrooms + appliances + electrical
-        + yard + cleaning + baseboards + exterior + demo + elevators + build28Units
-        + otherRenovations;
-    tenPercentExtra = subtotal * 0.1;
-    notifyListeners();
-    return tenPercentExtra;
-  }
-
   void updateFoundation(double newFoundation) {
     foundation = newFoundation;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateRoof(double newRoof) {
     roof = newRoof;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateAirConditioner(double newAirConditioner) {
     airConditioner = newAirConditioner;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updatePaintingPatching (double newPainting) {
     paintingPatching = newPainting;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateKitchen(double newKitchen) {
     kitchen = newKitchen;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateWindows (double newWindows) {
     windows = newWindows;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updatePlumbing(double newPlumbing) {
     plumbing = newPlumbing;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateFlooring(double newFlooring) {
     flooring = newFlooring;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateBathrooms(double newBathrooms) {
     bathrooms = newBathrooms;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateAppliances(double newAppliances) {
     appliances = newAppliances;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateElectrical(double newElectrical) {
     electrical = newElectrical;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateYard(double newYard) {
     yard = newYard;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateCleaning(double newCleaning) {
     cleaning = newCleaning;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateBaseboards(double newBaseboards) {
     baseboards = newBaseboards;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
 
   void updateExterior(double newExterior) {
     exterior = newExterior;
-    calculateTenPercentExtra();
-    calculateTotalRenovations();
-    notifyListeners();
-  }
-
-  void updateDemo(double newDemo) {
-    demo = newDemo;
-    calculateTenPercentExtra();
-    calculateTotalRenovations();
-    notifyListeners();
-  }
-
-  void updateElevators(double newElevators) {
-    elevators = newElevators;
-    calculateTenPercentExtra();
-    calculateTotalRenovations();
-    notifyListeners();
-  }
-
-  void updateBuildUnits(double newBuildUnits) {
-    build28Units = newBuildUnits;
-    calculateTenPercentExtra();
-    calculateTotalRenovations();
-    notifyListeners();
-  }
-
-  void updateOtherRenovations(double newOther) {
-    otherRenovations = newOther;
-    calculateTenPercentExtra();
     calculateTotalRenovations();
     notifyListeners();
   }
@@ -697,12 +622,7 @@ class BRRRR extends ChangeNotifier{
     cleaning = newRenovation.cleaning;
     baseboards = newRenovation.baseboards;
     exterior = newRenovation.exterior;
-    demo = newRenovation.demo;
-    elevators = newRenovation.elevators;
-    build28Units = newRenovation.build28Units;
-    otherRenovations = newRenovation.otherRenovations;
     totalRenovations = newRenovation.totalRenovations;
-    tenPercentExtra = newRenovation.tenPercentExtra;
     notifyListeners();
   }
 
@@ -1217,8 +1137,7 @@ class BRRRR extends ChangeNotifier{
     id = null;
     foundation = roof = airConditioner = paintingPatching = kitchen = windows
     = plumbing = flooring = bathrooms = appliances = electrical = yard
-    = cleaning = baseboards = exterior = demo = elevators = build28Units
-    = otherRenovations = totalRenovations = tenPercentExtra = 0;
+    = cleaning = baseboards = exterior = totalRenovations = 0;
     rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
       = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
     taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly =

@@ -36,10 +36,6 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
   TextEditingController cleaningController = TextEditingController();
   TextEditingController baseboardsController = TextEditingController();
   TextEditingController exteriorController = TextEditingController();
-  TextEditingController demoController = TextEditingController();
-  TextEditingController elevatorsController = TextEditingController();
-  TextEditingController build28Controller = TextEditingController();
-  TextEditingController otherController = TextEditingController();
   TextEditingController totalController = TextEditingController();
 
   @override
@@ -108,22 +104,6 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
     if (exterior != 0) {
       exteriorController.text = kCurrencyFormat.format(exterior);
     }
-    double demo = ref.read(brrrrProvider).demo;
-    if (demo != 0) {
-      demoController.text = kCurrencyFormat.format(demo);
-    }
-    double elevators = ref.read(brrrrProvider).elevators;
-    if (elevators != 0) {
-      elevatorsController.text = kCurrencyFormat.format(elevators);
-    }
-    double build28 = ref.read(brrrrProvider).build28Units;
-    if (build28 != 0) {
-      build28Controller.text = kCurrencyFormat.format(build28);
-    }
-    double other = ref.read(brrrrProvider).otherRenovations;
-    if (other != 0) {
-      otherController.text = kCurrencyFormat.format(other);
-    }
     double total = ref.read(brrrrProvider).totalRenovations;
     if (total != 0) {
       totalController.text = kCurrencyFormat.format(total);
@@ -134,10 +114,8 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
 
   @override
   Widget build(BuildContext context) {
-    double tenPercent = ref.watch(brrrrProvider).tenPercentExtra;
     double total = ref.watch(brrrrProvider).totalRenovations;
 
-    String tenPercentString = kCurrencyFormat.format(tenPercent);
     String totalString = kCurrencyFormat.format(total);
 
     return MyInputPage(
@@ -387,55 +365,6 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
                       }
                     },
                   ),
-                  MoneyTextField(
-                    labelText: 'Demo',
-                    controller: demoController,
-                    onChanged: (String newDemo) {
-                      newDemo = newDemo.replaceAll(',', '');
-
-                      double? demo = double.tryParse(newDemo);
-                      if (demo != null) {
-                        ref.read(brrrrProvider).updateDemo(demo);
-                      }
-                    },
-                  ),
-                  MoneyTextField(
-                    labelText: 'Elevators',
-                    controller: elevatorsController,
-                    onChanged: (String newElevators) {
-                      newElevators = newElevators.replaceAll(',', '');
-
-                      double? elevators = double.tryParse(newElevators);
-                      if (elevators != null) {
-                        ref.read(brrrrProvider).updateElevators(elevators);
-                      }
-                    },
-                  ),
-                  MoneyTextField(
-                    labelText: 'Build 28 units',
-                    controller: build28Controller,
-                    onChanged: (String newBuildUnits) {
-                      newBuildUnits = newBuildUnits.replaceAll(',', '');
-
-                      double? buildUnits = double.tryParse(newBuildUnits);
-                      if (buildUnits != null) {
-                        ref.read(brrrrProvider).updateBuildUnits(buildUnits);
-                      }
-                    },
-                  ),
-                  MoneyTextField(
-                    labelText: 'Other',
-                    controller: otherController,
-                    onChanged: (String newOther) {
-                      newOther = newOther.replaceAll(',', '');
-
-                      double? other = double.tryParse(newOther);
-                      if (other != null) {
-                        ref.read(brrrrProvider).updateOtherRenovations(other);
-                      }
-                    },
-                  ),
-                  MoneyListTile('10% Extra', tenPercentString),
                   MoneyListTile('Total', totalString),
                 ],
         ));

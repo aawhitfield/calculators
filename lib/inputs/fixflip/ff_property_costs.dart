@@ -1,5 +1,4 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/fixflip/ff_expenses_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
@@ -8,7 +7,6 @@ import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 
 class FixFlipPropertyCosts extends ConsumerStatefulWidget {
   const FixFlipPropertyCosts({Key? key}) : super(key: key);
@@ -59,7 +57,7 @@ class PropertyCostsState extends ConsumerState<FixFlipPropertyCosts> {
         subheadText: 'Now let\'s get some information about costs associated '
             'with this property.',
         onSubmit: () {
-            Get.to(() => const FixFlipExpensesInput());
+            // Get.to(() => const FixFlipExpensesInput());
         },
         position: kFixFlipQuestions.indexOf(FixFlipPropertyCosts) + 1,
         totalQuestions: kFixFlipQuestions.length,
