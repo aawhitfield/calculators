@@ -1,10 +1,10 @@
 import 'dart:math';
 
-import 'package:calculators/inputs/brrrr/location.dart';
 import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/models/saved_calculator.dart';
+import 'package:calculators/outputs/report.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/waiting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -208,8 +208,9 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                         .loadDataByID(id, ref, calculatorType);
                                                 if (calculatorType ==
                                                     Calculator.brrrr) {
+                                                  ref.read(brrrrProvider).calculateAll();
                                                   Get.to(() =>
-                                                      Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat',));
+                                                      const Report());
                                                 }
                                                 else if(calculatorType == Calculator.quickMaxOffer) {
                                                   ref.read(quickMaxProvider).calculateAllQuickMaxOffer();

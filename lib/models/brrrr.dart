@@ -447,6 +447,13 @@ class BRRRR extends ChangeNotifier{
     calculateAllRefinanceCalculations();
     calculateSellerFinanceCalculations();
     calculateAllHoldingCosts();
+    calculateDownPaymentAmount();
+  }
+
+  void calculateDownPaymentAmount() {
+    loanAmount = (1 - downPaymentPercent) * purchasePrice;
+    downPaymentAmount = purchasePrice - loanAmount;
+    notifyListeners();
   }
 
   void updateProperty(BRRRR newProperty) {
