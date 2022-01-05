@@ -1124,6 +1124,7 @@ class BRRRR extends ChangeNotifier{
   }
 
   void calculateAllRefinanceCalculations() {
+    refinancingLoanAmount = afterRepairValue * refinancingLoanToValue;
     refinancingMonthlyPayment = Finance.pmt(
       rate: refinancingInterestRate / 12,
       nper: refinancingTerm * 12,
