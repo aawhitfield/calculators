@@ -1,16 +1,17 @@
-import 'package:calculators/inputs/expenses_input.dart';
-import 'package:calculators/inputs/finance_option_construction_loan.dart';
-import 'package:calculators/inputs/finance_option_seller_financed.dart';
-import 'package:calculators/inputs/finance_options.dart';
-import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
-import 'package:calculators/inputs/holding_costs.dart';
-import 'package:calculators/inputs/income_input.dart';
-import 'package:calculators/inputs/location.dart';
-import 'package:calculators/inputs/property_costs.dart';
-import 'package:calculators/inputs/refinance_input.dart';
-import 'package:calculators/inputs/renovations_calculator.dart';
+import 'package:calculators/inputs/brrrr/expenses_input.dart';
+import 'package:calculators/inputs/brrrr/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/brrrr/finance_option_seller_financed.dart';
+import 'package:calculators/inputs/brrrr/finance_options.dart';
+import 'package:calculators/inputs/brrrr/fix_and_flip_selling_costs_input.dart';
+import 'package:calculators/inputs/brrrr/holding_costs.dart';
+import 'package:calculators/inputs/brrrr/income_input.dart';
+import 'package:calculators/inputs/brrrr/location.dart';
+import 'package:calculators/inputs/brrrr/property_costs.dart';
+import 'package:calculators/inputs/brrrr/renovations_calculator.dart';
 import 'package:calculators/outputs/report.dart';
 import 'package:intl/intl.dart';
+
+import 'inputs/brrrr/refinance_input.dart';
 
 List<Type> kBRRRRQuestions = [
   Location,

@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'package:calculators/inputs/location.dart';
+import 'package:calculators/inputs/brrrr/location.dart';
 import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';

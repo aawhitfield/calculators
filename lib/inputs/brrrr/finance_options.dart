@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/finance_option_construction_loan.dart';
-import 'package:calculators/inputs/finance_option_seller_financed.dart';
-import 'package:calculators/inputs/refinance_input.dart';
+import 'package:calculators/inputs/brrrr/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/brrrr/finance_option_seller_financed.dart';
+import 'package:calculators/inputs/brrrr/refinance_input.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/models/financing_type.dart';

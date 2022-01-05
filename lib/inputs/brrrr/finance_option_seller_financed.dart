@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/fix_and_flip_selling_costs_input.dart';
-import 'package:calculators/inputs/holding_costs.dart';
-import 'package:calculators/inputs/refinance_input.dart';
+import 'package:calculators/inputs/brrrr/fix_and_flip_selling_costs_input.dart';
+import 'package:calculators/inputs/brrrr/holding_costs.dart';
+import 'package:calculators/inputs/brrrr/refinance_input.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';

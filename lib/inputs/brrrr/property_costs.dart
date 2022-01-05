@@ -1,6 +1,6 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/expenses_input.dart';
-import 'package:calculators/inputs/income_input.dart';
+import 'package:calculators/inputs/brrrr/expenses_input.dart';
+import 'package:calculators/inputs/brrrr/income_input.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
