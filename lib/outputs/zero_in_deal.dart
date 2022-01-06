@@ -13,6 +13,7 @@ class ZeroInDeal extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    double arv = ref.watch(brrrrProvider).afterRepairValue;
     double arvLoan = ref.watch(brrrrProvider).refinancingLoanAmount;
     double totalLoans = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).constructionLoanAmount +
@@ -32,7 +33,10 @@ class ZeroInDeal extends ConsumerWidget {
     BRRRR provider = ref.read(brrrrProvider);
     double holdingCost = provider.totalHoldingCosts;
     double afterRefinance = arvLoan - totalLoans - initialCashInvestment - holdingCost;
+    int investors = ref.read(brrrrProvider).investors;
+    double perInvestorAfterRefinance = (investors != 0) ? afterRefinance / investors : 0;
 
+    String arvString = kCurrencyFormat.format(arv);
     String arvLoanString = kCurrencyFormat.format(arvLoan);
     String totalLoansString = kCurrencyFormat.format(totalLoans);
     String initialCashInvestmentString =
@@ -42,11 +46,15 @@ class ZeroInDeal extends ConsumerWidget {
     String equityString = kCurrencyFormat.format(equity);
     String afterRefinanceString = kCurrencyFormat.format(afterRefinance);
     String holdingCostString = kCurrencyFormat.format(holdingCost);
+    String perInvestorAfterRefinanceString = kCurrencyFormat.format(perInvestorAfterRefinance);
 
     return Column(
       children: [
         const ReportHeader('Refinance 0 in Deal?'),
         const SizedBox(height: 16),
+        MoneyListTile(
+                'ARV',
+            arvString),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'ARV\nLoan'
@@ -70,7 +78,8 @@ class ZeroInDeal extends ConsumerWidget {
             (MediaQuery.of(context).size.width < 640)
                 ? 'Per\nInvestor'
                 : 'Initial Cash \nPer Investor',
-            initialCashPerInvestorString),
+            initialCashPerInvestorString,
+        ),
         MoneyListTile('Equity', equityString),
         Container(
             color: (afterRefinance > 0)
@@ -86,6 +95,21 @@ class ZeroInDeal extends ConsumerWidget {
               subtitle: (MediaQuery.of(context).size.width < 640)
                 ? '0 IN' : '',
             ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          color: (perInvestorAfterRefinance > 0)
+              ? Colors.green.withOpacity(0.5)
+              : (afterRefinance < 0)
+              ? Colors.red.withOpacity(0.5)
+              : Colors.transparent,
+          child: MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Per\nInvestor'
+                : 'Per Investor',
+            perInvestorAfterRefinanceString,
+            subtitle: 'After Refinance 0 IN',
+          ),
         ),
         const SizedBox(height: 16),
       ],
