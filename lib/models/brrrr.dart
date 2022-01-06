@@ -1216,7 +1216,7 @@ class BRRRR extends ChangeNotifier{
     afterRepairTotalExpensesMonthly = afterRepairTotalExpensesYearly =
       afterRepairNOIMonthly = afterRepairNOIYearly = 0;
     financingType = FinancingType.commercial;
-    downPaymentAmount = 0;
+    downPaymentPercent = 0;
     loanAmount = 0;
     downPaymentAmount = 0;
     interestRate = 0;

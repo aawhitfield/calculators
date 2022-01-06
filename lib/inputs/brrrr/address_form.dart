@@ -2,6 +2,7 @@ import 'package:calculators/globals.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/clear_all_fields_button.dart';
 import 'package:calculators/widgets/money_text_field.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_places_hoc081098/flutter_google_places_hoc081098.dart';
@@ -62,7 +63,18 @@ class _AddressFormState extends ConsumerState<AddressForm> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlacesAutocompleteField(
+              child: (kIsWeb)
+              ? TextField(
+                  controller: widget.addressController,
+                  decoration: const InputDecoration(
+                    labelText: 'Address',
+                  ),
+                onChanged: (String? newAddress) {
+                  if (newAddress != null) {
+                    ref.read(brrrrProvider).updateAddress(newAddress);
+                  }
+                },)
+              : PlacesAutocompleteField(
                 controller: widget.addressController,
                 onChanged: (String? newAddress) {
                   if (newAddress != null) {
