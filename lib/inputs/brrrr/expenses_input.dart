@@ -97,7 +97,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
               if (taxes != null) {
                 ref.read(brrrrProvider).updateTaxes(taxes);
               } else {
-                ref.read(brrrrProvider).updateTaxes(0);
+                ref.read(brrrrProvider).updateTaxes(0.0);
               }
               ref.read(brrrrProvider).calculateAllExpenses();
             },
@@ -112,7 +112,7 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
               if (insurance != null) {
                 ref.read(brrrrProvider).updateInsurance(insurance);
               } else {
-                ref.read(brrrrProvider).updateTaxes(0);
+                ref.read(brrrrProvider).updateInsurance(0.0);
               }
               ref.read(brrrrProvider).calculateAllExpenses();
             },

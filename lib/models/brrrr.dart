@@ -697,10 +697,24 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateTaxesMonthly(double newValue) {
+    taxesMonthly = newValue;
+    taxesYearly = taxesMonthly * 12;
+    calculateAllExpenses();
+    notifyListeners();
+  }
+
   void updateInsurance(double newValue) {
     insuranceYearly = newValue;
     insuranceMonthly = insuranceYearly / 12;
     updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateInsuranceMonthly(double newValue) {
+    insuranceMonthly = newValue;
+    insuranceYearly = insuranceMonthly * 12;
+    calculateAllExpenses();
     notifyListeners();
   }
 
@@ -711,10 +725,34 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updatePropertyManagementMonthly(double newValue) {
+    propertyManagementMonthly = newValue;
+    if (rent != 0) {
+      propertyManagementPercentage = propertyManagementMonthly / rent;
+    }
+    else {
+      propertyManagementPercentage = 0.0;
+    }
+    calculateAllExpenses();
+    notifyListeners();
+  }
+
   void updateVacancy(double newValue) {
     vacancyPercentage = newValue;
     vacancyMonthly = vacancyPercentage * rent;
     updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
+    notifyListeners();
+  }
+
+  void updateVacancyMonthly(double newValue) {
+    vacancyMonthly = newValue;
+    if (rent != 0) {
+      vacancyPercentage = vacancyMonthly / rent;
+    }
+    else {
+      vacancyPercentage = 0.0;
+    }
+    calculateAllExpenses();
     notifyListeners();
   }
 
@@ -725,11 +763,34 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateMaintenanceMonthly(double newValue) {
+    maintenanceMonthly = newValue;
+    if(rent != 0) {
+      maintenancePercentage = maintenanceMonthly / rent;
+    }
+    else {
+      maintenancePercentage = 0.0;
+    }
+    calculateAllExpenses();
+    notifyListeners();
+  }
+
   void updateOther(double newValue) {
     otherExpensesPercentage = newValue;
     otherExpensesMonthly = otherExpensesPercentage * rent;
     updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
     notifyListeners();
+  }
+
+  void updateOtherMonthly(double newValue) {
+    otherExpensesMonthly = newValue;
+    if(rent != 0) {
+      otherExpensesPercentage = otherExpensesMonthly / rent;
+    }
+    else {
+      otherExpensesPercentage = 0.0;
+    }
+    calculateAllExpenses();
   }
 
   void updateTotalMonthlyExpenses(double newValue) {
