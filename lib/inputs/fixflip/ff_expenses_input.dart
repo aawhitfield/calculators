@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/brrrr/finance_options.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -47,10 +47,10 @@ class _ExpensesInputState extends ConsumerState<FixFlipExpensesInput> {
       imageUri: 'images/expenses.svg',
       headerText: 'Expenses',
       subheadText: '',
-      position: kBRRRRQuestions.indexOf(FixFlipExpensesInput) + 1,
-      totalQuestions: kBRRRRQuestions.length,
+      position: kFixFlipQuestions.indexOf(FixFlipExpensesInput) + 1,
+      totalQuestions: kFixFlipQuestions.length,
       onSubmit: () {
-        Get.to(() => const FinanceOptions());
+        Get.to(() => const FixFlipFinanceOptions());
       },
       child: ResponsiveLayout(
         children: [

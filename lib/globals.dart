@@ -10,6 +10,7 @@ import 'package:calculators/inputs/brrrr/property_costs.dart';
 import 'package:calculators/inputs/brrrr/refinance_input.dart';
 import 'package:calculators/inputs/brrrr/renovations_calculator.dart';
 import 'package:calculators/inputs/fixflip/ff_expenses_input.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
 import 'package:calculators/inputs/fixflip/ff_location.dart';
 import 'package:calculators/inputs/fixflip/ff_property_costs.dart';
 import 'package:calculators/inputs/fixflip/ff_renovations_calculator.dart';
@@ -37,13 +38,13 @@ List<Type> kFixFlipQuestions = [
   FixFlipRenovationsCalculator,
   FixFlipPropertyCosts,
   FixFlipExpensesInput,
-  FinanceOptions,
-  FinanceOptionConstructionLoan,
-  FinanceOptionSellerFinanced,
-  RefinanceInput,
-  HoldingCosts,
-  FixAndFlipSellingCostsInput,
-  Report,
+  FixFlipFinanceOptions,
+  // FinanceOptionConstructionLoan,
+  // FinanceOptionSellerFinanced,
+  // RefinanceInput,
+  // HoldingCosts,
+  // FixAndFlipSellingCostsInput,
+  // Report,
 ];
 
 NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");

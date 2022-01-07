@@ -15,9 +15,8 @@ class FixFlipFields {
     flooring, bathrooms, appliances, electrical, yard, cleaning, baseboards, exterior,
     demo, elevators, build28, otherRenovations, tenPercent, totalRenovations,
     rent, otherIncome, afterRepairRentPerMonth, afterRepairOtherIncome,
-    taxes, insurance, propertyManagementPercentage, vacancyPercentage, maintenancePercentage,
-    otherExpensesPercentage,
-    financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType, wantsToRefinance,
+    taxes, insurance,
+    financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType,
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
     holdingCostsUtilities,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
@@ -61,17 +60,12 @@ class FixFlipFields {
   static const String afterRepairOtherIncome = 'afterRepairOtherIncome';
   static const String taxes = 'taxes';
   static const String insurance = 'insurance';
-  static const String propertyManagementPercentage = 'propertyManagementPercentage';
-  static const String vacancyPercentage = 'vacancyPercentage';
-  static const String maintenancePercentage = 'maintenancePercentage';
-  static const String otherExpensesPercentage = 'otherExpensesPercentage';
   static const String financingType = 'financingType';
   static const String downPaymentPercent = 'downPaymentPercent';
   static const String interestRate = 'interestRate';
   static const String term = 'term';
   static const String closingCosts = 'closingCosts';
   static const String paymentTypeType = 'paymentTypeType';
-  static const String wantsToRefinance = 'wantsToRefinance';
   static const String constructionDownPaymentPercentage = 'constructionDownPaymentPercentage';
   static const String constructionInterestRate = 'constructionInterestRate';
   static const String constructionTerm = 'constructionTerm';
@@ -126,22 +120,8 @@ class FixFlip extends ChangeNotifier{
   double taxesMonthly;
   double insuranceYearly;
   double insuranceMonthly;
-  double propertyManagementPercentage;
-  double propertyManagementMonthly;
-  double vacancyPercentage;
-  double vacancyMonthly;
-  double maintenancePercentage;
-  double maintenanceMonthly;
-  double otherExpensesPercentage;
-  double otherExpensesMonthly;
   double totalMonthlyExpenses;
   double totalAnnualExpenses;
-  double noiMonthly;
-  double noiAnnual;
-  double afterRepairTotalExpensesMonthly;
-  double afterRepairTotalExpensesYearly;
-  double afterRepairNOIMonthly;
-  double afterRepairNOIYearly;
   FinancingType financingType;
   double downPaymentPercent;
   double loanAmount;
@@ -152,7 +132,6 @@ class FixFlip extends ChangeNotifier{
   double monthlyPayment;
   bool willRefinance;
   PaymentType paymentType;
-  bool wantsToRefinance;
   double constructionDownPaymentPercentage;
   double constructionLoanAmount;
   double constructionDownPaymentAmount;
@@ -191,18 +170,12 @@ class FixFlip extends ChangeNotifier{
     this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
     this.yearlyIncome = 0, this.afterRepairRentPerMonth = 0, this.afterRepairOtherIncome = 0,
     this.totalIncomeAfterRepair = 0, this.yearlyIncomeAfterRepair = 0,
-    this.taxesYearly = 0, this.taxesMonthly = 0, this.propertyManagementPercentage = 0,
-    this.propertyManagementMonthly = 0, this.vacancyPercentage = 0, this.vacancyMonthly = 0,
-    this.maintenancePercentage = 0, this.maintenanceMonthly = 0, this.otherExpensesPercentage = 0,
-    this.otherExpensesMonthly = 0, this.totalMonthlyExpenses = 0, this.totalAnnualExpenses = 0,
-    this.noiMonthly = 0, this.noiAnnual = 0, this.insuranceMonthly = 0, this.insuranceYearly = 0,
-    this.afterRepairNOIMonthly = 0, this.afterRepairNOIYearly = 0, this.afterRepairTotalExpensesMonthly = 0, 
-    this.afterRepairTotalExpensesYearly = 0,
+    this.taxesYearly = 0, this.taxesMonthly = 0, this.totalMonthlyExpenses = 0, this.totalAnnualExpenses = 0,
+    this.insuranceMonthly = 0, this.insuranceYearly = 0,
     this.financingType = FinancingType.commercial,
     this.downPaymentPercent = 0, this.loanAmount = 0, this.downPaymentAmount = 0,
     this.interestRate = 0, this.term = 0, this.closingCosts = 0, this.monthlyPayment = 0,
     this.willRefinance = false, this.paymentType = PaymentType.principalAndInterest,
-    this.wantsToRefinance = false,
     this.constructionDownPaymentPercentage = 0, this.constructionLoanAmount = 0, this.constructionDownPaymentAmount = 0,
     this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionMonthlyPayment = 0,
     this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
@@ -248,17 +221,12 @@ class FixFlip extends ChangeNotifier{
     FixFlipFields.afterRepairOtherIncome: afterRepairOtherIncome,
     FixFlipFields.taxes: taxesYearly,
     FixFlipFields.insurance: insuranceYearly,
-    FixFlipFields.propertyManagementPercentage: propertyManagementPercentage,
-    FixFlipFields.vacancyPercentage: vacancyPercentage,
-    FixFlipFields.maintenancePercentage: maintenancePercentage,
-    FixFlipFields.otherExpensesPercentage: otherExpensesPercentage,
     FixFlipFields.financingType: FinancingTypeUtils(financingType).name,
     FixFlipFields.downPaymentPercent: downPaymentPercent,
     FixFlipFields.interestRate: interestRate,
     FixFlipFields.term: term,
     FixFlipFields.closingCosts: closingCosts,
     FixFlipFields.paymentTypeType: PaymentTypeUtils(paymentType).name,
-    FixFlipFields.wantsToRefinance: wantsToRefinance,
     FixFlipFields.constructionDownPaymentPercentage: constructionDownPaymentPercentage,
     FixFlipFields.constructionInterestRate: constructionInterestRate,
     FixFlipFields.constructionTerm: constructionTerm,
@@ -308,17 +276,12 @@ class FixFlip extends ChangeNotifier{
       afterRepairOtherIncome:  json[FixFlipFields.afterRepairOtherIncome] as double,
       taxesYearly: json[FixFlipFields.taxes] as double,
       insuranceYearly: json[FixFlipFields.insurance] as double,
-      propertyManagementPercentage: json[FixFlipFields.propertyManagementPercentage] as double,
-      vacancyPercentage: json[FixFlipFields.vacancyPercentage] as double,
-      maintenancePercentage: json[FixFlipFields.maintenancePercentage] as double,
-      otherExpensesPercentage:  json[FixFlipFields.otherExpensesPercentage] as double,
       financingType: FinancingTypeUtils.getFinancingType(json[FixFlipFields.financingType] as String),
       downPaymentPercent: json[FixFlipFields.downPaymentPercent] as double,
       interestRate: json[FixFlipFields.interestRate] as double,
       term: json[FixFlipFields.term] as int,
       closingCosts: json[FixFlipFields.closingCosts] as double,
       paymentType: PaymentTypeUtils.getPaymentType(json[FixFlipFields.paymentTypeType] as String),
-      wantsToRefinance: (json[FixFlipFields.wantsToRefinance] as bool),
       constructionDownPaymentPercentage: json[FixFlipFields.constructionDownPaymentPercentage] as double,
       constructionInterestRate: json[FixFlipFields.constructionInterestRate] as double,
       constructionTerm: json[FixFlipFields.constructionTerm] as int,
@@ -371,24 +334,10 @@ class FixFlip extends ChangeNotifier{
     yearlyIncomeAfterRepair = data.yearlyIncomeAfterRepair;
     taxesYearly = data.taxesYearly;
     taxesMonthly = data.taxesMonthly;
-    propertyManagementPercentage = data.propertyManagementPercentage;
-    propertyManagementMonthly = data.propertyManagementMonthly;
-    vacancyPercentage = data.vacancyPercentage;
-    vacancyMonthly = data.vacancyMonthly;
-    maintenancePercentage = data.maintenancePercentage;
-    maintenanceMonthly = data.maintenanceMonthly;
-    otherExpensesPercentage = data.otherExpensesPercentage;
-    otherExpensesMonthly = data.otherExpensesMonthly;
     totalMonthlyExpenses = data.totalMonthlyExpenses;
     totalAnnualExpenses = data.totalAnnualExpenses;
-    noiMonthly = data.noiMonthly;
-    noiAnnual = data.noiAnnual;
     insuranceMonthly = data.insuranceMonthly;
     insuranceYearly = data.insuranceYearly;
-    afterRepairNOIMonthly = data.afterRepairNOIMonthly;
-    afterRepairNOIYearly = data.afterRepairNOIYearly;
-    afterRepairTotalExpensesMonthly = data.afterRepairTotalExpensesMonthly;
-    afterRepairTotalExpensesYearly = data.afterRepairTotalExpensesYearly;
     financingType = data.financingType;
     downPaymentPercent = data.downPaymentPercent;
     loanAmount = data.loanAmount;
@@ -399,7 +348,6 @@ class FixFlip extends ChangeNotifier{
     monthlyPayment = data.monthlyPayment;
     willRefinance = data.willRefinance;
     paymentType = data.paymentType;
-    wantsToRefinance = data.wantsToRefinance;
     constructionDownPaymentPercentage = data.constructionDownPaymentPercentage;
     constructionLoanAmount = data.constructionLoanAmount;
     constructionDownPaymentAmount = data.constructionDownPaymentAmount;
@@ -438,11 +386,6 @@ class FixFlip extends ChangeNotifier{
     calculateYearlyIncome();
     calculateTotalIncomeAfterRepair();
     calculateYearlyIncomeAfterRepair();
-    calculateAfterRepairTotalExpensesMonthly();
-    calculateNOIMonthly();
-    calculateNOIAnnually();
-    calculateAfterRepairNOIMonthly();
-    calculateAfterRepairNOIYearly();
     calculateLoanAmount();
     calculateAllRefinanceCalculations();
     calculateSellerFinanceCalculations();
@@ -676,10 +619,6 @@ class FixFlip extends ChangeNotifier{
 
   void updateExpenses(FixFlip newExpense) {
     taxesYearly = newExpense.taxesYearly;
-    propertyManagementPercentage = newExpense.propertyManagementPercentage;
-    vacancyPercentage = newExpense.vacancyPercentage;
-    maintenancePercentage = newExpense.maintenancePercentage;
-    otherExpensesPercentage = newExpense.otherExpensesPercentage;
     notifyListeners();
   }
 
@@ -697,34 +636,6 @@ class FixFlip extends ChangeNotifier{
     notifyListeners();
   }
 
-  void updatePropertyManagement(double newValue) {
-    propertyManagementPercentage = newValue;
-    propertyManagementMonthly = propertyManagementPercentage * rent;
-    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
-    notifyListeners();
-  }
-
-  void updateVacancy(double newValue) {
-    vacancyPercentage = newValue;
-    vacancyMonthly = vacancyPercentage * rent;
-    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
-    notifyListeners();
-  }
-
-  void updateMaintenance(double newValue) {
-    maintenancePercentage = newValue;
-    maintenanceMonthly = maintenancePercentage * rent;
-    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
-    notifyListeners();
-  }
-
-  void updateOther(double newValue) {
-    otherExpensesPercentage = newValue;
-    otherExpensesMonthly = otherExpensesPercentage * rent;
-    updateTotalMonthlyExpenses(calculateTotalExpensesMonthly());
-    notifyListeners();
-  }
-
   void updateTotalMonthlyExpenses(double newValue) {
     totalMonthlyExpenses = newValue;
     notifyListeners();
@@ -732,16 +643,6 @@ class FixFlip extends ChangeNotifier{
 
   void updateTotalAnnualExpenses(double newValue) {
     totalAnnualExpenses = newValue;
-    notifyListeners();
-  }
-
-  void updateNOIMonthly(double newValue) {
-    noiMonthly = newValue;
-    notifyListeners();
-  }
-
-  void updateNOIAnnual(double newValue) {
-    noiAnnual = newValue;
     notifyListeners();
   }
 
@@ -757,34 +658,8 @@ class FixFlip extends ChangeNotifier{
     return insuranceMonthly;
   }
 
-  double calculatePropertyManagement() {
-    propertyManagementMonthly = propertyManagementPercentage * rent;
-    notifyListeners();
-    return propertyManagementMonthly;
-  }
-
-  double calculateVacancy() {
-    vacancyMonthly = vacancyPercentage * rent;
-    notifyListeners();
-    return vacancyMonthly;
-  }
-
-  double calculateMaintenance() {
-    maintenanceMonthly = maintenancePercentage * rent;
-    notifyListeners();
-    return maintenanceMonthly;
-  }
-
-  double calculateOtherExpenses() {
-    otherExpensesMonthly = otherExpensesPercentage * rent;
-    notifyListeners();
-    return otherExpensesMonthly;
-  }
-
   double calculateTotalExpensesMonthly() {
-    totalMonthlyExpenses = taxesMonthly + insuranceMonthly +
-        propertyManagementMonthly + vacancyMonthly + maintenanceMonthly
-        + otherExpensesMonthly;
+    totalMonthlyExpenses = taxesMonthly + insuranceMonthly;
     totalAnnualExpenses = totalMonthlyExpenses * 12;
     updateTotalAnnualExpenses(totalAnnualExpenses);
     return totalMonthlyExpenses;
@@ -801,68 +676,11 @@ class FixFlip extends ChangeNotifier{
     return totalAnnualExpenses;
   }
 
-  double calculateNOIMonthly() {
-    noiMonthly = totalIncome - totalMonthlyExpenses;
-    return noiMonthly;
-  }
-
-  double calculateNOIAnnually() {
-    noiAnnual = totalIncome * 12 - totalAnnualExpenses;
-    return noiAnnual;
-  }
-
-  double calculateAfterRepairTotalExpensesMonthly() {
-    afterRepairTotalExpensesMonthly = taxesMonthly + insuranceMonthly
-        + propertyManagementMonthly + vacancyMonthly + maintenanceMonthly
-        + otherExpensesMonthly;
-    notifyListeners();
-    return afterRepairTotalExpensesMonthly;
-  }
-
-  double calculateAfterRepairTotalExpensesYearly() {
-    afterRepairTotalExpensesYearly = afterRepairTotalExpensesMonthly * 12;
-    notifyListeners();
-    return afterRepairTotalExpensesYearly;
-  }
-
-  double calculateAfterRepairNOIMonthly() {
-    afterRepairNOIMonthly = afterRepairRentPerMonth - afterRepairTotalExpensesMonthly;
-    notifyListeners();
-    return afterRepairNOIMonthly;
-  }
-
-  double calculateAfterRepairNOIYearly() {
-    afterRepairNOIYearly = yearlyIncomeAfterRepair - afterRepairTotalExpensesYearly;
-    notifyListeners();
-    return afterRepairTotalExpensesYearly;
-  }
-
-
   void calculateAllExpenses() {
     calculateMonthlyTaxes();
     calculateMonthlyInsurance();
-    calculatePropertyManagement();
-    calculateVacancy();
-    calculateMaintenance();
-    calculateOtherExpenses();
     calculateTotalExpensesMonthly();
     calculateTotalExpensesYearly();
-    calculateNOIMonthly();
-    calculateNOIAnnually();
-    calculateAfterRepairTotalExpensesMonthly();
-    calculateAfterRepairTotalExpensesYearly();
-    calculateAfterRepairNOIMonthly();
-    calculateAfterRepairNOIYearly();
-  }
-
-  void calculateAfterRepairExpenses() {
-    afterRepairTotalExpensesMonthly = taxesMonthly + insuranceMonthly
-        + propertyManagementMonthly + vacancyMonthly + maintenanceMonthly
-        + otherExpensesMonthly;
-    afterRepairTotalExpensesYearly = afterRepairTotalExpensesMonthly * 12;
-    afterRepairNOIMonthly = afterRepairRentPerMonth - afterRepairTotalExpensesMonthly;
-    afterRepairNOIYearly = yearlyIncome - afterRepairTotalExpensesYearly;
-    notifyListeners();
   }
 
   void updateFinanceOptionData(FixFlip newFinanceOptionData) {
@@ -933,11 +751,6 @@ class FixFlip extends ChangeNotifier{
 
   void updateWillRefinance(bool newValue) {
     willRefinance = newValue;
-    notifyListeners();
-  }
-
-  void updateWantsToRefinance(bool newValue) {
-    wantsToRefinance = newValue;
     notifyListeners();
   }
 
@@ -1140,12 +953,7 @@ class FixFlip extends ChangeNotifier{
     = cleaning = baseboards = exterior = totalRenovations = 0;
     rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
       = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
-    taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly =
-        propertyManagementPercentage = propertyManagementMonthly = vacancyPercentage
-    = vacancyMonthly = maintenancePercentage = maintenanceMonthly = otherExpensesPercentage
-    = otherExpensesMonthly = totalMonthlyExpenses = totalAnnualExpenses = noiMonthly = noiAnnual = 0;
-    afterRepairTotalExpensesMonthly = afterRepairTotalExpensesYearly =
-      afterRepairNOIMonthly = afterRepairNOIYearly = 0;
+    taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly = 0;
     financingType = FinancingType.commercial;
     downPaymentAmount = 0;
     loanAmount = 0;
@@ -1156,7 +964,6 @@ class FixFlip extends ChangeNotifier{
     monthlyPayment = 0;
     willRefinance = false;
     paymentType = PaymentType.principalAndInterest;
-    wantsToRefinance = false;
     constructionDownPaymentPercentage = 0;
     constructionLoanAmount = 0;
     constructionDownPaymentAmount = 0;
