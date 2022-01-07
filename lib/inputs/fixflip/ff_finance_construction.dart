@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_seller_financed.dart';
 import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -65,6 +66,15 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FixFlipFinanceCo
     return MyInputPage(
         imageUri: 'images/finance-construction.svg',
         headerText: 'Finance Option', subheadText: 'Construction Loan',
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const FixFlipFinanceOptions());
+        } else {
+          Get.back();
+        }
+      },
         onSubmit: () {
           ref.read(fixFlipProvider).updateMonthlyPayment(monthlyPayment);
           ref.read(fixFlipProvider).updateConstructionDownPayment(downPaymentAmount);

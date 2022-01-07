@@ -1,5 +1,9 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_construction.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_seller_financed.dart';
 import 'package:calculators/inputs/fixflip/fix_and_flip_selling_costs_input.dart';
+import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -45,6 +49,25 @@ class _HoldingCostsState extends ConsumerState<FixFlipHoldingCosts> {
         subheadText: '',
         position: kFixFlipQuestions.indexOf(FixFlipHoldingCosts) + 1,
         totalQuestions: kFixFlipQuestions.length,
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          if(ref.read(fixFlipProvider).financingType == FinancingType.sellerFinancing) {
+            Get.off(() => const FixFlipFinanceSellerFinanced());
+          }
+          else if(ref.read(fixFlipProvider).financingType == FinancingType.hardMoneyWithConstruction
+              || ref.read(fixFlipProvider).financingType == FinancingType.commercialWithConstruction) {
+            Get.off(() => const FixFlipFinanceConstruction());
+          }
+          else {
+            Get.off(() => const FixFlipFinanceOptions());
+          }
+        }
+        else {
+          Get.back();
+        }
+      },
         onSubmit: () {
           Get.to(() => const FixAndFlipSellingCostsInput());
         },

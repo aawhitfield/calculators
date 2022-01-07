@@ -1,4 +1,6 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/brrrr/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/brrrr/finance_options.dart';
 import 'package:calculators/inputs/fixflip/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/brrrr/holding_costs.dart';
 import 'package:calculators/inputs/brrrr/refinance_input.dart';
@@ -76,6 +78,22 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
         imageUri: 'images/transfer.svg',
         headerText: 'Finance Option',
         subheadText: 'Seller Financed Loan',
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            if(ref.read(brrrrProvider).financingType == FinancingType.hardMoneyWithConstruction
+                || ref.read(brrrrProvider).financingType == FinancingType.commercialWithConstruction) {
+              Get.off(() => const FinanceOptionConstructionLoan());
+            }
+            else {
+              Get.off(() => const FinanceOptions());
+            }
+          }
+          else {
+            Get.back();
+          }
+        },
         onSubmit: () {
           ref.read(brrrrProvider).updateSellerMonthlyPayment(monthlyPayment);
           ref.read(brrrrProvider).updateSellerLoanAmount(loanAmount);

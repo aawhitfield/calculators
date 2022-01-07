@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/home.dart';
 import 'package:calculators/inputs/brrrr/renovations_calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_input_page.dart';
@@ -25,6 +26,15 @@ class Location extends ConsumerWidget {
       subheadText: 'Where is the property located?',
       shouldShowBackButton: true,
       child: AddressForm(addressController),
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.offAll(() => const MyHomePage(title: 'Vereifi', startingTab: 1,));
+        } else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         ref.read(brrrrProvider).updateAddress(addressController.text);
 

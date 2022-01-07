@@ -33,7 +33,6 @@ List<Type> kBRRRRQuestions = [
   FinanceOptionSellerFinanced,
   RefinanceInput,
   HoldingCosts,
-  FixAndFlipSellingCostsInput,
   Report,
 ];
 

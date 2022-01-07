@@ -1,6 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/brrrr/expenses_input.dart';
 import 'package:calculators/inputs/brrrr/income_input.dart';
+import 'package:calculators/inputs/brrrr/renovations_calculator.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -60,6 +61,15 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
         headerText: 'Property Costs',
         subheadText: 'Now let\'s get some information about costs associated '
             'with this property.',
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const RenovationsCalculator());
+        } else {
+          Get.back();
+        }
+      },
         onSubmit: () {
           Calculator calculatorType = ref.read(calculatorProvider).type;
           if (calculatorType == Calculator.brrrr) {

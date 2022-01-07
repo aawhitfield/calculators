@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/fixflip/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/my_input_page.dart';
@@ -6,6 +7,7 @@ import 'package:calculators/widgets/report_header.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 
 class FixFlipStatement extends ConsumerWidget {
   const FixFlipStatement({
@@ -58,6 +60,16 @@ class FixFlipStatement extends ConsumerWidget {
       subheadText: '',
       position: kFixFlipQuestions.indexOf(FixFlipStatement) + 1,
       totalQuestions: kFixFlipQuestions.length,
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const FixAndFlipSellingCostsInput());
+        }
+        else {
+          Get.back();
+        }
+      },
       onSubmit: () {},
       child: ResponsiveLayout(
           children: [

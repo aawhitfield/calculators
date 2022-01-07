@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/brrrr/expenses_input.dart';
+import 'package:calculators/inputs/brrrr/property_costs.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -58,6 +59,15 @@ class _IncomeInputState extends ConsumerState<IncomeInput> {
         imageUri: 'images/income.svg',
         headerText: 'Income',
         subheadText: 'Enter the income amounts',
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const PropertyCosts());
+        } else {
+          Get.back();
+        }
+      },
         onSubmit: () {
           ref.read(brrrrProvider).calculateTotalIncome();
           Get.to(() => const ExpensesInput());

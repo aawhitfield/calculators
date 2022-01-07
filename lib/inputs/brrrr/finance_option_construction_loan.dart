@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/brrrr/finance_option_seller_financed.dart';
+import 'package:calculators/inputs/brrrr/finance_options.dart';
 import 'package:calculators/inputs/brrrr/holding_costs.dart';
 import 'package:calculators/inputs/brrrr/refinance_input.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -66,6 +67,15 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
     return MyInputPage(
         imageUri: 'images/finance-construction.svg',
         headerText: 'Finance Option', subheadText: 'Construction Loan',
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const FinanceOptions());
+        } else {
+          Get.back();
+        }
+      },
         onSubmit: () {
           ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
           ref.read(brrrrProvider).updateConstructionDownPayment(downPaymentAmount);

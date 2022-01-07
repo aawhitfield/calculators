@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/brrrr/location.dart';
 import 'package:calculators/inputs/brrrr/property_costs.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -122,6 +123,15 @@ class _RenovationsCalculatorState extends ConsumerState<RenovationsCalculator> {
         imageUri: 'images/construction.svg',
         headerText: 'Renovations',
         subheadText: 'How much will it take to renovate the property?',
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            Get.off(() => Location('BRRRR', subtitle: 'Buy, Rehab, Rent, Refinance, Repeat'));
+          } else {
+            Get.back();
+          }
+        },
         onSubmit: () {
           if (!enterTotal) {
             ref.read(brrrrProvider).calculateTotalRenovations();

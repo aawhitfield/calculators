@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/brrrr/finance_options.dart';
+import 'package:calculators/inputs/brrrr/income_input.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -83,6 +84,15 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
       subheadText: '',
       position: kBRRRRQuestions.indexOf(ExpensesInput) + 1,
       totalQuestions: kBRRRRQuestions.length,
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const IncomeInput());
+        } else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         Get.to(() => const FinanceOptions());
       },

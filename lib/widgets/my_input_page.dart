@@ -16,6 +16,7 @@ class MyInputPage extends ConsumerWidget {
   final String subheadText;
   final Widget child;
   final VoidCallback onSubmit;
+  final VoidCallback? onBack;
   final int position;
   final int totalQuestions;
   final bool? shouldShowBackButton;
@@ -29,6 +30,7 @@ class MyInputPage extends ConsumerWidget {
     required this.subheadText,
     required this.child,
     required this.onSubmit,
+    this.onBack,
     required this.position,
     required this.totalQuestions,
     this.shouldShowBackButton,
@@ -72,7 +74,7 @@ class MyInputPage extends ConsumerWidget {
                     icon: Icon(GetPlatform.isAndroid
                         ? Icons.arrow_back
                         : CupertinoIcons.back),
-                    onPressed: () => Get.back(),
+                    onPressed: onBack ?? () => Get.back(),
                   )
                 : Container(),
         systemOverlayStyle: SystemUiOverlayStyle(

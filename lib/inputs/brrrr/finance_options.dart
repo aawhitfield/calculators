@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/brrrr/expenses_input.dart';
 import 'package:calculators/inputs/brrrr/finance_option_construction_loan.dart';
 import 'package:calculators/inputs/brrrr/finance_option_seller_financed.dart';
 import 'package:calculators/inputs/brrrr/refinance_input.dart';
@@ -33,15 +34,15 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
   @override
   void initState() {
     double loanPercent = ref.read(brrrrProvider).downPaymentPercent * 100;
-    if(loanPercent != 0) {
+    if (loanPercent != 0) {
       downPaymentPercentController.text = kWholeNumber.format(loanPercent);
     }
     double interestRate = ref.read(brrrrProvider).interestRate * 100;
-    if(interestRate != 0) {
+    if (interestRate != 0) {
       interestRateController.text = interestRate.toString();
     }
     int term = ref.read(brrrrProvider).term;
-    if(term != 0) {
+    if (term != 0) {
       termController.text = kWholeNumber.format(term);
     }
     double closingCosts = ref.read(brrrrProvider).closingCosts;
@@ -57,8 +58,8 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
 
     double loanAmount = ref.watch(brrrrProvider).loanAmount;
 
-    double downPaymentAmount = ref.watch(brrrrProvider).purchasePrice -
-        loanAmount;
+    double downPaymentAmount =
+        ref.watch(brrrrProvider).purchasePrice - loanAmount;
 
     double monthlyPayment = (ref.watch(brrrrProvider).paymentType ==
             PaymentType.principalAndInterest)
@@ -82,6 +83,15 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
       imageUri: 'images/finance.svg',
       headerText: 'Finance Options',
       subheadText: '',
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const ExpensesInput());
+        } else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
         ref.read(brrrrProvider).updateDownPayment(downPaymentAmount);
@@ -90,13 +100,11 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
         if (financingType == FinancingType.hardMoneyWithConstruction ||
             financingType == FinancingType.commercialWithConstruction) {
           Get.to(() => const FinanceOptionConstructionLoan());
-        } else if(financingType == FinancingType.sellerFinancing){
+        } else if (financingType == FinancingType.sellerFinancing) {
           Get.to(() => const FinanceOptionSellerFinanced());
-        }
-        else if(ref.read(brrrrProvider).wantsToRefinance) {
+        } else if (ref.read(brrrrProvider).wantsToRefinance) {
           Get.to(() => const RefinanceInput());
-        }
-        else {
+        } else {
           ref.read(brrrrProvider).calculateAllHoldingCosts();
           Get.to(() => const HoldingCosts());
         }
@@ -131,9 +139,10 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               double? newValue = double.tryParse(newPercentage);
               if (newValue != null) {
                 double downPaymentPercentage = newValue / 100;
-                ref.read(brrrrProvider).updateDownPaymentPercentage(downPaymentPercentage);
-              }
-              else {
+                ref
+                    .read(brrrrProvider)
+                    .updateDownPaymentPercentage(downPaymentPercentage);
+              } else {
                 ref.read(brrrrProvider).updateDownPaymentPercentage(0.0);
               }
               ref.read(brrrrProvider).calculateAllFinanceOptions();
@@ -158,8 +167,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               if (newValue != null) {
                 double interestRate = newValue / 100;
                 ref.read(brrrrProvider).updateInterestRate(interestRate);
-              }
-              else {
+              } else {
                 ref.read(brrrrProvider).updateInterestRate(0);
               }
             },
@@ -174,8 +182,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               int? newValue = int.tryParse(newTerm);
               if (newValue != null) {
                 ref.read(brrrrProvider).updateTerm(newValue);
-              }
-              else {
+              } else {
                 ref.read(brrrrProvider).updateTerm(0);
               }
             },
@@ -188,8 +195,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               double? newValue = double.tryParse(newCost);
               if (newValue != null) {
                 ref.read(brrrrProvider).updateClosingCosts(newValue);
-              }
-              else {
+              } else {
                 ref.read(brrrrProvider).updateClosingCosts(0);
               }
             },
@@ -211,7 +217,10 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               monthlyPaymentString),
           const Divider(),
           const SizedBox(height: 8),
-          Text('Would you like to refinance this property?', style: Theme.of(context).textTheme.headline6,),
+          Text(
+            'Would you like to refinance this property?',
+            style: Theme.of(context).textTheme.headline6,
+          ),
           Padding(
             padding: const EdgeInsets.all(32.0),
             child: CupertinoSlidingSegmentedControl<bool>(
@@ -253,10 +262,9 @@ class FinancingDropDown extends StatelessWidget {
     return DropdownButton<FinancingType>(
       value: value,
       items: FinancingType.values
-          .map((FinancingType financingType) =>
-              DropdownMenuItem<FinancingType>(
-                  value: financingType,
-                  child: Text(FinancingTypeUtils(financingType).name)))
+          .map((FinancingType financingType) => DropdownMenuItem<FinancingType>(
+              value: financingType,
+              child: Text(FinancingTypeUtils(financingType).name)))
           .toList(),
       onChanged: (FinancingType? newValue) {
         ref.read(brrrrProvider).updateFinancingType(newValue);

@@ -1,4 +1,6 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_construction.dart';
+import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
 import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';
@@ -73,6 +75,22 @@ class _FinanceOptionDownPaymentState
         imageUri: 'images/transfer.svg',
         headerText: 'Finance Option',
         subheadText: 'Seller Financed Loan',
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            if(ref.read(fixFlipProvider).financingType == FinancingType.hardMoneyWithConstruction
+                || ref.read(fixFlipProvider).financingType == FinancingType.commercialWithConstruction) {
+              Get.off(() => const FixFlipFinanceConstruction());
+            }
+            else {
+              Get.off(() => const FixFlipFinanceOptions());
+            }
+          }
+          else {
+            Get.back();
+          }
+        },
         onSubmit: () {
           ref.read(fixFlipProvider).updateSellerMonthlyPayment(monthlyPayment);
           ref.read(fixFlipProvider).updateSellerLoanAmount(loanAmount);

@@ -1,5 +1,9 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/brrrr/finance_option_construction_loan.dart';
+import 'package:calculators/inputs/brrrr/finance_option_seller_financed.dart';
+import 'package:calculators/inputs/brrrr/finance_options.dart';
 import 'package:calculators/inputs/brrrr/holding_costs.dart';
+import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/models/refinance.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -68,6 +72,25 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
       imageUri: 'images/refinance.svg',
       headerText: 'Refinance Options',
       subheadText: '',
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          if(ref.read(brrrrProvider).financingType == FinancingType.sellerFinancing) {
+            Get.off(() => const FinanceOptionSellerFinanced());
+          }
+          else if(ref.read(brrrrProvider).financingType == FinancingType.hardMoneyWithConstruction
+              || ref.read(brrrrProvider).financingType == FinancingType.commercialWithConstruction) {
+            Get.off(() => const FinanceOptionConstructionLoan());
+          }
+          else {
+            Get.off(() => const FinanceOptions());
+          }
+        }
+        else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
         ref.read(brrrrProvider).calculateAllHoldingCosts();

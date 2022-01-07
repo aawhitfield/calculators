@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
@@ -75,6 +76,16 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
       position:
           kFixFlipQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
       totalQuestions: kFixFlipQuestions.length,
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const FixFlipHoldingCosts());
+        }
+        else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         Get.to(() => const FixFlipStatement());
       },

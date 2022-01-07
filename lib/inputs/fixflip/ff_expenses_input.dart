@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
+import 'package:calculators/inputs/fixflip/ff_property_costs.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -49,6 +50,15 @@ class _ExpensesInputState extends ConsumerState<FixFlipExpensesInput> {
       subheadText: '',
       position: kFixFlipQuestions.indexOf(FixFlipExpensesInput) + 1,
       totalQuestions: kFixFlipQuestions.length,
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.off(() => const FixFlipPropertyCosts());
+        } else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         Get.to(() => const FixFlipFinanceOptions());
       },

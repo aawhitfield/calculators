@@ -1,4 +1,5 @@
 import 'package:calculators/globals.dart';
+import 'package:calculators/home.dart';
 import 'package:calculators/inputs/fixflip/ff_address_form.dart';
 import 'package:calculators/inputs/fixflip/ff_renovations_calculator.dart';
 import 'package:calculators/providers.dart';
@@ -24,6 +25,15 @@ class FixFlipLocation extends ConsumerWidget {
       subheadText: 'Where is the property located?',
       shouldShowBackButton: true,
       child: FixFlipAddressForm(addressController),
+      onBack: () {
+        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+        bool shouldOverrideBackButton = savedCalculatorID != '';
+        if (shouldOverrideBackButton) {
+          Get.offAll(() => const MyHomePage(title: 'Vereifi', startingTab: 1,));
+        } else {
+          Get.back();
+        }
+      },
       onSubmit: () {
         ref.read(fixFlipProvider).updateAddress(addressController.text);
 
