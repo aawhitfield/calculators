@@ -3,7 +3,6 @@
 // ignore_for_file: import_of_legacy_library_into_null_safe
 
 import 'package:calculators/models/financing_type.dart';
-import 'package:calculators/models/refinance.dart';
 import 'package:finance/finance.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +19,7 @@ class FixFlipFields {
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
     holdingCostsUtilities,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
-    refinancingType, refinancingLoanToValue, refinancingInterestRate, refinancingTerm, refinancingClosingCosts,
+    realtorsFeesPercentage, sellersClosingCosts, buyersClosingCosts, otherClosingCosts,
   ];
 
   static const String id = 'id';
@@ -75,11 +74,10 @@ class FixFlipFields {
   static const String sellerInterestRate = 'sellerInterestRate';
   static const String amortization = 'amortization';
   static const String sellerTerm = 'sellerTerm';
-  static const String refinancingType = 'refinancingType';
-  static const String refinancingLoanToValue = 'refinancingLoanToValue';
-  static const String refinancingInterestRate = 'refinancingInterestRate';
-  static const String refinancingTerm = 'refinancingTerm';
-  static const String refinancingClosingCosts = 'refinancingClosingCosts';
+  static const String realtorsFeesPercentage = 'realtorsFeesPercentage';
+  static const String sellersClosingCosts = 'sellersClosingCosts';
+  static const String buyersClosingCosts = 'buyersClosingCosts';
+  static const String otherClosingCosts = 'otherClosingCosts';
 }
 
 class FixFlip extends ChangeNotifier{
@@ -149,14 +147,12 @@ class FixFlip extends ChangeNotifier{
   int amortization;
   int sellerTerm;
   double sellerMonthlyPayment;
-  Refinancing refinancingType;
-  double refinancingLoanToValue;
-  double refinancingLoanAmount;
-  double refinancingDownPaymentAmount;
-  double refinancingInterestRate;
-  int refinancingTerm;
-  double refinancingClosingCosts;
-  double refinancingMonthlyPayment;
+  double realtorFeesPercentage;
+  double realtorFees;
+  double sellersClosingCosts;
+  double buyersClosingCosts;
+  double otherClosingCosts;
+  double totalClosingCosts;
 
   FixFlip({this.id, this.address = '', this.listPrice = 0, this.sqft,
     this.afterRepairValue = 0, this.purchasePrice = 0, this.monthsToRehabRent = 0,
@@ -183,9 +179,8 @@ class FixFlip extends ChangeNotifier{
     this.sellerFinancingType = SellerFinancingType.payment,
     this.sellerLoanPercentage = 0, this.sellerLoanAmount = 0,
     this.sellerInterestRate = 0, this.amortization = 0, this.sellerTerm = 0, this.sellerMonthlyPayment = 0,
-    this.refinancingType = Refinancing.cashOut,
-    this.refinancingLoanToValue = 0, this.refinancingLoanAmount = 0, this.refinancingDownPaymentAmount = 0,
-    this.refinancingInterestRate = 0, this.refinancingTerm = 0, this.refinancingClosingCosts = 0, this.refinancingMonthlyPayment = 0,
+    this.realtorFees = 0, this.realtorFeesPercentage = 0, this.sellersClosingCosts = 0,
+    this.buyersClosingCosts = 0, this.otherClosingCosts = 0, this.totalClosingCosts = 0,
   });
   
 
@@ -236,12 +231,11 @@ class FixFlip extends ChangeNotifier{
     FixFlipFields.sellerInterestRate: sellerInterestRate,
     FixFlipFields.amortization: amortization,
     FixFlipFields.sellerTerm: sellerTerm,
-    FixFlipFields.refinancingType: RefinancingUtils(refinancingType).name,
-    FixFlipFields.refinancingLoanToValue: refinancingLoanToValue,
-    FixFlipFields.refinancingInterestRate: refinancingInterestRate,
-    FixFlipFields.refinancingTerm: refinancingTerm,
-    FixFlipFields.refinancingClosingCosts: refinancingClosingCosts,
-    'calculatorType': 'BRRRR',
+    FixFlipFields.realtorsFeesPercentage: realtorFeesPercentage,
+    FixFlipFields.sellersClosingCosts: sellersClosingCosts,
+    FixFlipFields.buyersClosingCosts: buyersClosingCosts,
+    FixFlipFields.otherClosingCosts: otherClosingCosts,
+    'calculatorType': 'Fix and Flip',
   };
 
   static FixFlip fromJson(Map<String, Object?> json) => FixFlip(
@@ -291,11 +285,10 @@ class FixFlip extends ChangeNotifier{
       sellerInterestRate: json[FixFlipFields.sellerInterestRate] as double,
       amortization: json[FixFlipFields.amortization] as int,
       sellerTerm: json[FixFlipFields.sellerTerm] as int,
-      refinancingType: RefinancingUtils.getFinancingType(json[FixFlipFields.financingType] as String),
-      refinancingLoanToValue: json[FixFlipFields.refinancingLoanToValue] as double,
-      refinancingInterestRate: json[FixFlipFields.refinancingInterestRate] as double,
-      refinancingTerm: json[FixFlipFields.refinancingTerm] as int,
-      refinancingClosingCosts: json[FixFlipFields.refinancingClosingCosts] as double,
+      realtorFeesPercentage: json[FixFlipFields.realtorsFeesPercentage] as double,
+      sellersClosingCosts: json[FixFlipFields.sellersClosingCosts] as double,
+      buyersClosingCosts: json[FixFlipFields.buyersClosingCosts] as double,
+      otherClosingCosts: json[FixFlipFields.otherClosingCosts] as double,
   );
 
   void updateAll(FixFlip data) {
@@ -365,14 +358,12 @@ class FixFlip extends ChangeNotifier{
     amortization = data.amortization;
     sellerTerm = data.sellerTerm;
     sellerMonthlyPayment = data.sellerMonthlyPayment;
-    refinancingType = data.refinancingType;
-    refinancingLoanToValue = data.refinancingLoanToValue;
-    refinancingLoanAmount = data.refinancingLoanAmount;
-    refinancingDownPaymentAmount = data.refinancingDownPaymentAmount;
-    refinancingInterestRate = data.refinancingInterestRate;
-    refinancingTerm = data.refinancingTerm;
-    refinancingClosingCosts = data.refinancingClosingCosts;
-    refinancingMonthlyPayment = data.refinancingMonthlyPayment;
+    realtorFeesPercentage = data.realtorFeesPercentage;
+    realtorFees = data.realtorFees;
+    sellersClosingCosts = data.sellersClosingCosts;
+    buyersClosingCosts = data.buyersClosingCosts;
+    otherClosingCosts = data.otherClosingCosts;
+    totalClosingCosts = data.totalClosingCosts;
     calculateAll();
     notifyListeners();
   }
@@ -387,9 +378,9 @@ class FixFlip extends ChangeNotifier{
     calculateTotalIncomeAfterRepair();
     calculateYearlyIncomeAfterRepair();
     calculateLoanAmount();
-    calculateAllRefinanceCalculations();
     calculateSellerFinanceCalculations();
     calculateAllHoldingCosts();
+    calculateAllSellingCosts();
   }
 
   void updateProperty(FixFlip newProperty) {
@@ -888,53 +879,51 @@ class FixFlip extends ChangeNotifier{
     }
     notifyListeners();
   }
-
-  void updateRefinancingType(Refinancing newValue) {
-    refinancingType = newValue;
+  void updateRealtorFeesPercentage (double newValue) {
+    realtorFeesPercentage = newValue;
     notifyListeners();
   }
 
-  void updateRefinancingLoanToValue(newValue) {
-    refinancingLoanToValue = newValue;
+  void updateRealtorFees(double newValue) {
+    realtorFees = newValue;
+    calculateAllSellingCosts();
     notifyListeners();
   }
 
-  void updateRefinancingLoanAmount(newValue) {
-    refinancingLoanAmount = newValue;
+  void updateSellersClosingCosts(double newValue) {
+    sellersClosingCosts = newValue;
+    calculateAllSellingCosts();
     notifyListeners();
   }
 
-  void updateRefinancingDownPayment(newValue) {
-    refinancingDownPaymentAmount = newValue;
+  void updateBuyersClosingCosts(double newValue) {
+    buyersClosingCosts = newValue;
+    calculateAllSellingCosts();
     notifyListeners();
   }
 
-  void updateRefinancingInterestRate(newValue) {
-    refinancingInterestRate = newValue;
+  void updateOtherClosingCosts(double newValue) {
+    otherClosingCosts = newValue;
+    calculateAllSellingCosts();
     notifyListeners();
   }
 
-  void updateRefinancingTerm(newValue) {
-    refinancingTerm = newValue;
+  double calculateTotal() {
+    totalClosingCosts = realtorFees + sellersClosingCosts + buyersClosingCosts
+        + otherClosingCosts;
     notifyListeners();
+    return totalClosingCosts;
   }
 
-  void updateRefinancingClosingCosts(newValue) {
-    refinancingClosingCosts = newValue;
-    notifyListeners();
+  double calculateTotalOnly() {
+    totalClosingCosts = realtorFees + sellersClosingCosts + buyersClosingCosts
+        + otherClosingCosts;
+    return totalClosingCosts;
   }
 
-  void updateRefinancingMonthlyPayment(newValue) {
-    refinancingMonthlyPayment = newValue;
-    notifyListeners();
-  }
-
-  void calculateAllRefinanceCalculations() {
-    refinancingMonthlyPayment = Finance.pmt(
-      rate: refinancingInterestRate / 12,
-      nper: refinancingTerm * 12,
-      pv: -1 * refinancingLoanAmount,
-    ) as double;
+  void calculateAllSellingCosts() {
+    realtorFees = realtorFeesPercentage * afterRepairValue;
+    totalClosingCosts = realtorFees + taxesYearly + sellersClosingCosts + buyersClosingCosts + otherClosingCosts;
     notifyListeners();
   }
 
@@ -973,11 +962,12 @@ class FixFlip extends ChangeNotifier{
     sellerFinancingType = SellerFinancingType.payment;
     sellerLoanPercentage = sellerLoanAmount = sellerInterestRate = 0;
     sellerTerm = 0;
-    refinancingType = Refinancing.cashOut;
-    refinancingLoanToValue = refinancingLoanAmount = refinancingDownPaymentAmount = 0;
-    refinancingInterestRate = 0;
-    refinancingTerm = 0;
-    refinancingClosingCosts = refinancingMonthlyPayment = 0;
+    realtorFees = 0;
+    realtorFeesPercentage = 0;
+    sellersClosingCosts = 0;
+    buyersClosingCosts = 0;
+    otherClosingCosts = 0;
+    totalClosingCosts = 0;
     notifyListeners();
   }
 }

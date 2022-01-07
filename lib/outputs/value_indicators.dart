@@ -27,7 +27,7 @@ class ValueIndicators extends ConsumerWidget {
 
     double totalMoneyToRehab = ref.read(brrrrProvider).totalRenovations;
 
-    double totalMoneyToSell = ref.read(ffSellingCostsProvider).totalClosingCosts;
+    double totalMoneyToSell = ref.read(fixFlipProvider).totalClosingCosts;
 
     double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
     double totalProfit = afterRepairValue - totalMoneyToBuy - totalMoneyToHold

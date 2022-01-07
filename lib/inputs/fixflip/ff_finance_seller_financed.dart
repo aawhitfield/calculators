@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/brrrr/holding_costs.dart';
+import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/models/financing_type.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -78,7 +78,7 @@ class _FinanceOptionDownPaymentState
           ref.read(fixFlipProvider).updateSellerLoanAmount(loanAmount);
 
           ref.read(fixFlipProvider).calculateAllHoldingCosts();
-          Get.to(() => const HoldingCosts());
+          Get.to(() => const FixFlipHoldingCosts());
         },
         position: kFixFlipQuestions.indexOf(FixFlipFinanceSellerFinanced) + 1,
         totalQuestions: kFixFlipQuestions.length,

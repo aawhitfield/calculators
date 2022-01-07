@@ -1,7 +1,7 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/brrrr/holding_costs.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_construction.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_seller_financed.dart';
+import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/models/financing_type.dart';
@@ -93,7 +93,7 @@ class _FinanceOptionsState extends ConsumerState<FixFlipFinanceOptions> {
         }
         else {
           ref.read(fixFlipProvider).calculateAllHoldingCosts();
-          Get.to(() => const HoldingCosts());
+          Get.to(() => const FixFlipHoldingCosts());
         }
       },
       position: kFixFlipQuestions.indexOf(FixFlipFinanceOptions) + 1,

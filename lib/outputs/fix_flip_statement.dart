@@ -1,7 +1,9 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
+import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/report_header.dart';
+import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,7 +32,7 @@ class FixFlipStatement extends ConsumerWidget {
 
     double totalMoneyToRehab = ref.read(brrrrProvider).totalRenovations;
 
-    double totalMoneyToSell = ref.read(ffSellingCostsProvider).totalClosingCosts;
+    double totalMoneyToSell = ref.read(fixFlipProvider).totalClosingCosts;
 
     double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
     double totalProfit = afterRepairValue - totalMoneyToBuy - totalMoneyToHold
@@ -50,46 +52,54 @@ class FixFlipStatement extends ConsumerWidget {
     String profitPerInvestorString = kCurrencyFormat.format(profitPerInvestor);
     String breakEvenString = kCurrencyFormat.format(breakEvenSellPrice);
 
-    return Column(
-      children: [
-        const ReportHeader('Fix and Flip'),
-        const SizedBox(height: 16),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Total\nto Buy'
-                : 'Total Money\nto Buy',
-            moneyToBuyString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Total\nto Hold'
-                : 'Total Money \nto Hold',
-            moneyToHoldString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Total\nto Rehab'
-                : 'Total Money \n to Rehab',
-            moneyToRehabString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Total\nto Sell'
-                : 'Total Money \n to Sell',
-            moneyToSellString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Total\nProfit'
-                : 'Total Profit',
-            totalProfitString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Profit per\ninvestor'
-                : 'Profit per investor',
-            profitPerInvestorString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Break\nEven'
-                : 'Break Even Sell Price',
-            breakEvenString),
-      ],
+    return MyInputPage(
+      imageUri: 'images/report.svg',
+      headerText: 'Report',
+      subheadText: '',
+      position: kFixFlipQuestions.indexOf(FixFlipStatement) + 1,
+      totalQuestions: kFixFlipQuestions.length,
+      onSubmit: () {},
+      child: ResponsiveLayout(
+          children: [
+            const ReportHeader('Fix and Flip'),
+            const SizedBox(height: 16),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Total\nto Buy'
+                    : 'Total Money\nto Buy',
+                moneyToBuyString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Total\nto Hold'
+                    : 'Total Money \nto Hold',
+                moneyToHoldString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Total\nto Rehab'
+                    : 'Total Money \n to Rehab',
+                moneyToRehabString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Total\nto Sell'
+                    : 'Total Money \n to Sell',
+                moneyToSellString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Total\nProfit'
+                    : 'Total Profit',
+                totalProfitString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Profit per\ninvestor'
+                    : 'Profit per investor',
+                profitPerInvestorString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Break\nEven'
+                    : 'Break Even Sell Price',
+                breakEvenString),
+          ],
+      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/fix_flip.dart';
-import 'package:calculators/models/fix_flip_selling_costs.dart';
 import 'package:calculators/models/quick_max_offer.dart';
 import 'package:calculators/models/saved_calculator.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,10 +13,6 @@ final brrrrProvider = ChangeNotifierProvider<BRRRR>((ref) => BRRRR(
 
 final calculatorProvider = ChangeNotifierProvider<CurrentCalculator>(
     (ref) => CurrentCalculator(),
-);
-
-final ffSellingCostsProvider = ChangeNotifierProvider<FixFlipSellingCosts>(
-    (ref) => FixFlipSellingCosts(),
 );
 
 final savedCalculatorProvider = ChangeNotifierProvider<SavedCalculator>(
@@ -36,5 +31,4 @@ void resetAllData(WidgetRef ref) {
   ref.read(brrrrProvider).reset();
   ref.read(quickMaxProvider).reset();
   ref.read(fixFlipProvider).reset();
-  ref.read(ffSellingCostsProvider).reset();
 }

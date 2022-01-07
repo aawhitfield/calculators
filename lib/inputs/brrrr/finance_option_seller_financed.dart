@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/inputs/brrrr/fix_and_flip_selling_costs_input.dart';
+import 'package:calculators/inputs/fixflip/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/brrrr/holding_costs.dart';
 import 'package:calculators/inputs/brrrr/refinance_input.dart';
 import 'package:calculators/models/calculator.dart';
@@ -91,8 +91,8 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
           }
           else {
             double realtorsFees = ref.watch(brrrrProvider).afterRepairValue *
-                ref.watch(ffSellingCostsProvider).realtorFeesPercentage;
-            ref.read(ffSellingCostsProvider).updateRealtorFees(realtorsFees);
+                ref.watch(fixFlipProvider).realtorFeesPercentage;
+            ref.read(fixFlipProvider).updateRealtorFees(realtorsFees);
 
             int numberOfMonthsToRehabRent =
                 ref.read(brrrrProvider).monthsToRehabRent;
@@ -100,10 +100,10 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
             if (numberOfMonthsToRehabRent != 0) {
               taxes = taxes / numberOfMonthsToRehabRent;
             }
-            ref.read(ffSellingCostsProvider).updateTaxes(taxes);
+            ref.read(fixFlipProvider).updateTaxes(taxes);
             double other = ref.watch(brrrrProvider).afterRepairValue * 0.02;
-            ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
-            ref.read(ffSellingCostsProvider).calculateTotal();
+            ref.read(fixFlipProvider).updateOtherClosingCosts(other);
+            ref.read(fixFlipProvider).calculateTotal();
             Get.to(() => const FixAndFlipSellingCostsInput());
           }
         },

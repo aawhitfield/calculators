@@ -1,5 +1,5 @@
 import 'package:calculators/globals.dart';
-import 'package:calculators/outputs/report.dart';
+import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -22,48 +22,50 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
   TextEditingController sellersClosingCostsController = TextEditingController();
   TextEditingController buyersClosingCostsController = TextEditingController();
   TextEditingController closingCostsController = TextEditingController();
+  TextEditingController otherClosingCostsController = TextEditingController();
 
   late double sellersClosingCosts;
   late double buyersClosingCosts;
 
   @override
   void initState() {
-    double realtorsFeesDecimal = ref.read(ffSellingCostsProvider).realtorFeesPercentage;
+    double realtorsFeesDecimal = ref.read(fixFlipProvider).realtorFeesPercentage;
     double realtorsFeesPercentage = realtorsFeesDecimal * 100;
     if(realtorsFeesPercentage != 0) {
       realtorsFeesController.text = kWholeNumber.format(realtorsFeesPercentage);
     }
 
-    sellersClosingCosts = ref.read(ffSellingCostsProvider).sellersClosingCosts;
+    sellersClosingCosts = ref.read(fixFlipProvider).sellersClosingCosts;
     if (sellersClosingCosts != 0) {
       sellersClosingCostsController.text = kCurrencyFormat.format(sellersClosingCosts);
     }
 
-    buyersClosingCosts = ref.read(ffSellingCostsProvider).buyersClosingCosts;
+    buyersClosingCosts = ref.read(fixFlipProvider).buyersClosingCosts;
     if (buyersClosingCosts != 0) {
       buyersClosingCostsController.text = kCurrencyFormat.format(buyersClosingCosts);
+    }
+    double otherClosingCosts = ref.read(fixFlipProvider).otherClosingCosts;
+    if(otherClosingCosts != 0) {
+      otherClosingCostsController.text = kCurrencyFormat.format(otherClosingCosts);
     }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double realtorsFees = ref.watch(brrrrProvider).afterRepairValue *
-        ref.watch(ffSellingCostsProvider).realtorFeesPercentage;
+    double realtorsFees = ref.watch(fixFlipProvider).afterRepairValue *
+        ref.watch(fixFlipProvider).realtorFeesPercentage;
 
     int numberOfMonthsToRehabRent =
-        ref.read(brrrrProvider).monthsToRehabRent;
-    double taxes = ref.watch(brrrrProvider).taxesYearly;
+        ref.read(fixFlipProvider).monthsToRehabRent;
+    double taxes = ref.watch(fixFlipProvider).taxesYearly;
     if (numberOfMonthsToRehabRent != 0) {
       taxes = taxes / numberOfMonthsToRehabRent;
     }
-    double other = ref.watch(brrrrProvider).afterRepairValue * 0.02;
-    double total = realtorsFees + taxes + sellersClosingCosts + buyersClosingCosts + other;
-    total = ref.watch(ffSellingCostsProvider).totalClosingCosts;
+    double total = ref.watch(fixFlipProvider).totalClosingCosts;
 
     String taxesString = kCurrencyFormat.format(taxes);
     String realtorsFeesString = kCurrencyFormat.format(realtorsFees);
-    String otherString = kCurrencyFormat.format(other);
     String totalString = kCurrencyFormat.format(total);
 
     return MyInputPage(
@@ -71,11 +73,10 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
       headerText: 'Fix and Flip',
       subheadText: 'Selling Costs',
       position:
-          kBRRRRQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
-      totalQuestions: kBRRRRQuestions.length,
+          kFixFlipQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
+      totalQuestions: kFixFlipQuestions.length,
       onSubmit: () {
-        ref.read(ffSellingCostsProvider).calculateTotal();
-        Get.to(() => const Report());
+        Get.to(() => const FixFlipStatement());
       },
       child: ResponsiveLayout(
         children: [
@@ -88,21 +89,13 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
               if (newValue != null) {
                 double realtorFeesPercentage = newValue / 100;
                 ref
-                    .read(ffSellingCostsProvider)
+                    .read(fixFlipProvider)
                     .updateRealtorFeesPercentage(realtorFeesPercentage);
-                double afterRepairValue =
-                    ref.read(brrrrProvider).afterRepairValue;
-                double realtorsFees = afterRepairValue * realtorFeesPercentage;
-
-                ref
-                    .read(ffSellingCostsProvider)
-                    .updateRealtorFees(realtorsFees);
-                ref.read(ffSellingCostsProvider).updateTaxes(taxes);
-                ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
               } else {
-                ref.read(ffSellingCostsProvider).updateRealtorFeesPercentage(0);
-                ref.read(ffSellingCostsProvider).updateRealtorFees(0);
+                ref.read(fixFlipProvider).updateRealtorFeesPercentage(0.0);
+                ref.read(fixFlipProvider).updateRealtorFees(0);
               }
+              ref.read(fixFlipProvider).calculateAllSellingCosts();
             },
           ),
           MoneyListTile(
@@ -119,14 +112,12 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
               double? newValue = double.tryParse(newCost);
               if (newValue != null) {
                 ref
-                    .read(ffSellingCostsProvider)
+                    .read(fixFlipProvider)
                     .updateSellersClosingCosts(newValue);
-                ref.read(ffSellingCostsProvider).updateTaxes(taxes);
-                ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
-                ref.read(ffSellingCostsProvider).calculateTotal();
               } else {
-                ref.read(ffSellingCostsProvider).updateSellersClosingCosts(0);
+                ref.read(fixFlipProvider).updateSellersClosingCosts(0.0);
               }
+              ref.read(fixFlipProvider).calculateAllSellingCosts();
             },
           ),
           MoneyTextField(
@@ -137,23 +128,28 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
               double? newValue = double.tryParse(newCost);
               if (newValue != null) {
                 ref
-                    .read(ffSellingCostsProvider)
+                    .read(fixFlipProvider)
                     .updateBuyersClosingCosts(newValue);
-                ref.read(ffSellingCostsProvider).updateTaxes(taxes);
-                ref.read(ffSellingCostsProvider).updateOtherClosingCosts(other);
-                ref.read(ffSellingCostsProvider).calculateTotal();
               } else {
-                ref.read(ffSellingCostsProvider).updateBuyersClosingCosts(0);
+                ref.read(fixFlipProvider).updateBuyersClosingCosts(0.0);
               }
+              ref.read(fixFlipProvider).calculateAllSellingCosts();
             },
           ),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Other'
-                  : context.isTablet
-                      ? 'Other Closing Costs'
-                      : 'Other\nClosing Costs',
-              otherString),
+          MoneyTextField(
+            labelText: 'Other Closing Costs',
+            controller: otherClosingCostsController,
+            onChanged: (String newCost) {
+              newCost = newCost.replaceAll(',', '');
+              double? newValue = double.tryParse(newCost);
+              if (newValue != null) {
+                ref.read(fixFlipProvider).updateOtherClosingCosts(newValue);
+              } else {
+                ref.read(fixFlipProvider).updateOtherClosingCosts(0.0);
+              }
+              ref.read(fixFlipProvider).calculateAllSellingCosts();
+            },
+          ),
           const SizedBox(height: 8),
           const Divider(),
           const SizedBox(height: 8),

@@ -2,7 +2,7 @@ import 'package:calculators/inputs/brrrr/expenses_input.dart';
 import 'package:calculators/inputs/brrrr/finance_option_construction_loan.dart';
 import 'package:calculators/inputs/brrrr/finance_option_seller_financed.dart';
 import 'package:calculators/inputs/brrrr/finance_options.dart';
-import 'package:calculators/inputs/brrrr/fix_and_flip_selling_costs_input.dart';
+import 'package:calculators/inputs/fixflip/fix_and_flip_selling_costs_input.dart';
 import 'package:calculators/inputs/brrrr/holding_costs.dart';
 import 'package:calculators/inputs/brrrr/income_input.dart';
 import 'package:calculators/inputs/brrrr/location.dart';
@@ -13,9 +13,11 @@ import 'package:calculators/inputs/fixflip/ff_expenses_input.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_construction.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_options.dart';
 import 'package:calculators/inputs/fixflip/ff_finance_seller_financed.dart';
+import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/inputs/fixflip/ff_location.dart';
 import 'package:calculators/inputs/fixflip/ff_property_costs.dart';
 import 'package:calculators/inputs/fixflip/ff_renovations_calculator.dart';
+import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/outputs/report.dart';
 import 'package:intl/intl.dart';
 
@@ -43,10 +45,9 @@ List<Type> kFixFlipQuestions = [
   FixFlipFinanceOptions,
   FixFlipFinanceConstruction,
   FixFlipFinanceSellerFinanced,
-  // RefinanceInput,
-  // HoldingCosts,
-  // FixAndFlipSellingCostsInput,
-  // Report,
+  FixFlipHoldingCosts,
+  FixAndFlipSellingCostsInput,
+  FixFlipStatement,
 ];
 
 NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");
