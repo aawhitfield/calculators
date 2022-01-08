@@ -15,30 +15,33 @@ class ZeroInDeal extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     double arv = ref.watch(brrrrProvider).afterRepairValue;
     double arvLoan = ref.watch(brrrrProvider).refinancingLoanAmount;
-    double totalLoans = ref.watch(brrrrProvider).loanAmount +
-        ref.watch(brrrrProvider).constructionLoanAmount +
+    double originalAmount = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).sellerLoanAmount;
+    double originalConstruction = ref.watch(brrrrProvider).constructionLoanAmount;
 
     double totalDownPayment = ref.watch(brrrrProvider).downPaymentAmount -
         ref.watch(brrrrProvider).sellerLoanAmount;
-
     double constructionDownPayment =
         ref.watch(brrrrProvider).constructionDownPaymentAmount;
     double closingCosts = ref.watch(brrrrProvider).closingCosts;
+    double refinanceClosingCosts = ref.watch(brrrrProvider).refinancingClosingCosts;
     double initialCashInvestment =
         totalDownPayment + constructionDownPayment + closingCosts;
     double initialCashPerInvestor =
         initialCashInvestment / ref.watch(brrrrProvider).investors;
-    double equity = arvLoan - totalLoans;
+    double equity = arvLoan - originalAmount;
     BRRRR provider = ref.read(brrrrProvider);
     double holdingCost = provider.totalHoldingCosts;
-    double afterRefinance = arvLoan - totalLoans - initialCashInvestment - holdingCost;
+    double afterRefinance = arvLoan - originalAmount - closingCosts - originalConstruction - refinanceClosingCosts - holdingCost;
     int investors = ref.read(brrrrProvider).investors;
     double perInvestorAfterRefinance = (investors != 0) ? afterRefinance / investors : 0;
 
     String arvString = kCurrencyFormat.format(arv);
     String arvLoanString = kCurrencyFormat.format(arvLoan);
-    String totalLoansString = kCurrencyFormat.format(totalLoans);
+    String originalAmountString = kCurrencyFormat.format(originalAmount);
+    String originalConstructionString = kCurrencyFormat.format(originalConstruction);
+    String originalClosingCostsString = kCurrencyFormat.format(closingCosts);
+    String refinanceClosingCostsString = kCurrencyFormat.format(refinanceClosingCosts);
     String initialCashInvestmentString =
         kCurrencyFormat.format(initialCashInvestment);
     String initialCashPerInvestorString =
@@ -64,22 +67,41 @@ class ZeroInDeal extends ConsumerWidget {
             (MediaQuery.of(context).size.width < 640)
                 ? 'Original\nAmount'
                 : 'Original \nLoan Amount',
-            totalLoansString),
+            originalAmountString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Original\nConstruction'
+                : 'Original \nConstruction Amount',
+            originalConstructionString),
+        MoneyListTile(
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Closing\nCosts'
+                : 'Closing Costs',
+            originalClosingCostsString,
+          subtitle: 'Original Loan',
+        ),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'Initial\ncash'
                 : 'Initial \nCash Investment',
             initialCashInvestmentString),
+        MoneyListTile(
+          (MediaQuery.of(context).size.width < 640)
+              ? 'Per\nInvestor'
+              : 'Initial Cash \nPer Investor',
+          initialCashPerInvestorString,
+        ),
+        MoneyListTile(
+          (MediaQuery.of(context).size.width < 640)
+              ? 'Closing\nCosts'
+              : 'Closing Costs',
+          refinanceClosingCostsString,
+          subtitle: 'Refinance',
+        ),
         MoneyListTile((MediaQuery.of(context).size.width < 640)
             ? 'Holding\ncost'
             : 'Holding Cost',
             holdingCostString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Per\nInvestor'
-                : 'Initial Cash \nPer Investor',
-            initialCashPerInvestorString,
-        ),
         MoneyListTile('Equity', equityString),
         Container(
             color: (afterRefinance > 0)
