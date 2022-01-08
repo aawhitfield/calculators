@@ -4,6 +4,7 @@ import 'package:calculators/inputs/quick_max_offer.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/models/saved_calculator.dart';
+import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/outputs/report.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/waiting.dart';
@@ -206,6 +207,7 @@ class _SavedPlacesState extends State<SavedPlaces> {
 
                                               await DatabaseUtils
                                                         .loadDataByID(id, ref, calculatorType);
+                                              ref.read(calculatorProvider).updateCurrentCalculator(calculatorType);
                                                 if (calculatorType ==
                                                     Calculator.brrrr) {
                                                   ref.read(brrrrProvider).calculateAll();
@@ -215,6 +217,10 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                 else if(calculatorType == Calculator.quickMaxOffer) {
                                                   ref.read(quickMaxProvider).calculateAllQuickMaxOffer();
                                                   Get.to(() => const QuickMaxOffer());
+                                                }
+                                                else if(calculatorType == Calculator.fixAndFlip) {
+                                                  ref.read(fixFlipProvider).calculateAll();
+                                                  Get.to(() => const FixFlipStatement());
                                                 }
                                               }
                                           ),

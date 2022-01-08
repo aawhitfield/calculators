@@ -35,6 +35,9 @@ class FinalOptionsButtons extends ConsumerWidget {
             else if(currentCalculator == Calculator.quickMaxOffer) {
               data = ref.read(quickMaxProvider).toJson();
             }
+            else if(currentCalculator == Calculator.fixAndFlip) {
+              data = ref.read(fixFlipProvider).toJson();
+            }
 
             // get the document ID to update the record, otherwise create a new document
             String docID = ref.read(savedCalculatorProvider).uid;

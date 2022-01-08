@@ -57,12 +57,7 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
     double realtorsFees = ref.watch(fixFlipProvider).afterRepairValue *
         ref.watch(fixFlipProvider).realtorFeesPercentage;
 
-    int numberOfMonthsToRehabRent =
-        ref.read(fixFlipProvider).monthsToRehabRent;
     double taxes = ref.watch(fixFlipProvider).taxesYearly;
-    if (numberOfMonthsToRehabRent != 0) {
-      taxes = taxes / numberOfMonthsToRehabRent;
-    }
     double total = ref.watch(fixFlipProvider).totalClosingCosts;
 
     String taxesString = kCurrencyFormat.format(taxes);

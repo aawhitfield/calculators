@@ -373,6 +373,8 @@ class FixFlip extends ChangeNotifier{
     if (totalRenovations == 0) {
       calculateTotalRenovations();
     }
+    calculateAllFinanceOptions();
+    calculateAllConstructionCalculations();
     calculateTotalIncome();
     calculateYearlyIncome();
     calculateTotalIncomeAfterRepair();
@@ -752,6 +754,9 @@ class FixFlip extends ChangeNotifier{
 
   void calculateAllFinanceOptions() {
     calculateLoanAmount();
+    loanAmount = (1 - downPaymentPercent) * purchasePrice;
+    downPaymentAmount = purchasePrice - loanAmount;
+    notifyListeners();
   }
 
   void updateFinanceOptionConstruction(FixFlip newFinanceOptionConstructionProvider) {
@@ -817,7 +822,7 @@ class FixFlip extends ChangeNotifier{
     ));
 
     debtService =
-        (mp + sellerMonthlyPayment + constructionMonthlyPayment) * monthsToRehabRent;
+        (mp * monthsToRehabRent) + constructionMonthlyPayment;
 
     insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
     totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities) * monthsToRehabRent;
@@ -943,8 +948,10 @@ class FixFlip extends ChangeNotifier{
     rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
       = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
     taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly = 0;
+    totalMonthlyExpenses = totalAnnualExpenses = 0;
     financingType = FinancingType.commercial;
     downPaymentAmount = 0;
+    downPaymentPercent = 0;
     loanAmount = 0;
     downPaymentAmount = 0;
     interestRate = 0;
@@ -968,6 +975,7 @@ class FixFlip extends ChangeNotifier{
     buyersClosingCosts = 0;
     otherClosingCosts = 0;
     totalClosingCosts = 0;
+    holdingCostsUtilities = 0;
     notifyListeners();
   }
 }

@@ -3,6 +3,7 @@ import 'package:calculators/inputs/fixflip/fix_and_flip_selling_costs_input.dart
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/my_input_page.dart';
+import 'package:calculators/widgets/percent_list_tile.dart';
 import 'package:calculators/widgets/report_header.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:flutter/material.dart';
@@ -17,35 +18,38 @@ class FixFlipStatement extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    double purchasePrice = ref.read(brrrrProvider).purchasePrice;
-    double closingCosts = ref.read(brrrrProvider).closingCosts;
-    double totalMoneyToBuy = purchasePrice + closingCosts;
+    double loanDownPayment = ref.watch(fixFlipProvider).downPaymentAmount;
+    double constructionDownPayment = ref.watch(fixFlipProvider).constructionDownPaymentAmount;
 
-    int monthsToRehab = ref.read(brrrrProvider).monthsToRehabRent;
-    double totalDebtServicePayments = ref.read(brrrrProvider).monthlyPayment
-        + ref.read(brrrrProvider).sellerMonthlyPayment +
-        ref.read(brrrrProvider).constructionMonthlyPayment;
-    double totalDebtService = monthsToRehab * totalDebtServicePayments;
-
-    double totalMonthlyExpenses = ref.read(brrrrProvider).totalMonthlyExpenses;
-    double totalHoldingExpenses = monthsToRehab * totalMonthlyExpenses;
-
-    double totalMoneyToHold = totalDebtService + totalHoldingExpenses;
-
-    double totalMoneyToRehab = ref.read(brrrrProvider).totalRenovations;
-
+    double purchasePrice = ref.read(fixFlipProvider).purchasePrice;
+    double closingCosts = ref.read(fixFlipProvider).closingCosts;
+    double initialCashInvestment = loanDownPayment + constructionDownPayment + closingCosts;
+    int investors = ref.read(fixFlipProvider).investors;
+    double costPerInvestor = (investors != 0)
+      ? initialCashInvestment / investors
+      : initialCashInvestment;
+    double totalMoneyToBuy = purchasePrice;
+    double totalMoneyToHold = ref.read(fixFlipProvider).totalHoldingCosts;
+    double totalMoneyToRehab = ref.read(fixFlipProvider).totalRenovations;
     double totalMoneyToSell = ref.read(fixFlipProvider).totalClosingCosts;
-
-    double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
+    double afterRepairValue = ref.read(fixFlipProvider).afterRepairValue;
     double totalProfit = afterRepairValue - totalMoneyToBuy - totalMoneyToHold
       - totalMoneyToRehab - totalMoneyToSell;
 
-    int numberOfInvestors = ref.read(brrrrProvider).investors;
+    int numberOfInvestors = ref.read(fixFlipProvider).investors;
     double profitPerInvestor = totalProfit / numberOfInvestors;
 
     double breakEvenSellPrice = totalMoneyToBuy + totalMoneyToHold
       + totalMoneyToRehab + totalMoneyToSell;
+    double cashOnCashReturn = (costPerInvestor != 0)
+      ? profitPerInvestor / costPerInvestor * 100
+      : 0;
 
+    String loanDownPaymentString = kCurrencyFormat.format(loanDownPayment);
+    String constructionDownPaymentString = kCurrencyFormat.format(constructionDownPayment);
+    String closingCostsString = kCurrencyFormat.format(closingCosts);
+    String initialCashInvestmentString = kCurrencyFormat.format(initialCashInvestment);
+    String costPerInvestorString = kCurrencyFormat.format(costPerInvestor);
     String moneyToBuyString = kCurrencyFormat.format(totalMoneyToBuy);
     String moneyToHoldString = kCurrencyFormat.format(totalMoneyToHold);
     String moneyToRehabString = kCurrencyFormat.format(totalMoneyToRehab);
@@ -53,6 +57,7 @@ class FixFlipStatement extends ConsumerWidget {
     String totalProfitString = kCurrencyFormat.format(totalProfit);
     String profitPerInvestorString = kCurrencyFormat.format(profitPerInvestor);
     String breakEvenString = kCurrencyFormat.format(breakEvenSellPrice);
+    String cashOnCashReturnString  = cashOnCashReturn.toStringAsFixed(0);
 
     return MyInputPage(
       imageUri: 'images/report.svg',
@@ -75,6 +80,37 @@ class FixFlipStatement extends ConsumerWidget {
           children: [
             const ReportHeader('Fix and Flip'),
             const SizedBox(height: 16),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Loan\nDP'
+                    : 'Loan Down\nPayment',
+                loanDownPaymentString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Loan\nDP'
+                    : 'Construction\nDown Payment',
+                constructionDownPaymentString,
+              subtitle: 'Construction',
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Closing\nCosts'
+                    : 'Closing Costs',
+                closingCostsString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Initial\nCash'
+                    : 'Initial Cash Investment',
+                initialCashInvestmentString,
+              subtitle: 'Investment',
+            ),
+            MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Cost Per\nInvestor'
+                  : 'Cost Per Investor',
+              costPerInvestorString,
+            ),
+
             MoneyListTile(
                 (MediaQuery.of(context).size.width < 640)
                     ? 'Total\nto Buy'
@@ -110,6 +146,9 @@ class FixFlipStatement extends ConsumerWidget {
                     ? 'Break\nEven'
                     : 'Break Even Sell Price',
                 breakEvenString),
+            PercentListTile(
+                'Cash on Cash Return',
+                cashOnCashReturnString),
           ],
       ),
     );
