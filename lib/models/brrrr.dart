@@ -1073,11 +1073,10 @@ class BRRRR extends ChangeNotifier{
   }
 
   void calculateAllHoldingCosts() {
-    double mp = (calculateMonthlyPaymentInterestOnly(
+    double mp = (calculateMonthlyPayment(
       rate: interestRate / 12,
-      nper: term,
+      nper: term * 12,
       pv: -1 * loanAmount,
-      per: 1,
     ));
 
     debtService =

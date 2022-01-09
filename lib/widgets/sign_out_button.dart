@@ -21,7 +21,7 @@ class SignOutButton extends StatelessWidget {
           )
         ];
       },
-      onSelected: (item) => FirebaseAuth.instance.signOut(),
+      onSelected: (item) async => await FirebaseAuth.instance.signOut(),
     );
   }
 }
