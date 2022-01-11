@@ -4,7 +4,7 @@ PODS:
     - AppAuth/ExternalUserAgent (= 1.4.0)
   - AppAuth/Core (1.4.0)
   - AppAuth/ExternalUserAgent (1.4.0)
-  - cloud_firestore (3.1.5):
+  - cloud_firestore (3.1.6):
     - Firebase/Firestore (= 8.9.0)
     - firebase_core
     - Flutter
@@ -30,18 +30,18 @@ PODS:
   - Firebase/Firestore (8.9.0):
     - Firebase/CoreOnly
     - FirebaseFirestore (~> 8.9.0)
-  - firebase_auth (3.3.4):
+  - firebase_auth (3.3.5):
     - Firebase/Auth (= 8.9.0)
     - firebase_core
     - Flutter
   - firebase_core (1.10.6):
     - Firebase/CoreOnly (= 8.9.0)
     - Flutter
-  - firebase_database (9.0.4):
+  - firebase_database (9.0.5):
     - Firebase/Database (= 8.9.0)
     - firebase_core
     - Flutter
-  - firebase_dynamic_links (4.0.3):
+  - firebase_dynamic_links (4.0.4):
     - Firebase/DynamicLinks (= 8.9.0)
     - firebase_core
     - Flutter
@@ -196,16 +196,16 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
-  cloud_firestore: 338122a6149c14ca376ad363626b5bf3037a5056
+  cloud_firestore: bce8cd999f11c214a482c4669f434de362e26bd2
   FBAEMKit: 56c0bb9b42e3747cd82b67934f0c2b19325382ea
   FBSDKCoreKit: 75368765d9c2303073145a7925dfaa9d60bcd77b
   FBSDKCoreKit_Basics: 39865aff97e5f6951a78fb3e89dc4460e35e1895
   FBSDKLoginKit: e993f97c7cc794c5da4056d8aec3c3d66033a727
   Firebase: 13d8d96499e2635428d5bf0ec675df21f95d9a95
-  firebase_auth: e875a50b81aefb20f305dfede425647e9675c19e
+  firebase_auth: b665b5c9a4aab86f9ac4d7685e908139ad1c40cf
   firebase_core: c263d7daf1dc92fcd9895e6abdc04872b0ee07ff
-  firebase_database: 7538bfd20724e08e710f43b6fd2059b88b30b5c9
-  firebase_dynamic_links: 32d0fe83b4c6252e6e62f8355e8d60672b1ddccf
+  firebase_database: cc1b0362f6d9985230ef9d88f0a46746d93dc44c
+  firebase_dynamic_links: 2c153a7ab3794a43eb7e58aeb0f5f295a5977947
   FirebaseAuth: 2b78b2a32c07b3ecfa4970bdf1d3632b8304099b
   FirebaseCore: 599ee609343eaf4941bd188f85e3aa077ffe325b
   FirebaseCoreDiagnostics: 56fb7216d87e0e6ec2feddefa9d8a392fe8b2c18
