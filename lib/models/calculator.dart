@@ -4,6 +4,7 @@ enum Calculator {
   brrrr,
   fixAndFlip,
   quickMaxOffer,
+  turnkeyRental
 }
 
 class CalculatorUtils {
@@ -16,6 +17,8 @@ class CalculatorUtils {
         return 'Fix and Flip';
       case Calculator.quickMaxOffer :
         return 'Quick Max Offer';
+      case Calculator.turnkeyRental :
+        return 'Turnkey Rental';
     }
   }
 
@@ -24,6 +27,7 @@ class CalculatorUtils {
       case 'BRRRR': return Calculator.brrrr;
       case 'Fix and Flip': return Calculator.fixAndFlip;
       case 'Quick Max Offer': return Calculator.quickMaxOffer;
+      case 'Turnkey Rental' : return Calculator.turnkeyRental;
       default: return Calculator.brrrr;
     }
   }
@@ -42,6 +46,8 @@ class CurrentCalculator extends ChangeNotifier{
         return 'Fix and Flip';
       case Calculator.quickMaxOffer:
         return 'Quick Max Offer';
+      case Calculator.turnkeyRental :
+        return 'Turnkey Rental';
     }
   }
 
