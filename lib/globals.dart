@@ -17,8 +17,14 @@ import 'package:calculators/inputs/fixflip/ff_holding_costs.dart';
 import 'package:calculators/inputs/fixflip/ff_location.dart';
 import 'package:calculators/inputs/fixflip/ff_property_costs.dart';
 import 'package:calculators/inputs/fixflip/ff_renovations_calculator.dart';
+import 'package:calculators/inputs/turnkey/tr_expenses_input.dart';
+import 'package:calculators/inputs/turnkey/tr_finance_options.dart';
+import 'package:calculators/inputs/turnkey/tr_income_input.dart';
+import 'package:calculators/inputs/turnkey/tr_property_costs.dart';
+import 'package:calculators/models/turnkey_rental_type.dart';
 import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/outputs/report.dart';
+import 'package:calculators/outputs/turnkey/report_turnkey_rental.dart';
 import 'package:intl/intl.dart';
 
 
@@ -47,6 +53,15 @@ List<Type> kFixFlipQuestions = [
   FixFlipHoldingCosts,
   FixAndFlipSellingCostsInput,
   FixFlipStatement,
+];
+
+List<Type> kTurnKeyRentalQuestions = [
+  TurnkeyRental,
+  TurnkeyRentalPropertyCosts,
+  TurnkeyRentalIncomeInput,
+  TurnkeyRentalExpensesInput,
+  TurnkeyRentalFinanceOptions,
+  TurnkeyRentalReport,
 ];
 
 NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");

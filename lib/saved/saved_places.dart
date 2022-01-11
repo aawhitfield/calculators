@@ -6,6 +6,7 @@ import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/models/saved_calculator.dart';
 import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/outputs/report.dart';
+import 'package:calculators/outputs/turnkey/report_turnkey_rental.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/waiting.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -221,6 +222,10 @@ class _SavedPlacesState extends State<SavedPlaces> {
                                                 else if(calculatorType == Calculator.fixAndFlip) {
                                                   ref.read(fixFlipProvider).calculateAll();
                                                   Get.to(() => const FixFlipStatement());
+                                                }
+                                                else if(calculatorType == Calculator.turnkeyRental) {
+                                                  ref.read(turnkeyProvider).calculateAll();
+                                                  Get.to(() => const TurnkeyRentalReport());
                                                 }
                                               }
                                           ),

@@ -2,6 +2,7 @@ import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/fix_flip.dart';
 import 'package:calculators/models/quick_max_offer.dart';
+import 'package:calculators/models/turnkey_rental_type.dart';
 import 'package:calculators/providers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,6 +43,11 @@ class DatabaseUtils {
         FixFlip fixFlipData = FixFlip.fromJson(data);
         ref.read(fixFlipProvider).updateAll(fixFlipData);
         ref.read(fixFlipProvider).calculateAll();
+      }
+      else if(calculatorType == Calculator.turnkeyRental) {
+        TurnkeyRental turnkeyData = TurnkeyRental.fromJson(data);
+        ref.read(turnkeyProvider).updateAll(turnkeyData);
+        ref.read(turnkeyProvider).calculateAll();
       }
     }
     return calculatorType;

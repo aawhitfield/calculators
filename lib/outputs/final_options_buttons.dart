@@ -38,6 +38,9 @@ class FinalOptionsButtons extends ConsumerWidget {
             else if(currentCalculator == Calculator.fixAndFlip) {
               data = ref.read(fixFlipProvider).toJson();
             }
+            else if(currentCalculator == Calculator.turnkeyRental) {
+              data = ref.read(turnkeyProvider).toJson();
+            }
 
             // get the document ID to update the record, otherwise create a new document
             String docID = ref.read(savedCalculatorProvider).uid;

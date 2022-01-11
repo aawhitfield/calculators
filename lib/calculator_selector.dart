@@ -2,7 +2,7 @@ import 'dart:math';
 import 'package:calculators/inputs/brrrr/location.dart';
 import 'package:calculators/inputs/fixflip/ff_location.dart';
 import 'package:calculators/inputs/quick_max_offer.dart';
-import 'package:calculators/inputs/turnkey_rental.dart';
+import 'package:calculators/inputs/turnkey/turnkey_rental.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/card_button.dart';
@@ -56,7 +56,7 @@ class CalculatorSelector extends ConsumerWidget {
         imageSize: imageSize,
         onPressed: () {
           ref.read(calculatorProvider).updateCurrentCalculator(Calculator.turnkeyRental);
-          Get.to(() => const TurnkeyRental());
+          Get.to(() => TurnkeyRentalInput('Turnkey Rental'));
         },
       ),
     ];
