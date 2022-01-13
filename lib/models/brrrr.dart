@@ -1101,14 +1101,8 @@ class BRRRR extends ChangeNotifier{
   }
 
   void calculateAllHoldingCosts() {
-    double mp = (calculateMonthlyPayment(
-      rate: interestRate / 12,
-      nper: term * 12,
-      pv: -1 * loanAmount,
-    ));
-
-    debtService =
-        (mp + sellerMonthlyPayment + constructionMonthlyPayment) * monthsToRehabRent;
+        debtService =
+        (monthlyPayment + sellerMonthlyPayment + constructionMonthlyPayment) * monthsToRehabRent;
 
     insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
     totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities) * monthsToRehabRent;
