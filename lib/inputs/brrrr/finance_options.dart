@@ -61,19 +61,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
     double downPaymentAmount =
         ref.watch(brrrrProvider).purchasePrice - loanAmount;
 
-    double monthlyPayment = (ref.watch(brrrrProvider).paymentType ==
-            PaymentType.principalAndInterest)
-        ? ref.watch(brrrrProvider).calculateMonthlyPayment(
-              rate: ref.watch(brrrrProvider).interestRate / 12,
-              nper: ref.watch(brrrrProvider).term * 12,
-              pv: -1 * loanAmount,
-            )
-        : ref.watch(brrrrProvider).calculateMonthlyPaymentInterestOnly(
-              rate: ref.watch(brrrrProvider).interestRate / 12,
-              nper: ref.watch(brrrrProvider).term,
-              pv: -1 * loanAmount,
-              per: 1,
-            );
+    double monthlyPayment = ref.watch(brrrrProvider).monthlyPayment;
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -170,6 +158,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               } else {
                 ref.read(brrrrProvider).updateInterestRate(0);
               }
+              ref.read(brrrrProvider).calculateAllFinanceOptions();
             },
           ),
           IntegerTextField(
@@ -185,6 +174,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               } else {
                 ref.read(brrrrProvider).updateTerm(0);
               }
+              ref.read(brrrrProvider).calculateAllFinanceOptions();
             },
           ),
           MoneyTextField(
@@ -198,6 +188,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
               } else {
                 ref.read(brrrrProvider).updateClosingCosts(0);
               }
+              ref.read(brrrrProvider).calculateAllFinanceOptions();
             },
           ),
           CupertinoSlidingSegmentedControl<PaymentType>(

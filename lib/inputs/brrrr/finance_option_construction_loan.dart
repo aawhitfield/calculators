@@ -10,6 +10,7 @@ import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -53,12 +54,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
 
     double downPaymentAmount = ref.watch(brrrrProvider).constructionDownPaymentAmount;
 
-    double monthlyPayment = ref.watch(brrrrProvider).calculateMonthlyPaymentInterestOnly(
-      rate: ref.watch(brrrrProvider).constructionInterestRate / 12,
-      nper: ref.watch(brrrrProvider).constructionTerm,
-      pv: -1 * loanAmount,
-      per: 1,
-    );
+    double monthlyPayment = ref.watch(brrrrProvider).constructionMonthlyPayment;
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -155,6 +151,16 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
                 }
                 ref.read(brrrrProvider).calculateAllConstructionCalculations();
               },
+            ),
+            CupertinoSlidingSegmentedControl<PaymentType>(
+              thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+              groupValue: ref.watch(brrrrProvider).constructionPaymentType,
+              children: const {
+                PaymentType.principalAndInterest: Text('Principal & Interest'),
+                PaymentType.interestOnly: Text('Interest Only'),
+              },
+              onValueChanged: (PaymentType? newValue) =>
+                  ref.read(brrrrProvider).updateConstructionPaymentType(newValue!),
             ),
             MoneyListTile(
     (MediaQuery.of(context).size.width < 640)

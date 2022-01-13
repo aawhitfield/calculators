@@ -18,7 +18,7 @@ class BRRRRFields {
     taxes, insurance, propertyManagementPercentage, vacancyPercentage, maintenancePercentage,
     otherExpensesPercentage,
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType, wantsToRefinance,
-    constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
+    constructionDownPaymentPercentage, constructionInterestRate, constructionTerm, constructionPaymentType,
     holdingCostsUtilities,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
     refinancingType, refinancingLoanToValue, refinancingInterestRate, refinancingTerm, refinancingClosingCosts,
@@ -75,6 +75,7 @@ class BRRRRFields {
   static const String constructionDownPaymentPercentage = 'constructionDownPaymentPercentage';
   static const String constructionInterestRate = 'constructionInterestRate';
   static const String constructionTerm = 'constructionTerm';
+  static const String constructionPaymentType = 'constructionPaymentType';
   static const String holdingCostsUtilities = 'holdingCostsUtilities';
   static const String sellerFinancingType = 'sellerFinancingType';
   static const String sellerLoanPercent = 'sellerLoanPercent';
@@ -158,6 +159,7 @@ class BRRRR extends ChangeNotifier{
   double constructionDownPaymentAmount;
   double constructionInterestRate;
   int constructionTerm;
+  PaymentType constructionPaymentType;
   double constructionMonthlyPayment;
   double debtService;
   double insuranceAndTaxes;
@@ -204,7 +206,8 @@ class BRRRR extends ChangeNotifier{
     this.willRefinance = false, this.paymentType = PaymentType.principalAndInterest,
     this.wantsToRefinance = false,
     this.constructionDownPaymentPercentage = 0, this.constructionLoanAmount = 0, this.constructionDownPaymentAmount = 0,
-    this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionMonthlyPayment = 0,
+    this.constructionInterestRate = 0, this.constructionTerm = 0,
+    this.constructionPaymentType = PaymentType.principalAndInterest, this.constructionMonthlyPayment = 0,
     this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
     this.totalHoldingCosts = 0,
     this.sellerFinancingType = SellerFinancingType.payment,
@@ -262,6 +265,7 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.constructionDownPaymentPercentage: constructionDownPaymentPercentage,
     BRRRRFields.constructionInterestRate: constructionInterestRate,
     BRRRRFields.constructionTerm: constructionTerm,
+    BRRRRFields.constructionPaymentType : PaymentTypeUtils(constructionPaymentType).name,
     BRRRRFields.holdingCostsUtilities: holdingCostsUtilities,
     BRRRRFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
     BRRRRFields.sellerLoanPercent: sellerLoanPercentage,
@@ -322,6 +326,9 @@ class BRRRR extends ChangeNotifier{
       constructionDownPaymentPercentage: json[BRRRRFields.constructionDownPaymentPercentage] as double,
       constructionInterestRate: json[BRRRRFields.constructionInterestRate] as double,
       constructionTerm: json[BRRRRFields.constructionTerm] as int,
+      constructionPaymentType: (json.containsKey(BRRRRFields.constructionPaymentType))
+        ? PaymentTypeUtils.getPaymentType(json[BRRRRFields.constructionPaymentType] as String)
+        : PaymentType.principalAndInterest,
       holdingCostsUtilities: json[BRRRRFields.holdingCostsUtilities] as double,
       sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[BRRRRFields.financingType] as String),
       sellerLoanPercentage: json[BRRRRFields.sellerLoanPercent] as double,
@@ -444,6 +451,7 @@ class BRRRR extends ChangeNotifier{
     calculateAfterRepairNOIMonthly();
     calculateAfterRepairNOIYearly();
     calculateLoanAmount();
+    calculateAllFinanceOptions();
     calculateAllRefinanceCalculations();
     calculateSellerFinanceCalculations();
     calculateAllHoldingCosts();
@@ -986,6 +994,11 @@ class BRRRR extends ChangeNotifier{
 
   void updatePaymentType(PaymentType newValue) {
     paymentType = newValue;
+    if(paymentType == PaymentType.principalAndInterest) {
+      monthlyPayment = calculateMonthlyPayment(rate: interestRate / 12, nper: term * 12, pv: -1 * loanAmount);
+    } else if(paymentType == PaymentType.interestOnly) {
+      monthlyPayment = calculateMonthlyPaymentInterestOnly(rate: interestRate / 12, nper: term, pv: -1 * loanAmount, per: 1);
+    }
     notifyListeners();
   }
 
@@ -1016,6 +1029,12 @@ class BRRRR extends ChangeNotifier{
 
   void calculateAllFinanceOptions() {
     calculateLoanAmount();
+    if(paymentType == PaymentType.principalAndInterest) {
+      monthlyPayment = calculateMonthlyPayment(rate: interestRate / 12, nper: term * 12, pv: -1 * loanAmount);
+    } else if(paymentType == PaymentType.interestOnly) {
+      monthlyPayment = calculateMonthlyPaymentInterestOnly(rate: interestRate / 12, nper: term, pv: -1 * loanAmount, per: 1);
+    }
+    notifyListeners();
   }
 
   void updateFinanceOptionConstruction(BRRRR newFinanceOptionConstructionProvider) {
@@ -1023,6 +1042,11 @@ class BRRRR extends ChangeNotifier{
     constructionInterestRate = newFinanceOptionConstructionProvider.constructionInterestRate;
     constructionTerm = newFinanceOptionConstructionProvider.constructionTerm;
     notifyListeners();
+  }
+
+  void updateConstructionPaymentType(PaymentType newValue) {
+    constructionPaymentType = newValue;
+    calculateAllConstructionCalculations();
   }
 
   void updateConstructionDownPaymentPercentage(newValue) {
@@ -1058,12 +1082,16 @@ class BRRRR extends ChangeNotifier{
   void calculateAllConstructionCalculations() {
     constructionLoanAmount = (1 - constructionDownPaymentPercentage) * totalRenovations;
     constructionDownPaymentAmount = totalRenovations - constructionLoanAmount;
-    constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
-      rate: constructionInterestRate / 12,
-      nper: constructionTerm,
-      pv: -1 * constructionLoanAmount,
-      per: 1,
-    );
+    if(constructionPaymentType == PaymentType.principalAndInterest) {
+      constructionMonthlyPayment = calculateMonthlyPayment(rate: constructionInterestRate / 12, nper: constructionTerm * 12, pv: -1 * constructionLoanAmount);
+    } else if(constructionPaymentType == PaymentType.interestOnly) {
+      constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
+        rate: constructionInterestRate / 12,
+        nper: constructionTerm,
+        pv: -1 * constructionLoanAmount,
+        per: 1,
+      );
+    }
     notifyListeners();
   }
 
