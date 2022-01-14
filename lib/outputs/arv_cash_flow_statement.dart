@@ -1,6 +1,8 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/models/brrrr.dart';
+import 'package:calculators/outputs/colored_percent_list_tile.dart';
 import 'package:calculators/providers.dart';
+import 'package:calculators/widgets/colored_money_list_tile.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/numerical_list_tile.dart';
@@ -21,6 +23,8 @@ class ARVCashFlowStatement extends ConsumerStatefulWidget {
 }
 
 class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
+  TextEditingController rentIncomeController = TextEditingController();
+  TextEditingController otherIncomeController = TextEditingController();
   TextEditingController taxesController = TextEditingController();
   TextEditingController insuranceController = TextEditingController();
   TextEditingController propertyManagementController = TextEditingController();
@@ -28,30 +32,43 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
   TextEditingController maintenanceController = TextEditingController();
   TextEditingController otherController = TextEditingController();
 
+  late double rentIncome;
+  late double otherIncome;
+
   @override
   void initState() {
+   rentIncome = ref.read(brrrrProvider).rent;
+    if (rentIncome != 0) {
+      rentIncomeController.text = kCurrencyFormat.format(rentIncome);
+    }
+    otherIncome = ref.read(brrrrProvider).otherIncome;
+    if(otherIncome != 0) {
+      otherIncomeController.text = kCurrencyFormat.format(otherIncome);
+    }
     double taxes = ref.read(brrrrProvider).taxesMonthly;
-    if(taxes != 0) {
+    if (taxes != 0) {
       taxesController.text = kCurrencyFormat.format(taxes);
     }
     double insurance = ref.read(brrrrProvider).insuranceMonthly;
-    if(insurance != 0) {
+    if (insurance != 0) {
       insuranceController.text = kCurrencyFormat.format(insurance);
     }
-    double propertyManagement = ref.read(brrrrProvider).propertyManagementMonthly;
-    if(propertyManagement != 0) {
-      propertyManagementController.text = kCurrencyFormat.format(propertyManagement);
+    double propertyManagement =
+        ref.read(brrrrProvider).propertyManagementMonthly;
+    if (propertyManagement != 0) {
+      propertyManagementController.text =
+          kCurrencyFormat.format(propertyManagement);
     }
     double vacancy = ref.read(brrrrProvider).vacancyMonthly;
-    if(vacancy != 0) {
+    if (vacancy != 0) {
       vacancyController.text = kCurrencyFormat.format(vacancy);
     }
     double maintenance = ref.read(brrrrProvider).maintenanceMonthly;
-    if(maintenance != 0) {
+    if (maintenance != 0) {
       maintenanceController.text = kCurrencyFormat.format(maintenance);
     }
     double other = ref.read(brrrrProvider).otherExpensesMonthly;
-    if(other != 0) {
+    if (other != 0) {
       otherController.text = kCurrencyFormat.format(other);
     }
     super.initState();
@@ -60,7 +77,7 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
   @override
   Widget build(BuildContext context) {
     BRRRR provider = ref.watch(brrrrProvider);
-    double income = provider.afterRepairRentPerMonth;
+    double income = provider.totalIncome;
     double expenses = provider.afterRepairTotalExpensesMonthly;
     double noi = income - expenses;
     double debtService = Finance.pmt(
@@ -70,11 +87,13 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
     ) as double;
     double cashFlow = noi - debtService;
     double yearlyCashFlow = cashFlow * 12;
-    double initialCash = provider.downPaymentAmount + provider.constructionDownPaymentAmount + provider.closingCosts;
+    double initialCash = provider.downPaymentAmount +
+        provider.constructionDownPaymentAmount +
+        provider.closingCosts;
     double cashOnCashReturn = yearlyCashFlow / initialCash * 100;
     double dscr = noi / debtService;
-    double onePercentRule = provider.afterRepairRentPerMonth / provider.afterRepairValue * 100;
-
+    double onePercentRule =
+        provider.afterRepairRentPerMonth / provider.afterRepairValue * 100;
 
     String incomeString = kCurrencyFormat.format(income);
     String expensesString = kCurrencyFormat.format(expenses);
@@ -90,10 +109,52 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
       children: [
         const ReportHeader('Monthly ARV Cash Flow Statement'),
         const SizedBox(height: 16),
-        MoneyListTile('Income', incomeString),
         ExpansionTile(
-          leading: Text('Expenses', style: Theme.of(context).textTheme.headline6,),
-          title: Text('\$ $expensesString', style: Theme.of(context).textTheme.headline5,),
+          leading: Text('Income', style: Theme.of(context).textTheme.headline6,),
+          title: Text(
+            '\$ $incomeString',
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          children: [
+            MoneyTextField(
+              controller: rentIncomeController,
+              labelText: 'Rent',
+              onChanged: (String newValue) {
+                newValue = newValue.replaceAll(',', '');
+                double? newIncome = double.tryParse(newValue);
+                if (newIncome != null) {
+                  ref.read(brrrrProvider).updateRent(newIncome);
+                } else {
+                  ref.read(brrrrProvider).updateRent(0.0);
+                }
+                ref.read(brrrrProvider).calculateAll();
+              },
+            ),
+            MoneyTextField(
+              controller: otherIncomeController,
+              labelText: 'Other Income',
+              onChanged: (String newValue) {
+                newValue = newValue.replaceAll(',', '');
+                double? newIncome = double.tryParse(newValue);
+                if (newIncome != null) {
+                  ref.read(brrrrProvider).updateOtherIncome(newIncome);
+                } else {
+                  ref.read(brrrrProvider).updateOtherIncome(0.0);
+                }
+                ref.read(brrrrProvider).calculateAll();
+              },
+            ),
+          ],
+        ),
+        ExpansionTile(
+          leading: Text(
+            'Expenses',
+            style: Theme.of(context).textTheme.headline6,
+          ),
+          title: Text(
+            '\$ $expensesString',
+            style: Theme.of(context).textTheme.headline5,
+          ),
           children: [
             MoneyTextField(
               labelText: 'Taxes',
@@ -129,9 +190,13 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
                 onChanged: (String newValue) {
                   double? value = double.tryParse(newValue);
                   if (value != null) {
-                    ref.read(brrrrProvider).updatePropertyManagementMonthly(value);
+                    ref
+                        .read(brrrrProvider)
+                        .updatePropertyManagementMonthly(value);
                   } else {
-                    ref.read(brrrrProvider).updatePropertyManagementMonthly(0.0);
+                    ref
+                        .read(brrrrProvider)
+                        .updatePropertyManagementMonthly(0.0);
                   }
                   ref.read(brrrrProvider).calculateAllExpenses();
                 }),
@@ -175,15 +240,23 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
         ),
         MoneyListTile('NOI', noiString),
         MoneyListTile('Debt Service', debtServiceString),
-        MoneyListTile('Cashflow', cashFlowString),
-        MoneyListTile((MediaQuery.of(context).size.width < 640)
-            ? 'Yearly\nCashflow'
-            : 'Yearly Cashflow', yearlyCashFlowString),
+        ColoredMoneyListTile(
+            value: cashFlow,
+            smallScreenTitle: 'Cashflow', largeScreenTitle: 'Cashflow',
+            valueString: cashFlowString,),
+        ColoredMoneyListTile(
+            value: yearlyCashFlow,
+            smallScreenTitle: 'Yearly\nCashflow',
+            largeScreenTitle: 'Yearly Cashflow',
+            valueString: yearlyCashFlowString),
+        const SizedBox(height: 16),
         Text('Refinance Metrics', style: Theme.of(context).textTheme.headline5),
         const Divider(),
-        PercentListTile((MediaQuery.of(context).size.width < 640)
-            ? 'Cash on\nCash Return'
-            : 'Cash on Cash Return', cashOnCashReturnString),
+        ColoredPercentListTile(
+            value: cashOnCashReturn,
+            smallScreenTitle: 'Cash on\nCash Return',
+            largeScreenTitle: 'Cash on Cash Return',
+            valueString: cashOnCashReturnString),
         NumericalListTile('Debt Service\nCoverage Ratio', dscrString),
         PercentListTile('1% Rule', onePercentRuleString),
         const SizedBox(height: 32),

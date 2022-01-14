@@ -7,7 +7,7 @@ import 'package:calculators/outputs/cash_flow_statement.dart';
 import 'package:calculators/outputs/report_fix_flip_holding_costs.dart';
 import 'package:calculators/outputs/report_initial_purchase.dart';
 import 'package:calculators/outputs/value_indicators.dart';
-import 'package:calculators/outputs/zero_in_deal.dart';
+import 'package:calculators/outputs/report_refinance.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
@@ -53,7 +53,7 @@ class Report extends ConsumerWidget {
           const ReportInitialPurchase(),
           const CashFlowStatement(),
           (shouldShow0inDeal && calculatorType == Calculator.brrrr)
-              ? const ZeroInDeal()
+              ? const ReportRefinance()
               : Container(),
           (shouldShowARVStatement) ? const ARVCashFlowStatement() : Container(),
           (calculatorType == Calculator.fixAndFlip)

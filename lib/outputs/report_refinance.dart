@@ -3,18 +3,42 @@ import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/widgets/colored_money_list_tile.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
+import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/report_header.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ZeroInDeal extends ConsumerWidget {
-  const ZeroInDeal({
+class ReportRefinance extends ConsumerStatefulWidget {
+  const ReportRefinance({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    double arv = ref.watch(brrrrProvider).afterRepairValue;
+  _ReportRefinanceState createState() => _ReportRefinanceState();
+}
+
+class _ReportRefinanceState extends ConsumerState<ReportRefinance> {
+  TextEditingController arvController = TextEditingController();
+  TextEditingController closingCostsController = TextEditingController();
+
+  late double arv;
+  late double refinanceClosingCosts;
+
+  @override
+  void initState() {
+    arv = ref.read(brrrrProvider).afterRepairValue;
+    if(arv != 0) {
+      arvController.text = kCurrencyFormat.format(arv);
+    }
+    refinanceClosingCosts = ref.read(brrrrProvider).refinancingClosingCosts;
+    if(refinanceClosingCosts != 0) {
+      closingCostsController.text = kCurrencyFormat.format(refinanceClosingCosts);
+    }
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+
     double arvLoan = ref.watch(brrrrProvider).refinancingLoanAmount;
     double originalAmount = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).sellerLoanAmount;
@@ -45,12 +69,10 @@ class ZeroInDeal extends ConsumerWidget {
     double perInvestorAfterRefinance =
         (investors != 0) ? afterRefinance / investors : 0;
 
-    String arvString = kCurrencyFormat.format(arv);
     String arvLoanString = kCurrencyFormat.format(arvLoan);
     String originalAmountString = kCurrencyFormat.format(originalAmount);
     String originalConstructionString =
         kCurrencyFormat.format(originalConstruction);
-    String originalClosingCostsString = kCurrencyFormat.format(closingCosts);
     String refinanceClosingCostsString =
         kCurrencyFormat.format(refinanceClosingCosts);
     String initialCashInvestmentString =
@@ -65,9 +87,19 @@ class ZeroInDeal extends ConsumerWidget {
 
     return Column(
       children: [
-        const ReportHeader('Refinance 0 in Deal?'),
+        const ReportHeader('Refinance'),
         const SizedBox(height: 16),
-        MoneyListTile('ARV', arvString),
+        MoneyTextField(
+            controller: arvController,
+            labelText: 'ARV', onChanged: (String newValue) {
+          double? value = double.tryParse(newValue);
+          if (value != null) {
+            ref.read(brrrrProvider).updateAfterRepairValue(value);
+          } else {
+            ref.read(brrrrProvider).updateAfterRepairValue(0.0);
+          }
+          ref.read(brrrrProvider).calculateAll();
+        }),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'ARV\nLoan'
@@ -83,13 +115,18 @@ class ZeroInDeal extends ConsumerWidget {
                 ? 'Original\nConstruction'
                 : 'Original \nConstruction Amount',
             originalConstructionString),
-        MoneyListTile(
-          (MediaQuery.of(context).size.width < 640)
-              ? 'Closing\nCosts'
-              : 'Closing Costs',
-          originalClosingCostsString,
-          subtitle: 'Original Loan',
-        ),
+        MoneyTextField(
+            controller: closingCostsController,
+            labelText: 'Closing Costs',
+            onChanged: (String newValue) {
+              double? value = double.tryParse(newValue);
+              if (value != null) {
+                ref.read(brrrrProvider).updateRefinancingClosingCosts(value);
+              } else {
+                ref.read(brrrrProvider).updateRefinancingClosingCosts(0.0);
+              }
+              ref.read(brrrrProvider).calculateAll();
+            }),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'Initial\ncash'
