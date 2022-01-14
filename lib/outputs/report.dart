@@ -11,22 +11,47 @@ import 'package:calculators/outputs/report_refinance.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
-class Report extends ConsumerWidget {
+class Report extends ConsumerStatefulWidget {
   const Report({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    bool isRefinancing = ref.watch(brrrrProvider).wantsToRefinance;
-    bool isCashOut =
-        ref.watch(brrrrProvider).refinancingType == Refinancing.cashOut;
-    bool shouldShow0inDeal = isRefinancing && isCashOut;
-    bool shouldShowARVStatement = isRefinancing;
+  _ReportState createState() => _ReportState();
+}
 
-    Calculator calculatorType = ref.read(calculatorProvider).type;
+class _ReportState extends ConsumerState<Report> {
+  int tab = 0;
+
+  late bool isRefinancing;
+  late bool isCashOut;
+  late bool shouldShow0inDeal;
+  late bool shouldShowARVStatement;
+  late Calculator calculatorType;
+  late List<List<Widget>> children;
+
+  @override
+  void initState() {
+    isRefinancing = ref.read(brrrrProvider).wantsToRefinance;
+    isCashOut =
+        ref.read(brrrrProvider).refinancingType == Refinancing.cashOut;
+    shouldShow0inDeal = isRefinancing && isCashOut;
+    shouldShowARVStatement = isRefinancing;
+    calculatorType = ref.read(calculatorProvider).type;
+
+    children = [[const ReportInitialPurchase(),
+      const CashFlowStatement(),], [(shouldShow0inDeal && calculatorType == Calculator.brrrr)
+        ? const ReportRefinance()
+        : Container(),
+      (shouldShowARVStatement) ? const ARVCashFlowStatement() : Container(),]];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
 
     return MyInputPage(
       imageUri: 'images/report.svg',
@@ -50,12 +75,23 @@ class Report extends ConsumerWidget {
           (calculatorType == Calculator.fixAndFlip)
               ? const FixFlipHoldingCosts()
               : Container(),
-          const ReportInitialPurchase(),
-          const CashFlowStatement(),
-          (shouldShow0inDeal && calculatorType == Calculator.brrrr)
-              ? const ReportRefinance()
-              : Container(),
-          (shouldShowARVStatement) ? const ARVCashFlowStatement() : Container(),
+          CupertinoSlidingSegmentedControl<int>(
+            thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+            groupValue: tab,
+            children: const {
+              0: Text('Initial Purchase'),
+              1: Text('Refinance'),
+            },
+            onValueChanged: (int? newTab) {
+              if (mounted) {
+                setState(() {
+                  tab = newTab!;
+                });
+              }
+            },
+          ),
+          const SizedBox(height: 16),
+          ...children[tab],
           (calculatorType == Calculator.fixAndFlip)
               ? const ValueIndicators()
               : Container(),
