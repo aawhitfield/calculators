@@ -9,6 +9,7 @@ import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -32,7 +33,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FixFlipFinanceCo
     if(loanPercent != 0) {
       downPaymentPercentageController.text = kWholeNumber.format(loanPercent);
     }
-    double interestRate = ref.read(fixFlipProvider).constructionInterestRate;
+    double interestRate = ref.read(fixFlipProvider).constructionInterestRate * 100;
     if(interestRate != 0) {
       interestRateController.text = interestRate.toString();
     }
@@ -52,12 +53,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FixFlipFinanceCo
 
     double downPaymentAmount = ref.watch(fixFlipProvider).constructionDownPaymentAmount;
 
-    double monthlyPayment = ref.watch(fixFlipProvider).calculateMonthlyPaymentInterestOnly(
-      rate: ref.watch(fixFlipProvider).constructionInterestRate / 12,
-      nper: ref.watch(fixFlipProvider).constructionTerm,
-      pv: -1 * loanAmount,
-      per: 1,
-    );
+    double monthlyPayment = ref.watch(fixFlipProvider).constructionMonthlyPayment;
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -76,9 +72,6 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FixFlipFinanceCo
         }
       },
         onSubmit: () {
-          ref.read(fixFlipProvider).updateMonthlyPayment(monthlyPayment);
-          ref.read(fixFlipProvider).updateConstructionDownPayment(downPaymentAmount);
-          ref.read(fixFlipProvider).updateConstructionLoanAmount(loanAmount);
           if(ref.read(fixFlipProvider).financingType == FinancingType.sellerFinancing) {
             Get.to(() => const FixFlipFinanceSellerFinanced());
           }
@@ -151,6 +144,16 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FixFlipFinanceCo
                 }
                 ref.read(fixFlipProvider).calculateAllConstructionCalculations();
               },
+            ),
+            CupertinoSlidingSegmentedControl<PaymentType>(
+              thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+              groupValue: ref.watch(fixFlipProvider).constructionPaymentType,
+              children: const {
+                PaymentType.principalAndInterest: Text('Principal & Interest'),
+                PaymentType.interestOnly: Text('Interest Only'),
+              },
+              onValueChanged: (PaymentType? newValue) =>
+                  ref.read(fixFlipProvider).updateConstructionPaymentType(newValue!),
             ),
             MoneyListTile(
     (MediaQuery.of(context).size.width < 640)

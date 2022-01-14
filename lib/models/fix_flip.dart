@@ -16,7 +16,7 @@ class FixFlipFields {
     rent, otherIncome, afterRepairRentPerMonth, afterRepairOtherIncome,
     taxes, insurance,
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType,
-    constructionDownPaymentPercentage, constructionInterestRate, constructionTerm,
+    constructionDownPaymentPercentage, constructionInterestRate, constructionTerm, constructionPaymentType,
     holdingCostsUtilities,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
     realtorsFeesPercentage, sellersClosingCosts, buyersClosingCosts, otherClosingCosts,
@@ -68,6 +68,7 @@ class FixFlipFields {
   static const String constructionDownPaymentPercentage = 'constructionDownPaymentPercentage';
   static const String constructionInterestRate = 'constructionInterestRate';
   static const String constructionTerm = 'constructionTerm';
+  static const String constructionPaymentType = 'constructionPaymentType';
   static const String holdingCostsUtilities = 'holdingCostsUtilities';
   static const String sellerFinancingType = 'sellerFinancingType';
   static const String sellerLoanPercent = 'sellerLoanPercent';
@@ -135,6 +136,7 @@ class FixFlip extends ChangeNotifier{
   double constructionDownPaymentAmount;
   double constructionInterestRate;
   int constructionTerm;
+  PaymentType constructionPaymentType;
   double constructionMonthlyPayment;
   double debtService;
   double insuranceAndTaxes;
@@ -173,7 +175,7 @@ class FixFlip extends ChangeNotifier{
     this.interestRate = 0, this.term = 0, this.closingCosts = 0, this.monthlyPayment = 0,
     this.willRefinance = false, this.paymentType = PaymentType.principalAndInterest,
     this.constructionDownPaymentPercentage = 0, this.constructionLoanAmount = 0, this.constructionDownPaymentAmount = 0,
-    this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionMonthlyPayment = 0,
+    this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionPaymentType = PaymentType.principalAndInterest, this.constructionMonthlyPayment = 0,
     this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
     this.totalHoldingCosts = 0,
     this.sellerFinancingType = SellerFinancingType.payment,
@@ -225,6 +227,7 @@ class FixFlip extends ChangeNotifier{
     FixFlipFields.constructionDownPaymentPercentage: constructionDownPaymentPercentage,
     FixFlipFields.constructionInterestRate: constructionInterestRate,
     FixFlipFields.constructionTerm: constructionTerm,
+    FixFlipFields.constructionPaymentType: PaymentTypeUtils(constructionPaymentType).name,
     FixFlipFields.holdingCostsUtilities: holdingCostsUtilities,
     FixFlipFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
     FixFlipFields.sellerLoanPercent: sellerLoanPercentage,
@@ -279,6 +282,9 @@ class FixFlip extends ChangeNotifier{
       constructionDownPaymentPercentage: json[FixFlipFields.constructionDownPaymentPercentage] as double,
       constructionInterestRate: json[FixFlipFields.constructionInterestRate] as double,
       constructionTerm: json[FixFlipFields.constructionTerm] as int,
+      constructionPaymentType: (json.containsKey(FixFlipFields.constructionPaymentType))
+          ? PaymentTypeUtils.getPaymentType(json[FixFlipFields.constructionPaymentType] as String)
+          : PaymentType.principalAndInterest,
       holdingCostsUtilities: json[FixFlipFields.holdingCostsUtilities] as double,
       sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[FixFlipFields.financingType] as String),
       sellerLoanPercentage: json[FixFlipFields.sellerLoanPercent] as double,
@@ -346,6 +352,7 @@ class FixFlip extends ChangeNotifier{
     constructionDownPaymentAmount = data.constructionDownPaymentAmount;
     constructionInterestRate = data.constructionInterestRate;
     constructionTerm = data.constructionTerm;
+    constructionPaymentType = data.constructionPaymentType;
     constructionMonthlyPayment = data.constructionMonthlyPayment;
     debtService = data.debtService;
     insuranceAndTaxes = data.insuranceAndTaxes;
@@ -380,6 +387,8 @@ class FixFlip extends ChangeNotifier{
     calculateTotalIncomeAfterRepair();
     calculateYearlyIncomeAfterRepair();
     calculateLoanAmount();
+    calculateAllFinanceOptions();
+    calculateAllConstructionCalculations();
     calculateSellerFinanceCalculations();
     calculateAllHoldingCosts();
     calculateAllSellingCosts();
@@ -729,6 +738,7 @@ class FixFlip extends ChangeNotifier{
 
   void updatePaymentType(PaymentType newValue) {
     paymentType = newValue;
+    calculateAllFinanceOptions();
     notifyListeners();
   }
 
@@ -756,6 +766,11 @@ class FixFlip extends ChangeNotifier{
     calculateLoanAmount();
     loanAmount = (1 - downPaymentPercent) * purchasePrice;
     downPaymentAmount = purchasePrice - loanAmount;
+    if(paymentType == PaymentType.principalAndInterest) {
+      monthlyPayment = calculateMonthlyPayment(rate: interestRate / 12, nper: term * 12, pv: -1 * loanAmount);
+    } else if(paymentType == PaymentType.interestOnly) {
+      monthlyPayment = calculateMonthlyPaymentInterestOnly(rate: interestRate / 12, nper: term, pv: -1 * loanAmount, per: 1);
+    }
     notifyListeners();
   }
 
@@ -791,6 +806,11 @@ class FixFlip extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateConstructionPaymentType(PaymentType newValue) {
+    constructionPaymentType = newValue;
+    calculateAllConstructionCalculations();
+  }
+
   void updateConstructionMonthlyPayment(newValue) {
     constructionMonthlyPayment = newValue;
     notifyListeners();
@@ -799,12 +819,16 @@ class FixFlip extends ChangeNotifier{
   void calculateAllConstructionCalculations() {
     constructionLoanAmount = (1 - constructionDownPaymentPercentage) * totalRenovations;
     constructionDownPaymentAmount = totalRenovations - constructionLoanAmount;
-    constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
-      rate: constructionInterestRate / 12,
-      nper: constructionTerm,
-      pv: -1 * constructionLoanAmount,
-      per: 1,
-    );
+    if(constructionPaymentType == PaymentType.principalAndInterest) {
+      constructionMonthlyPayment = calculateMonthlyPayment(rate: constructionInterestRate / 12, nper: constructionTerm * 12, pv: -1 * constructionLoanAmount);
+    } else {
+      constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
+        rate: constructionInterestRate / 12,
+        nper: constructionTerm,
+        pv: -1 * constructionLoanAmount,
+        per: 1,
+      );
+    }
     notifyListeners();
   }
 
@@ -814,15 +838,9 @@ class FixFlip extends ChangeNotifier{
   }
 
   void calculateAllHoldingCosts() {
-    double mp = (calculateMonthlyPaymentInterestOnly(
-      rate: interestRate / 12,
-      nper: term,
-      pv: -1 * loanAmount,
-      per: 1,
-    ));
 
     debtService =
-        (mp * monthsToRehabRent) + constructionMonthlyPayment;
+        (monthlyPayment * monthsToRehabRent) + constructionMonthlyPayment;
 
     insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
     totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities) * monthsToRehabRent;
@@ -965,6 +983,7 @@ class FixFlip extends ChangeNotifier{
     constructionDownPaymentAmount = 0;
     constructionInterestRate = 0;
     constructionTerm = 0;
+    constructionPaymentType = PaymentType.principalAndInterest;
     constructionMonthlyPayment = 0;
     sellerFinancingType = SellerFinancingType.payment;
     sellerLoanPercentage = sellerLoanAmount = sellerInterestRate = 0;

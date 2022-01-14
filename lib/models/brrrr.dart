@@ -412,6 +412,7 @@ class BRRRR extends ChangeNotifier{
     constructionDownPaymentAmount = data.constructionDownPaymentAmount;
     constructionInterestRate = data.constructionInterestRate;
     constructionTerm = data.constructionTerm;
+    constructionPaymentType = data.constructionPaymentType;
     constructionMonthlyPayment = data.constructionMonthlyPayment;
     debtService = data.debtService;
     insuranceAndTaxes = data.insuranceAndTaxes;
@@ -452,6 +453,7 @@ class BRRRR extends ChangeNotifier{
     calculateAfterRepairNOIYearly();
     calculateLoanAmount();
     calculateAllFinanceOptions();
+    calculateAllConstructionCalculations();
     calculateAllRefinanceCalculations();
     calculateSellerFinanceCalculations();
     calculateAllHoldingCosts();
@@ -1252,6 +1254,7 @@ class BRRRR extends ChangeNotifier{
     constructionDownPaymentAmount = 0;
     constructionInterestRate = 0;
     constructionTerm = 0;
+    constructionPaymentType = PaymentType.principalAndInterest;
     constructionMonthlyPayment = 0;
     sellerFinancingType = SellerFinancingType.payment;
     sellerLoanPercentage = sellerLoanAmount = sellerInterestRate = 0;

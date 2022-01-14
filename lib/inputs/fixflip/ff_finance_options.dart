@@ -59,19 +59,7 @@ class _FinanceOptionsState extends ConsumerState<FixFlipFinanceOptions> {
     double downPaymentAmount = ref.watch(fixFlipProvider).purchasePrice -
         loanAmount;
 
-    double monthlyPayment = (ref.watch(fixFlipProvider).paymentType ==
-            PaymentType.principalAndInterest)
-        ? ref.watch(fixFlipProvider).calculateMonthlyPayment(
-              rate: ref.watch(fixFlipProvider).interestRate / 12,
-              nper: ref.watch(fixFlipProvider).term * 12,
-              pv: -1 * loanAmount,
-            )
-        : ref.watch(fixFlipProvider).calculateMonthlyPaymentInterestOnly(
-              rate: ref.watch(fixFlipProvider).interestRate / 12,
-              nper: ref.watch(fixFlipProvider).term,
-              pv: -1 * loanAmount,
-              per: 1,
-            );
+    double monthlyPayment = ref.watch(fixFlipProvider).monthlyPayment;
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -91,9 +79,6 @@ class _FinanceOptionsState extends ConsumerState<FixFlipFinanceOptions> {
         }
       },
       onSubmit: () {
-        ref.read(fixFlipProvider).updateMonthlyPayment(monthlyPayment);
-        ref.read(fixFlipProvider).updateDownPayment(downPaymentAmount);
-        ref.read(fixFlipProvider).updateLoanAmount(loanAmount);
         FinancingType financingType = ref.watch(fixFlipProvider).financingType;
         if (financingType == FinancingType.hardMoneyWithConstruction ||
             financingType == FinancingType.commercialWithConstruction) {
@@ -167,6 +152,7 @@ class _FinanceOptionsState extends ConsumerState<FixFlipFinanceOptions> {
               else {
                 ref.read(fixFlipProvider).updateInterestRate(0);
               }
+              ref.read(fixFlipProvider).calculateAllFinanceOptions();
             },
           ),
           IntegerTextField(
@@ -183,6 +169,7 @@ class _FinanceOptionsState extends ConsumerState<FixFlipFinanceOptions> {
               else {
                 ref.read(fixFlipProvider).updateTerm(0);
               }
+              ref.read(fixFlipProvider).calculateAllFinanceOptions();
             },
           ),
           MoneyTextField(
@@ -197,6 +184,7 @@ class _FinanceOptionsState extends ConsumerState<FixFlipFinanceOptions> {
               else {
                 ref.read(fixFlipProvider).updateClosingCosts(0);
               }
+              ref.read(fixFlipProvider).calculateAllFinanceOptions();
             },
           ),
           CupertinoSlidingSegmentedControl<PaymentType>(
