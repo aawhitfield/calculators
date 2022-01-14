@@ -73,6 +73,7 @@ class _FinanceOptionConstructionLoanState extends ConsumerState<FinanceOptionCon
         }
       },
         onSubmit: () {
+          ref.read(brrrrProvider).calculateAll();
           if(ref.read(brrrrProvider).financingType == FinancingType.sellerFinancing) {
             Get.to(() => const FinanceOptionSellerFinanced());
           }

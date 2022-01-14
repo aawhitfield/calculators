@@ -81,6 +81,7 @@ class _FinanceOptionsState extends ConsumerState<FinanceOptions> {
         }
       },
       onSubmit: () {
+        ref.read(brrrrProvider).calculateAll();
         FinancingType financingType = ref.watch(brrrrProvider).financingType;
         if (financingType == FinancingType.hardMoneyWithConstruction ||
             financingType == FinancingType.commercialWithConstruction) {

@@ -95,8 +95,7 @@ class _FinanceOptionDownPaymentState extends ConsumerState<FinanceOptionSellerFi
           }
         },
         onSubmit: () {
-          ref.read(brrrrProvider).updateSellerMonthlyPayment(monthlyPayment);
-          ref.read(brrrrProvider).updateSellerLoanAmount(loanAmount);
+          ref.read(brrrrProvider).calculateAll();
           Calculator calculatorType = ref.read(calculatorProvider).type;
           if (calculatorType == Calculator.brrrr) {
             if (ref.read(brrrrProvider).wantsToRefinance) {

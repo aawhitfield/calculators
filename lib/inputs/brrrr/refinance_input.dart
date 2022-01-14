@@ -92,8 +92,7 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
         }
       },
       onSubmit: () {
-        ref.read(brrrrProvider).updateMonthlyPayment(monthlyPayment);
-        ref.read(brrrrProvider).calculateAllHoldingCosts();
+        ref.read(brrrrProvider).calculateAll();
         Get.to(() => const HoldingCosts());
       },
       position: kBRRRRQuestions.indexOf(RefinanceInput) + 1,

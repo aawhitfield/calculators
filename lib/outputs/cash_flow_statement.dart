@@ -67,7 +67,8 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
         ref.watch(brrrrProvider).totalMonthlyExpenses;
     double noiMonthly = totalMonthlyIncome - totalMonthlyExpenses;
 
-    double debtService = ref.read(brrrrProvider).debtService;
+    int months = ref.read(brrrrProvider).monthsToRehabRent;
+    double debtService = (months != 0) ? ref.read(brrrrProvider).debtService / months : ref.read(brrrrProvider).debtService;
     double cashFlow = noiMonthly - debtService;
     double yearlyCashFlow = cashFlow * 12;
     BRRRR provider = ref.read(brrrrProvider);
