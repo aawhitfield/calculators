@@ -19,6 +19,7 @@ class CashFlowStatement extends ConsumerStatefulWidget {
 }
 
 class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
+  TextEditingController incomeController = TextEditingController();
   TextEditingController taxesController = TextEditingController();
   TextEditingController insuranceController = TextEditingController();
   TextEditingController propertyManagementController = TextEditingController();
@@ -28,6 +29,10 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
 
   @override
   void initState() {
+    double income = ref.read(brrrrProvider).totalIncome;
+    if(income != 0) {
+      incomeController.text = kCurrencyFormat.format(income);
+    }
     double taxes = ref.read(brrrrProvider).taxesMonthly;
     if(taxes != 0) {
       taxesController.text = kCurrencyFormat.format(taxes);
@@ -62,7 +67,7 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
         ref.watch(brrrrProvider).totalMonthlyExpenses;
     double noiMonthly = totalMonthlyIncome - totalMonthlyExpenses;
 
-    double debtService = ref.read(brrrrProvider).debtService / ref.read(brrrrProvider).monthsToRehabRent;
+    double debtService = ref.read(brrrrProvider).debtService;
     double cashFlow = noiMonthly - debtService;
     double yearlyCashFlow = cashFlow * 12;
     BRRRR provider = ref.read(brrrrProvider);
@@ -70,7 +75,6 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
     double dscr = noiMonthly / debtService;
     double onePercentRule = provider.rent / provider.purchasePrice * 100;
 
-    String incomeString = kCurrencyFormat.format(totalMonthlyIncome);
     String expensesString = kCurrencyFormat.format(totalMonthlyExpenses);
     String noiString = kCurrencyFormat.format(noiMonthly);
     String debtServiceString = kCurrencyFormat.format(debtService);
@@ -84,7 +88,20 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
       children: [
         const ReportHeader('Monthly Cashflow Statement'),
         const SizedBox(height: 16),
-        MoneyListTile('Income', incomeString),
+        MoneyTextField(
+            labelText: 'Income',
+            controller: incomeController,
+            onChanged: (String newPrice) {
+              newPrice = newPrice.replaceAll(',', '');
+              double? price = double.tryParse(newPrice);
+              if(price != null) {
+                ref.read(brrrrProvider).updateTotalIncome(price);
+              } else {
+                ref.read(brrrrProvider).updateTotalIncome(0.0);
+              }
+              ref.read(brrrrProvider).calculateAll();
+            }
+        ),
         ExpansionTile(
           leading: Text('Expenses', style: Theme.of(context).textTheme.headline6,),
             title: Text('\$ $expensesString', style: Theme.of(context).textTheme.headline5,),

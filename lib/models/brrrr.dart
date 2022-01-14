@@ -651,6 +651,12 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateTotalIncome(double newIncome) {
+    totalIncome = newIncome;
+    yearlyIncome = totalIncome * 12;
+    notifyListeners();
+  }
+
   void updateRent(double newValue) {
     rent = newValue;
     notifyListeners();
@@ -1084,15 +1090,17 @@ class BRRRR extends ChangeNotifier{
   void calculateAllConstructionCalculations() {
     constructionLoanAmount = (1 - constructionDownPaymentPercentage) * totalRenovations;
     constructionDownPaymentAmount = totalRenovations - constructionLoanAmount;
-    if(constructionPaymentType == PaymentType.principalAndInterest) {
-      constructionMonthlyPayment = calculateMonthlyPayment(rate: constructionInterestRate / 12, nper: constructionTerm * 12, pv: -1 * constructionLoanAmount);
-    } else if(constructionPaymentType == PaymentType.interestOnly) {
-      constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
-        rate: constructionInterestRate / 12,
-        nper: constructionTerm,
-        pv: -1 * constructionLoanAmount,
-        per: 1,
-      );
+    if (constructionInterestRate != 0 && constructionTerm != 0 && constructionLoanAmount != 0) {
+      if(constructionPaymentType == PaymentType.principalAndInterest) {
+        constructionMonthlyPayment = calculateMonthlyPayment(rate: constructionInterestRate / 12, nper: constructionTerm * 12, pv: -1 * constructionLoanAmount);
+      } else if(constructionPaymentType == PaymentType.interestOnly) {
+        constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
+          rate: constructionInterestRate / 12,
+          nper: constructionTerm,
+          pv: -1 * constructionLoanAmount,
+          per: 1,
+        );
+      }
     }
     notifyListeners();
   }

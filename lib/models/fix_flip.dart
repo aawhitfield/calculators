@@ -819,15 +819,17 @@ class FixFlip extends ChangeNotifier{
   void calculateAllConstructionCalculations() {
     constructionLoanAmount = (1 - constructionDownPaymentPercentage) * totalRenovations;
     constructionDownPaymentAmount = totalRenovations - constructionLoanAmount;
-    if(constructionPaymentType == PaymentType.principalAndInterest) {
-      constructionMonthlyPayment = calculateMonthlyPayment(rate: constructionInterestRate / 12, nper: constructionTerm * 12, pv: -1 * constructionLoanAmount);
-    } else {
-      constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
-        rate: constructionInterestRate / 12,
-        nper: constructionTerm,
-        pv: -1 * constructionLoanAmount,
-        per: 1,
-      );
+    if (constructionInterestRate != 0 && constructionTerm != 0 && constructionLoanAmount != 0) {
+      if(constructionPaymentType == PaymentType.principalAndInterest) {
+        constructionMonthlyPayment = calculateMonthlyPayment(rate: constructionInterestRate / 12, nper: constructionTerm * 12, pv: -1 * constructionLoanAmount);
+      } else {
+        constructionMonthlyPayment = calculateMonthlyPaymentInterestOnly(
+          rate: constructionInterestRate / 12,
+          nper: constructionTerm,
+          pv: -1 * constructionLoanAmount,
+          per: 1,
+        );
+      }
     }
     notifyListeners();
   }
