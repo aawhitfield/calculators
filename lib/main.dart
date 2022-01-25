@@ -1,13 +1,15 @@
 import 'package:calculators/initialization.dart';
 import 'package:calculators/onboarding/auth_gate.dart';
+import 'package:calculators/onboarding/vereifi_sign_in_screen.dart';
 import 'package:calculators/theme.dart';
+import 'package:calculators/widgets/restart_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 void main() async {
   await Initialization.initialize();
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(RestartWidget(child: const ProviderScope(child: MyApp())));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,6 +25,10 @@ class MyApp extends StatelessWidget {
         theme: buildThemeData(context),
         debugShowCheckedModeBanner: false,
         home: const AuthGate(),
+        routes: <String, WidgetBuilder>{
+          '/login': (BuildContext context) => const VereifiSignInScreen(),
+          '/authGate': (BuildContext context) => const AuthGate(),
+        },
       ),
     );
   }

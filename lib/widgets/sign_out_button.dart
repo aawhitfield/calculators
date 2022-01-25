@@ -21,7 +21,13 @@ class SignOutButton extends StatelessWidget {
           )
         ];
       },
-      onSelected: (item) async => await FirebaseAuth.instance.signOut(),
+      onSelected: (item) async {
+        await FirebaseAuth.instance.signOut();
+        if (Navigator.canPop(context)) {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/authGate', (Route<dynamic> route) => false);
+        }
+      },
     );
   }
 }

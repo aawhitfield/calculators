@@ -1,7 +1,7 @@
 import 'package:calculators/home.dart';
+import 'package:calculators/onboarding/vereifi_sign_in_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 
 class AuthGate extends StatelessWidget {
   const AuthGate({Key? key}) : super(key: key);
@@ -13,24 +13,7 @@ class AuthGate extends StatelessWidget {
       builder: (context, snapshot) {
         // User is not signed in
         if (!snapshot.hasData) {
-          return SignInScreen(
-            headerBuilder: (context, constraints, _) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Image.asset('images/logo.png'),
-              );
-            },
-            sideBuilder: (context, constraints) {
-              return Image.asset('images/logo.png');
-            },
-              providerConfigs: const [
-                EmailProviderConfiguration(),
-                // AppleProviderConfiguration(),
-                // GoogleProviderConfiguration(
-                //   clientId: 'vereifiapp',
-                // ),
-              ]
-          );
+          return const VereifiSignInScreen();
         }
 
         // Render your application if authenticated
