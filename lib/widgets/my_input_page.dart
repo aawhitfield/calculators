@@ -1,5 +1,6 @@
 import 'package:calculators/outputs/final_options_buttons.dart';
 import 'package:calculators/widgets/my_elevated_button.dart';
+import 'package:calculators/widgets/navigation_bar_home_report.dart';
 import 'package:calculators/widgets/sign_out_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -86,56 +87,63 @@ class MyInputPage extends ConsumerWidget {
           value: position / totalQuestions,
         ),
         centerTitle: true,
-        actions: const[SignOutButton()],
+        actions: const [SignOutButton()],
       ),
       body: SafeArea(
         top: false,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ListView(
-            shrinkWrap: true,
-            children: <Widget>[
-              (headlineText != null)
-                  ? Text(
-                      headlineText!,
-                      style: headline,
-                    )
-                  : Container(),
-              (subHeadlineText != null)
-                  ? Text(
-                subHeadlineText!,
-                style: subHeadline,
-              )
-                  : Container(),
-              const SizedBox(height: 32),
-              SvgPicture.asset(
-                imageUri,
-                width: MediaQuery.of(context).size.width * 0.3,
-                height: MediaQuery.of(context).size.height * 0.3,
+          child: Column(
+            children: [
+              const NavigationBarHomeReport(),
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    (headlineText != null)
+                        ? Text(
+                            headlineText!,
+                            style: headline,
+                          )
+                        : Container(),
+                    (subHeadlineText != null)
+                        ? Text(
+                            subHeadlineText!,
+                            style: subHeadline,
+                          )
+                        : Container(),
+                    const SizedBox(height: 32),
+                    SvgPicture.asset(
+                      imageUri,
+                      width: MediaQuery.of(context).size.width * 0.3,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                    ),
+                    const SizedBox(height: 32),
+                    Text(
+                      headerText,
+                      style: header,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      subheadText,
+                      style: subhead,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    child,
+                    (position != totalQuestions)
+                        ? MyElevatedButton(
+                            onPressed: onSubmit,
+                            label: (position == totalQuestions - 1)
+                                ? 'Generate report'
+                                : 'Continue',
+                          )
+                        : const FinalOptionsButtons(), // show on final report page
+                    const SizedBox(height: 16),
+                  ],
+                ),
               ),
-              const SizedBox(height: 32),
-              Text(
-                headerText,
-                style: header,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              Text(
-                subheadText,
-                style: subhead,
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 8),
-              child,
-              (position != totalQuestions)
-                  ? MyElevatedButton(
-                      onPressed: onSubmit,
-                      label: (position == totalQuestions - 1)
-                          ? 'Generate report'
-                          : 'Continue',
-                    )
-                  : const FinalOptionsButtons(), // show on final report page
-              const SizedBox(height: 16),
             ],
           ),
         ),
