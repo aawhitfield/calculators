@@ -1,6 +1,7 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/outputs/colored_percent_list_tile.dart';
+import 'package:calculators/outputs/expenses_expansion_tile.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/colored_money_list_tile.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
@@ -85,7 +86,6 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
     double dscr = noiMonthly / debtService;
     double onePercentRule = provider.rent / provider.purchasePrice * 100;
 
-    String expensesString = kCurrencyFormat.format(totalMonthlyExpenses);
     String noiString = kCurrencyFormat.format(noiMonthly);
     String debtServiceString = kCurrencyFormat.format(debtService);
     String cashFlowString = kCurrencyFormat.format(cashFlow);
@@ -111,98 +111,7 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
               }
               ref.read(brrrrProvider).calculateAll();
             }),
-        ExpansionTile(
-          leading: Text(
-            'Expenses',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          title: Text(
-            '\$ $expensesString',
-            style: Theme.of(context).textTheme.headline5,
-          ),
-          children: [
-            MoneyTextField(
-              labelText: 'Taxes',
-              controller: taxesController,
-              onChanged: (String newValue) {
-                newValue = newValue.replaceAll(',', '');
-                double? taxes = double.tryParse(newValue);
-                if (taxes != null) {
-                  ref.read(brrrrProvider).updateTaxesMonthly(taxes);
-                } else {
-                  ref.read(brrrrProvider).updateTaxesMonthly(0);
-                }
-                ref.read(brrrrProvider).calculateAllExpenses();
-              },
-            ),
-            MoneyTextField(
-              labelText: 'Insurance',
-              controller: insuranceController,
-              onChanged: (String newValue) {
-                newValue = newValue.replaceAll(',', '');
-                double? insurance = double.tryParse(newValue);
-                if (insurance != null) {
-                  ref.read(brrrrProvider).updateInsuranceMonthly(insurance);
-                } else {
-                  ref.read(brrrrProvider).updateInsuranceMonthly(0.0);
-                }
-                ref.read(brrrrProvider).calculateAllExpenses();
-              },
-            ),
-            MoneyTextField(
-                labelText: 'Property Management',
-                controller: propertyManagementController,
-                onChanged: (String newValue) {
-                  double? value = double.tryParse(newValue);
-                  if (value != null) {
-                    ref
-                        .read(brrrrProvider)
-                        .updatePropertyManagementMonthly(value);
-                  } else {
-                    ref
-                        .read(brrrrProvider)
-                        .updatePropertyManagementMonthly(0.0);
-                  }
-                  ref.read(brrrrProvider).calculateAllExpenses();
-                }),
-            MoneyTextField(
-                labelText: 'Vacancy',
-                controller: vacancyController,
-                onChanged: (String newValue) {
-                  double? value = double.tryParse(newValue);
-                  if (value != null) {
-                    ref.read(brrrrProvider).updateVacancyMonthly(value);
-                  } else {
-                    ref.read(brrrrProvider).updateVacancyMonthly(0.0);
-                  }
-                  ref.read(brrrrProvider).calculateAllExpenses();
-                }),
-            MoneyTextField(
-                labelText: 'Maintenance',
-                controller: maintenanceController,
-                onChanged: (String newValue) {
-                  double? value = double.tryParse(newValue);
-                  if (value != null) {
-                    ref.read(brrrrProvider).updateMaintenanceMonthly(value);
-                  } else {
-                    ref.read(brrrrProvider).updateMaintenanceMonthly(0.0);
-                  }
-                  ref.read(brrrrProvider).calculateAllExpenses();
-                }),
-            MoneyTextField(
-                labelText: 'Other',
-                controller: otherController,
-                onChanged: (String newValue) {
-                  double? value = double.tryParse(newValue);
-                  if (value != null) {
-                    ref.read(brrrrProvider).updateOtherMonthly(value);
-                  } else {
-                    ref.read(brrrrProvider).updateOtherMonthly(0.0);
-                  }
-                  ref.read(brrrrProvider).calculateAllExpenses();
-                }),
-          ],
-        ),
+        const ExpensesExpansionTile(),
         MoneyListTile('NOI', noiString),
         MoneyListTile('Debt Service', debtServiceString),
         ColoredMoneyListTile(
