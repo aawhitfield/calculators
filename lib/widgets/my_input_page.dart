@@ -95,7 +95,7 @@ class MyInputPage extends ConsumerWidget {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              const NavigationBarHomeReport(),
+              (position == totalQuestions) ? Container() : const NavigationBarHomeReport(),
               Expanded(
                 child: ListView(
                   shrinkWrap: true,
