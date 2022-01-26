@@ -2,10 +2,10 @@ import 'package:calculators/globals.dart';
 import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/outputs/colored_percent_list_tile.dart';
 import 'package:calculators/outputs/expenses_expansion_tile.dart';
+import 'package:calculators/outputs/income_expansion_tile.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/colored_money_list_tile.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
-import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/numerical_list_tile.dart';
 import 'package:calculators/widgets/percent_list_tile.dart';
 import 'package:calculators/widgets/report_header.dart';
@@ -24,26 +24,6 @@ class ARVCashFlowStatement extends ConsumerStatefulWidget {
 }
 
 class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
-  TextEditingController rentIncomeController = TextEditingController();
-  TextEditingController otherIncomeController = TextEditingController();
-
-  late double rentIncome;
-  late double otherIncome;
-
-  @override
-  void initState() {
-    rentIncome = ref.read(brrrrProvider).rent;
-    if (rentIncome != 0) {
-      rentIncomeController.text = kCurrencyFormat.format(rentIncome);
-    }
-    otherIncome = ref.read(brrrrProvider).otherIncome;
-    if (otherIncome != 0) {
-      otherIncomeController.text = kCurrencyFormat.format(otherIncome);
-    }
-
-
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +46,6 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
     double onePercentRule =
         provider.afterRepairRentPerMonth / provider.afterRepairValue * 100;
 
-    String incomeString = kCurrencyFormat.format(income);
     String noiString = kCurrencyFormat.format(noi);
     String debtServiceString = kCurrencyFormat.format(debtService);
     String cashFlowString = kCurrencyFormat.format(cashFlow);
@@ -79,46 +58,7 @@ class _ARVCashFlowStatementState extends ConsumerState<ARVCashFlowStatement> {
       children: [
         const ReportHeader('Monthly ARV Cash Flow Statement'),
         const SizedBox(height: 16),
-        ExpansionTile(
-          leading: Text(
-            'Income',
-            style: Theme.of(context).textTheme.headline6,
-          ),
-          title: Text(
-            '\$ $incomeString',
-            style: Theme.of(context).textTheme.headline5,
-          ),
-          children: [
-            MoneyTextField(
-              controller: rentIncomeController,
-              labelText: 'Rent',
-              onChanged: (String newValue) {
-                newValue = newValue.replaceAll(',', '');
-                double? newIncome = double.tryParse(newValue);
-                if (newIncome != null) {
-                  ref.read(brrrrProvider).updateRent(newIncome);
-                } else {
-                  ref.read(brrrrProvider).updateRent(0.0);
-                }
-                ref.read(brrrrProvider).calculateAll();
-              },
-            ),
-            MoneyTextField(
-              controller: otherIncomeController,
-              labelText: 'Other Income',
-              onChanged: (String newValue) {
-                newValue = newValue.replaceAll(',', '');
-                double? newIncome = double.tryParse(newValue);
-                if (newIncome != null) {
-                  ref.read(brrrrProvider).updateOtherIncome(newIncome);
-                } else {
-                  ref.read(brrrrProvider).updateOtherIncome(0.0);
-                }
-                ref.read(brrrrProvider).calculateAll();
-              },
-            ),
-          ],
-        ),
+        const IncomeExpansionTile(),
         const ExpensesExpansionTile(),
         MoneyListTile('NOI', noiString),
         MoneyListTile('Debt Service', debtServiceString),

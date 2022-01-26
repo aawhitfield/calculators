@@ -2,10 +2,10 @@ import 'package:calculators/globals.dart';
 import 'package:calculators/models/brrrr.dart';
 import 'package:calculators/outputs/colored_percent_list_tile.dart';
 import 'package:calculators/outputs/expenses_expansion_tile.dart';
+import 'package:calculators/outputs/income_expansion_tile.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/colored_money_list_tile.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
-import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/numerical_list_tile.dart';
 import 'package:calculators/widgets/percent_list_tile.dart';
 import 'package:calculators/widgets/report_header.dart';
@@ -22,48 +22,6 @@ class CashFlowStatement extends ConsumerStatefulWidget {
 }
 
 class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
-  TextEditingController incomeController = TextEditingController();
-  TextEditingController taxesController = TextEditingController();
-  TextEditingController insuranceController = TextEditingController();
-  TextEditingController propertyManagementController = TextEditingController();
-  TextEditingController vacancyController = TextEditingController();
-  TextEditingController maintenanceController = TextEditingController();
-  TextEditingController otherController = TextEditingController();
-
-  @override
-  void initState() {
-    double income = ref.read(brrrrProvider).totalIncome;
-    if (income != 0) {
-      incomeController.text = kCurrencyFormat.format(income);
-    }
-    double taxes = ref.read(brrrrProvider).taxesMonthly;
-    if (taxes != 0) {
-      taxesController.text = kCurrencyFormat.format(taxes);
-    }
-    double insurance = ref.read(brrrrProvider).insuranceMonthly;
-    if (insurance != 0) {
-      insuranceController.text = kCurrencyFormat.format(insurance);
-    }
-    double propertyManagement =
-        ref.read(brrrrProvider).propertyManagementMonthly;
-    if (propertyManagement != 0) {
-      propertyManagementController.text =
-          kCurrencyFormat.format(propertyManagement);
-    }
-    double vacancy = ref.read(brrrrProvider).vacancyMonthly;
-    if (vacancy != 0) {
-      vacancyController.text = kCurrencyFormat.format(vacancy);
-    }
-    double maintenance = ref.read(brrrrProvider).maintenanceMonthly;
-    if (maintenance != 0) {
-      maintenanceController.text = kCurrencyFormat.format(maintenance);
-    }
-    double other = ref.read(brrrrProvider).otherExpensesMonthly;
-    if (other != 0) {
-      otherController.text = kCurrencyFormat.format(other);
-    }
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,19 +56,7 @@ class _CashFlowStatementState extends ConsumerState<CashFlowStatement> {
       children: [
         const ReportHeader('Monthly Cashflow Statement'),
         const SizedBox(height: 16),
-        MoneyTextField(
-            labelText: 'Income',
-            controller: incomeController,
-            onChanged: (String newPrice) {
-              newPrice = newPrice.replaceAll(',', '');
-              double? price = double.tryParse(newPrice);
-              if (price != null) {
-                ref.read(brrrrProvider).updateTotalIncome(price);
-              } else {
-                ref.read(brrrrProvider).updateTotalIncome(0.0);
-              }
-              ref.read(brrrrProvider).calculateAll();
-            }),
+        const IncomeExpansionTile(),
         const ExpensesExpansionTile(),
         MoneyListTile('NOI', noiString),
         MoneyListTile('Debt Service', debtServiceString),
