@@ -34,11 +34,11 @@ class TurnkeyReportInitialPurchase extends ConsumerWidget {
         const ReportHeader('Initial Purchase'),
         const SizedBox(height: 16),
         MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Loan\nDP'
-                : 'Loan \nDown Payment',
-            loanDownPaymentString,
-        subtitle: 'Down Payment',
+          (MediaQuery.of(context).size.width < 640)
+              ? 'Loan\nDP'
+              : 'Loan \nDown Payment',
+          loanDownPaymentString,
+          subtitle: 'Down Payment',
         ),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
@@ -50,11 +50,13 @@ class TurnkeyReportInitialPurchase extends ConsumerWidget {
                 ? 'Initial\nCash'
                 : 'Initial \nCash Investment',
             initialCashInvestmentString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Cost per\ninvestor'
-                : 'Cost per investor',
-            costPerInvestorString),
+        (ref.read(turnkeyProvider).investors > 1)
+            ? MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Cost per\ninvestor'
+                    : 'Cost per investor',
+                costPerInvestorString)
+            : Container(),
       ],
     );
   }
