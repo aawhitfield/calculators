@@ -1,5 +1,6 @@
 import 'package:calculators/globals.dart';
 import 'package:calculators/models/turnkey_rental_type.dart';
+import 'package:calculators/outputs/turnkey/turnkey_income_expansion_tile.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/money_list_tile.dart';
 import 'package:calculators/widgets/money_text_field.dart';
@@ -75,7 +76,6 @@ class _CashFlowStatementState extends ConsumerState<TurnkeyCashFlowStatement> {
     double dscr = noiMonthly / debtService;
     double onePercentRule = provider.rent / provider.purchasePrice * 100;
 
-    String incomeString = kCurrencyFormat.format(totalMonthlyIncome);
     String expensesString = kCurrencyFormat.format(totalMonthlyExpenses);
     String noiString = kCurrencyFormat.format(noiMonthly);
     String debtServiceString = kCurrencyFormat.format(debtService);
@@ -89,7 +89,7 @@ class _CashFlowStatementState extends ConsumerState<TurnkeyCashFlowStatement> {
       children: [
         const ReportHeader('Monthly Cashflow Statement'),
         const SizedBox(height: 16),
-        MoneyListTile('Income', incomeString),
+        const TurnkeyIncomeExpansionTile(),
         ExpansionTile(
           leading: Text('Expenses', style: Theme.of(context).textTheme.headline6,),
             title: Text('\$ $expensesString', style: Theme.of(context).textTheme.headline5,),
