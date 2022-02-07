@@ -9,9 +9,12 @@ import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/my_input_page.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+
+enum ClosingCosts { value, percentage }
 
 class TurnkeyRentalFinanceOptions extends ConsumerStatefulWidget {
   const TurnkeyRentalFinanceOptions({Key? key}) : super(key: key);
@@ -25,6 +28,10 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
   TextEditingController interestRateController = TextEditingController();
   TextEditingController termController = TextEditingController();
   TextEditingController closingCostsController = TextEditingController();
+  TextEditingController closingCostsPercentageController = TextEditingController();
+
+  ClosingCosts closingCostOption = ClosingCosts.value;
+  double closingCostsPercentage = 0;
 
   @override
   void initState() {
@@ -57,10 +64,10 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
         ref.watch(turnkeyProvider).purchasePrice - loanAmount;
 
     double monthlyPayment = ref.watch(turnkeyProvider).calculateMonthlyPayment(
-              rate: ref.watch(turnkeyProvider).interestRate / 12,
-              nper: ref.watch(turnkeyProvider).term * 12,
-              pv: -1 * loanAmount,
-            );
+          rate: ref.watch(turnkeyProvider).interestRate / 12,
+          nper: ref.watch(turnkeyProvider).term * 12,
+          pv: -1 * loanAmount,
+        );
 
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String downPaymentString = kCurrencyFormat.format(downPaymentAmount);
@@ -83,9 +90,10 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
         ref.read(turnkeyProvider).updateMonthlyPayment(monthlyPayment);
         ref.read(turnkeyProvider).updateDownPayment(downPaymentAmount);
         ref.read(turnkeyProvider).updateLoanAmount(loanAmount);
-          Get.to(() => const TurnkeyRentalReport());
+        Get.to(() => const TurnkeyRentalReport());
       },
-      position: kTurnKeyRentalQuestions.indexOf(TurnkeyRentalFinanceOptions) + 1,
+      position:
+          kTurnKeyRentalQuestions.indexOf(TurnkeyRentalFinanceOptions) + 1,
       totalQuestions: kTurnKeyRentalQuestions.length,
       child: ResponsiveLayout(
         children: [
@@ -163,24 +171,69 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
               }
             },
           ),
-          MoneyTextField(
-            labelText: 'Closing Costs',
-            controller: closingCostsController,
-            onChanged: (String newCost) {
-              newCost = newCost.replaceAll(',', '');
-              double? newValue = double.tryParse(newCost);
-              if (newValue != null) {
-                ref.read(turnkeyProvider).updateClosingCosts(newValue);
-              } else {
-                ref.read(turnkeyProvider).updateClosingCosts(0);
-              }
+          CupertinoSlidingSegmentedControl(
+            thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+            groupValue: closingCostOption,
+            children: const {
+              ClosingCosts.value: Text('Dollar Amount'),
+              ClosingCosts.percentage: Text('Percentage'),
+            },
+            onValueChanged: (ClosingCosts? newClosingCostOption) {
+              setState(() {
+                closingCostOption = newClosingCostOption!;
+
+                if(newClosingCostOption == ClosingCosts.value) {
+                  closingCostsController.text = kCurrencyFormat.format(ref.read(turnkeyProvider).closingCosts);
+                }
+                else {
+                  closingCostsPercentageController.text = ((ref.read(turnkeyProvider).closingCosts) / loanAmount * 100).toStringAsFixed(2);
+                }
+              });
             },
           ),
+          (closingCostOption == ClosingCosts.value)
+              ? MoneyTextField(
+                  labelText: 'Closing Costs',
+                  controller: closingCostsController,
+                  onChanged: (String newCost) {
+                    newCost = newCost.replaceAll(',', '');
+                    double? newValue = double.tryParse(newCost);
+                    if (newValue != null) {
+                      ref.read(turnkeyProvider).updateClosingCosts(newValue);
+                    } else {
+                      ref.read(turnkeyProvider).updateClosingCosts(0);
+                    }
+                  },
+                )
+              : Column(
+                  children: [
+                    PercentTextField(
+                      controller: closingCostsPercentageController,
+                      labelText: 'Closing Costs Percentage',
+                      onChanged: (String newPercentage) {
+                        newPercentage = newPercentage.replaceAll(',', '');
+                        double? newValue = double.tryParse(newPercentage);
+                        if (newValue != null) {
+                          double closingCostsPercentage = newValue / 100;
+                          double newClosingCosts = closingCostsPercentage * loanAmount;
+                          ref.read(turnkeyProvider).updateClosingCosts(newClosingCosts);
+                        } else {
+                          ref.read(turnkeyProvider).updateClosingCosts(0);
+                        }
+                        ref.read(turnkeyProvider).calculateAll();
+                      },
+                    ),
+                    MoneyListTile(
+                        'Closing Costs',
+                        kCurrencyFormat
+                            .format(ref.watch(turnkeyProvider).closingCosts)),
+                  ],
+                ),
           MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Monthly\nPayment'
-                  : 'Monthly Payment',
-              monthlyPaymentString,
+            (MediaQuery.of(context).size.width < 640)
+                ? 'Monthly\nPayment'
+                : 'Monthly Payment',
+            monthlyPaymentString,
             subtitle: 'Principle and Interest Monthly',
           ),
         ],
