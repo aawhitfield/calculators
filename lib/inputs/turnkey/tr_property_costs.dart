@@ -28,10 +28,6 @@ class PropertyCostsState extends ConsumerState<TurnkeyRentalPropertyCosts> {
 
   @override
   void initState() {
-    double afterRepairValue = ref.read(turnkeyProvider).afterRepairValue;
-    if (afterRepairValue != 0) {
-      afterRepairController.text = kCurrencyFormat.format(afterRepairValue);
-    }
     double purchasePrice = ref.read(turnkeyProvider).purchasePrice;
     if (purchasePrice != 0) {
       purchasePriceController.text = kCurrencyFormat.format(purchasePrice);
@@ -76,17 +72,6 @@ class PropertyCostsState extends ConsumerState<TurnkeyRentalPropertyCosts> {
             MoneyListTile(
               'List Price',
               listPriceString,
-            ),
-            MoneyTextField(
-                labelText: 'After Repair Value',
-                controller: afterRepairController,
-                onChanged: (String newPrice) {
-                  newPrice = newPrice.replaceAll(',', '');
-                  double? price = double.tryParse(newPrice);
-                  if(price != null) {
-                    ref.read(turnkeyProvider).updateAfterRepairValue(price);
-                  }
-                }
             ),
             MoneyTextField(
                 labelText: 'Purchase Price',

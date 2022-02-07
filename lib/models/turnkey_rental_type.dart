@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class TurnkeyRentalFields {
   static final List<String> values = [
-    id, calculator, address, listPrice, sqft, afterRepairValue, purchasePrice,
+    id, calculator, address, listPrice, sqft, purchasePrice,
     units, investors,
     rent, otherIncome,
     taxes, insurance, propertyManagementPercentage, vacancyPercentage, maintenancePercentage,
@@ -22,7 +22,6 @@ class TurnkeyRentalFields {
   static const String address = 'address';
   static const String listPrice = 'listPrice';
   static const String sqft = 'sqft';
-  static const String afterRepairValue = 'afterRepairValue';
   static const String purchasePrice = 'purchasePrice';
   static const String monthsToRehabRent = 'monthsToRehabRent';
   static const String units = 'units';
@@ -47,7 +46,6 @@ class TurnkeyRental extends ChangeNotifier{
   String address;
   double listPrice;
   int? sqft;
-  double afterRepairValue;
   double purchasePrice;
   int units;
   int investors;
@@ -111,7 +109,7 @@ class TurnkeyRental extends ChangeNotifier{
   double refinancingMonthlyPayment;
 
   TurnkeyRental({this.id, this.address = '', this.listPrice = 0, this.sqft,
-    this.afterRepairValue = 0, this.purchasePrice = 0,
+    this.purchasePrice = 0,
     this.units = 0, this.investors = 0,
     this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
     this.yearlyIncome = 0,
@@ -144,7 +142,6 @@ class TurnkeyRental extends ChangeNotifier{
     TurnkeyRentalFields.address: address,
     TurnkeyRentalFields.listPrice: listPrice,
     TurnkeyRentalFields.sqft: sqft,
-    TurnkeyRentalFields.afterRepairValue: afterRepairValue,
     TurnkeyRentalFields.purchasePrice: purchasePrice,
     TurnkeyRentalFields.units: units,
     TurnkeyRentalFields.investors: investors,
@@ -169,7 +166,6 @@ class TurnkeyRental extends ChangeNotifier{
       address: json[TurnkeyRentalFields.address] as String,
       listPrice: json[TurnkeyRentalFields.listPrice] as double,
       sqft: json[TurnkeyRentalFields.sqft] as int?,
-      afterRepairValue: json[TurnkeyRentalFields.afterRepairValue] as double,
       purchasePrice:  json[TurnkeyRentalFields.purchasePrice] as double,
       units: json[TurnkeyRentalFields.units] as int,
       investors: json[TurnkeyRentalFields.investors] as int,
@@ -193,7 +189,6 @@ class TurnkeyRental extends ChangeNotifier{
     address = data.address;
     listPrice = data.listPrice;
     sqft = data.sqft;
-    afterRepairValue = data.afterRepairValue;
     purchasePrice = data.purchasePrice;
     units = data.units;
     investors = data.investors;
@@ -281,7 +276,6 @@ class TurnkeyRental extends ChangeNotifier{
     address = newProperty.address;
     listPrice = newProperty.listPrice;
     sqft = newProperty.sqft;
-    afterRepairValue = newProperty.afterRepairValue;
     purchasePrice = newProperty.purchasePrice;
     units = newProperty.units;
     investors = newProperty.investors;
@@ -301,11 +295,6 @@ class TurnkeyRental extends ChangeNotifier{
 
   void updateSqft(int newSqft) {
     sqft = newSqft;
-    notifyListeners();
-  }
-
-  void updateAfterRepairValue(double newAfterRepairValue) {
-    afterRepairValue = newAfterRepairValue;
     notifyListeners();
   }
 
@@ -656,7 +645,6 @@ class TurnkeyRental extends ChangeNotifier{
     address = '';
     listPrice = 0;
     sqft = 0;
-    afterRepairValue = 0;
     purchasePrice = 0;
     units = 0;
     investors = 0;

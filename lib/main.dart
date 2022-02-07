@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 
 void main() async {
   await Initialization.initialize();
-  runApp(RestartWidget(child: const ProviderScope(child: MyApp())));
+  runApp(const RestartWidget(child: ProviderScope(child: MyApp())));
 }
 
 class MyApp extends StatelessWidget {
