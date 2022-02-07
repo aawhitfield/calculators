@@ -37,4 +37,5 @@ void resetAllData(WidgetRef ref) {
   ref.read(quickMaxProvider).reset();
   ref.read(fixFlipProvider).reset();
   ref.read(turnkeyProvider).reset();
+  ref.read(savedCalculatorProvider).reset();
 }

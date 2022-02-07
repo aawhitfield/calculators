@@ -27,7 +27,8 @@ class NavigationBarHomeReport extends ConsumerWidget {
               fontSize: 18,
             ),)),
         const Spacer(),
-        TextButton(
+        (ref.read(savedCalculatorProvider).uid != '')
+        ? TextButton(
             onPressed: () => Get.to(() {
                   Calculator currentCalculator =
                       ref.read(calculatorProvider).type;
@@ -40,7 +41,8 @@ class NavigationBarHomeReport extends ConsumerWidget {
                 }),
             child: const Text('Report', style: TextStyle(
               fontSize: 18,
-            ))),
+            )))
+        : Container(),
       ],
     );
   }
