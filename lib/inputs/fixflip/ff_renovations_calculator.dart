@@ -18,7 +18,8 @@ class FixFlipRenovationsCalculator extends ConsumerStatefulWidget {
   _RenovationsCalculatorState createState() => _RenovationsCalculatorState();
 }
 
-class _RenovationsCalculatorState extends ConsumerState<FixFlipRenovationsCalculator> {
+class _RenovationsCalculatorState
+    extends ConsumerState<FixFlipRenovationsCalculator> {
   bool enterTotal = true;
 
   TextEditingController monthsToRehabController = TextEditingController();
@@ -38,6 +39,7 @@ class _RenovationsCalculatorState extends ConsumerState<FixFlipRenovationsCalcul
   TextEditingController baseboardsController = TextEditingController();
   TextEditingController exteriorController = TextEditingController();
   TextEditingController totalController = TextEditingController();
+  TextEditingController otherController = TextEditingController();
 
   @override
   void initState() {
@@ -155,7 +157,7 @@ class _RenovationsCalculatorState extends ConsumerState<FixFlipRenovationsCalcul
                     },
                   ),
                   IntegerTextField(
-                      labelText: 'Months to Rehab/Rent',
+                      labelText: 'Months to Rehab & Sell',
                       controller: monthsToRehabController,
                       onChanged: (String newValue) {
                         int? value = int.tryParse(newValue);
@@ -169,6 +171,7 @@ class _RenovationsCalculatorState extends ConsumerState<FixFlipRenovationsCalcul
                     onPressed: () {
                       setState(() {
                         enterTotal = false;
+                        totalController.text = kCurrencyFormat.format(ref.read(fixFlipProvider).totalRenovations);
                       });
                     },
                     child: const Text(
@@ -372,6 +375,18 @@ class _RenovationsCalculatorState extends ConsumerState<FixFlipRenovationsCalcul
                       double? exterior = double.tryParse(newExterior);
                       if (exterior != null) {
                         ref.read(fixFlipProvider).updateExterior(exterior);
+                      }
+                    },
+                  ),
+                  MoneyTextField(
+                    labelText: 'Other',
+                    controller: otherController,
+                    onChanged: (String newValue) {
+                      newValue = newValue.replaceAll(',', '');
+
+                      double? other = double.tryParse(newValue);
+                      if (other != null) {
+                        ref.read(fixFlipProvider).updateOtherRenovations(other);
                       }
                     },
                   ),

@@ -12,7 +12,7 @@ class FixFlipFields {
     units, investors,
     foundation, roof, airConditioner, painting, kitchen, windows, plumbing,
     flooring, bathrooms, appliances, electrical, yard, cleaning, baseboards, exterior,
-    demo, elevators, build28, otherRenovations, tenPercent, totalRenovations,
+    demo, elevators, build28, otherRenovations, tenPercent, otherRenovations, totalRenovations,
     rent, otherIncome, afterRepairRentPerMonth, afterRepairOtherIncome,
     taxes, insurance,
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType,
@@ -106,6 +106,7 @@ class FixFlip extends ChangeNotifier{
   double cleaning;
   double baseboards;
   double exterior;
+  double otherRenovations;
   double totalRenovations;
   double rent;
   double otherIncome;
@@ -163,7 +164,7 @@ class FixFlip extends ChangeNotifier{
     this.paintingPatching = 0, this.kitchen = 0, this.windows = 0,
     this. plumbing = 0, this.flooring = 0, this.bathrooms = 0,
     this.appliances = 0, this.electrical = 0, this.yard = 0, this.cleaning = 0,
-    this.baseboards = 0, this.exterior = 0,
+    this.baseboards = 0, this.exterior = 0, this.otherRenovations = 0,
     this.totalRenovations = 0,
     this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
     this.yearlyIncome = 0, this.afterRepairRentPerMonth = 0, this.afterRepairOtherIncome = 0,
@@ -211,6 +212,7 @@ class FixFlip extends ChangeNotifier{
     FixFlipFields.cleaning: cleaning,
     FixFlipFields.baseboards: baseboards,
     FixFlipFields.exterior: exterior,
+    FixFlipFields.otherRenovations: otherRenovations,
     FixFlipFields.totalRenovations: totalRenovations,
     FixFlipFields.rent: rent,
     FixFlipFields.otherIncome: otherIncome,
@@ -266,6 +268,7 @@ class FixFlip extends ChangeNotifier{
       cleaning: json[FixFlipFields.cleaning] as double,
       baseboards: json[FixFlipFields.baseboards] as double,
       exterior: json[FixFlipFields.exterior] as double,
+      otherRenovations: (json.containsKey('otherRenovations')) ? (json[FixFlipFields.otherRenovations] as double) : 0,
       totalRenovations: json[FixFlipFields.totalRenovations] as double,
       rent: json[FixFlipFields.rent] as double,
       otherIncome:  json[FixFlipFields.otherIncome] as double,
@@ -322,6 +325,7 @@ class FixFlip extends ChangeNotifier{
     cleaning = data.cleaning;
     baseboards = data.baseboards;
     exterior = data.exterior;
+    otherRenovations = data.otherRenovations;
     totalRenovations = data.totalRenovations;
     rent = data.rent;
     otherIncome = data.otherIncome;
@@ -456,7 +460,7 @@ class FixFlip extends ChangeNotifier{
   double calculateTotalRenovations() {
     totalRenovations = foundation + roof + airConditioner + paintingPatching + kitchen
         + windows + plumbing + flooring + bathrooms + appliances + electrical
-        + yard + cleaning + baseboards + exterior;
+        + yard + cleaning + baseboards + exterior + otherRenovations;
     notifyListeners();
     return totalRenovations;
   }
@@ -469,6 +473,12 @@ class FixFlip extends ChangeNotifier{
 
   void updateRoof(double newRoof) {
     roof = newRoof;
+    calculateTotalRenovations();
+    notifyListeners();
+  }
+
+  void updateOtherRenovations(double newValue) {
+    otherRenovations = newValue;
     calculateTotalRenovations();
     notifyListeners();
   }
@@ -567,6 +577,7 @@ class FixFlip extends ChangeNotifier{
     cleaning = newRenovation.cleaning;
     baseboards = newRenovation.baseboards;
     exterior = newRenovation.exterior;
+    otherRenovations = newRenovation.otherRenovations;
     totalRenovations = newRenovation.totalRenovations;
     notifyListeners();
   }

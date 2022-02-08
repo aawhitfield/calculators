@@ -74,3 +74,4 @@ GlobalKey<FormState> turnkeyPropertyKey = GlobalKey<FormState>();
 GlobalKey<FormState> turnkeySquareFeetKey = GlobalKey<FormState>();
 GlobalKey<FormState> turnkeyPropertyCostsKey = GlobalKey<FormState>();
 GlobalKey<FormState> turnkeyIncomeKey = GlobalKey<FormState>();
+GlobalKey<FormState> ffAddressKey = GlobalKey<FormState>();

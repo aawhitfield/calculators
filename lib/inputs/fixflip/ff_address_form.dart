@@ -62,12 +62,19 @@ class _AddressFormState extends ConsumerState<FixFlipAddressForm> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: PlacesAutocompleteField(
+              child: PlacesAutocompleteFormField(
                 controller: widget.addressController,
-                onChanged: (String? newAddress) {
+                onSaved: (String? newAddress) {
                   if (newAddress != null) {
                     ref.read(fixFlipProvider).updateAddress(newAddress);
                   }
+                },
+                hint: 'Address *',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Address is required';
+                  }
+                  return null;
                 },
                 apiKey: kGoogleAPIkey,
                 mode: Mode.fullscreen,
@@ -75,10 +82,10 @@ class _AddressFormState extends ConsumerState<FixFlipAddressForm> {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: TextField(
+              child: TextFormField(
                   controller: sqftController,
                   decoration: const InputDecoration(
-                    labelText: 'Square Feet',
+                    labelText: 'Square Feet *',
                   ),
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   keyboardType: TextInputType.number,
@@ -87,11 +94,18 @@ class _AddressFormState extends ConsumerState<FixFlipAddressForm> {
                     if (squareFeet != null) {
                       ref.read(fixFlipProvider).updateSqft(squareFeet);
                     }
-                  }),
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Square feet is required';
+                  }
+                  return null;
+                },
+              ),
             ),
             MoneyTextField(
                 controller: listPriceController,
-                labelText: 'List Price',
+                labelText: 'List Price * ',
                 onChanged: (String newListPrice) {
                   newListPrice = newListPrice.replaceAll(',', '');
                   double? listPrice = double.tryParse(newListPrice);
@@ -101,7 +115,14 @@ class _AddressFormState extends ConsumerState<FixFlipAddressForm> {
                   else {
                     ref.read(fixFlipProvider).updateListPrice(0.0);
                   }
-                }),
+                },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'List price is required';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 16),
           ],
         ),
