@@ -49,70 +49,94 @@ class _AddressFormState extends ConsumerState<TurnkeyRentalAddressForm> {
       alignment: Alignment.center,
       child: SizedBox(
         width: width,
-        child: Column(
-          children: [
-            ClearAllFieldsButton(
-              onPressed: () {
-                resetAllData(ref);
-                setState(() {
-                  widget.addressController.clear();
-                  sqftController.clear();
-                  listPriceController.clear();
-                });
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: (kIsWeb)
-              ? TextField(
-                  controller: widget.addressController,
-                  decoration: const InputDecoration(
-                    labelText: 'Address',
-                  ),
-                onChanged: (String? newAddress) {
-                  if (newAddress != null) {
-                    ref.read(turnkeyProvider).updateAddress(newAddress);
-                  }
-                },)
-              : PlacesAutocompleteField(
-                controller: widget.addressController,
-                onChanged: (String? newAddress) {
-                  if (newAddress != null) {
-                    ref.read(turnkeyProvider).updateAddress(newAddress);
-                  }
+        child: Form(
+          key: turnkeyPropertyKey,
+          child: Column(
+            children: [
+              ClearAllFieldsButton(
+                onPressed: () {
+                  resetAllData(ref);
+                  setState(() {
+                    widget.addressController.clear();
+                    sqftController.clear();
+                    listPriceController.clear();
+                  });
                 },
-                apiKey: kGoogleAPIkey,
-                mode: Mode.fullscreen,
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                  controller: sqftController,
-                  decoration: const InputDecoration(
-                    labelText: 'Square Feet',
-                  ),
-                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                  keyboardType: TextInputType.number,
-                  onChanged: (String newSqft) {
-                    int? squareFeet = int.tryParse(newSqft);
-                    if (squareFeet != null) {
-                      ref.read(turnkeyProvider).updateSqft(squareFeet);
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: (kIsWeb)
+                ? TextField(
+                    controller: widget.addressController,
+                    decoration: const InputDecoration(
+                      labelText: 'Address',
+                    ),
+                  onChanged: (String? newAddress) {
+                    if (newAddress != null) {
+                      ref.read(turnkeyProvider).updateAddress(newAddress);
                     }
-                  }),
-            ),
-            MoneyTextField(
-                controller: listPriceController,
-                labelText: 'List Price',
-                onChanged: (String newListPrice) {
-                  newListPrice = newListPrice.replaceAll(',', '');
-                  double? listPrice = double.tryParse(newListPrice);
-                  if (listPrice != null) {
-                    ref.read(turnkeyProvider).updateListPrice(listPrice);
+                  },)
+                : PlacesAutocompleteFormField(
+                  hint: 'Address *',
+                  controller: widget.addressController,
+                  onSaved: (String? newAddress) {
+                    if (newAddress != null) {
+                      ref.read(turnkeyProvider).updateAddress(newAddress);
+                    }
+                  },
+                  apiKey: kGoogleAPIkey,
+                  mode: Mode.fullscreen,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Address is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                    controller: sqftController,
+                    decoration: const InputDecoration(
+                      labelText: 'Square Feet *',
+                    ),
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                    keyboardType: TextInputType.number,
+                    onChanged: (String newSqft) {
+                      int? squareFeet = int.tryParse(newSqft);
+                      if (squareFeet != null) {
+                        ref.read(turnkeyProvider).updateSqft(squareFeet);
+                      }
+                    },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Square feet is required';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              MoneyTextField(
+                  controller: listPriceController,
+                  labelText: 'List Price *',
+                  onChanged: (String newListPrice) {
+                    newListPrice = newListPrice.replaceAll(',', '');
+                    double? listPrice = double.tryParse(newListPrice);
+                    if (listPrice != null) {
+                      ref.read(turnkeyProvider).updateListPrice(listPrice);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'List price is required';
                   }
-                }),
-            const SizedBox(height: 16),
-          ],
+                  return null;
+                },
+              ),
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

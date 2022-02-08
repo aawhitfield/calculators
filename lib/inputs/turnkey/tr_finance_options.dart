@@ -32,6 +32,8 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
 
   ClosingCosts closingCostOption = ClosingCosts.value;
   double closingCostsPercentage = 0;
+  
+  GlobalKey<FormState> turnkeyFinanceKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -90,153 +92,176 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
         ref.read(turnkeyProvider).updateMonthlyPayment(monthlyPayment);
         ref.read(turnkeyProvider).updateDownPayment(downPaymentAmount);
         ref.read(turnkeyProvider).updateLoanAmount(loanAmount);
-        Get.to(() => const TurnkeyRentalReport());
+        if (turnkeyFinanceKey.currentState?.validate() ?? false) {
+          Get.to(() => const TurnkeyRentalReport());
+        }
       },
       position:
           kTurnKeyRentalQuestions.indexOf(TurnkeyRentalFinanceOptions) + 1,
       totalQuestions: kTurnKeyRentalQuestions.length,
-      child: ResponsiveLayout(
-        children: [
-          (MediaQuery.of(context).size.width > 640)
-              ? Row(
-                  children: [
-                    const Text('Financing Type'),
-                    const SizedBox(width: 8),
-                    Expanded(child: FinancingDropDown(value: value, ref: ref)),
-                  ],
-                )
-              : Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Text('Financing Type'),
-                    const SizedBox(height: 8),
-                    SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: FinancingDropDown(value: value, ref: ref)),
-                  ],
-                ),
-          PercentTextField(
-            labelText: 'Down Payment Percent',
-            controller: downPaymentPercentController,
-            onChanged: (String newPercentage) {
-              newPercentage = newPercentage.replaceAll(',', '');
-              double? newValue = double.tryParse(newPercentage);
-              if (newValue != null) {
-                double downPaymentPercentage = newValue / 100;
-                ref
-                    .read(turnkeyProvider)
-                    .updateDownPaymentPercentage(downPaymentPercentage);
-              } else {
-                ref.read(turnkeyProvider).updateDownPaymentPercentage(0.0);
-              }
-              ref.read(turnkeyProvider).calculateAllFinanceOptions();
-            },
-          ),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Loan\nAmount'
-                  : 'Loan Amount',
-              loanAmountString),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Down\nPayment'
-                  : 'Down Payment',
-              downPaymentString),
-          PercentTextField(
-            labelText: 'Interest Rate',
-            controller: interestRateController,
-            onChanged: (String newPercentage) {
-              newPercentage = newPercentage.replaceAll(',', '');
-              double? newValue = double.tryParse(newPercentage);
-              if (newValue != null) {
-                double interestRate = newValue / 100;
-                ref.read(turnkeyProvider).updateInterestRate(interestRate);
-              } else {
-                ref.read(turnkeyProvider).updateInterestRate(0);
-              }
-            },
-          ),
-          IntegerTextField(
-            labelText: 'Term in Years',
-            controller: termController,
-            leftPadding: 8,
-            rightPadding: 8,
-            onChanged: (String newTerm) {
-              newTerm = newTerm.replaceAll(',', '');
-              int? newValue = int.tryParse(newTerm);
-              if (newValue != null) {
-                ref.read(turnkeyProvider).updateTerm(newValue);
-              } else {
-                ref.read(turnkeyProvider).updateTerm(0);
-              }
-            },
-          ),
-          CupertinoSlidingSegmentedControl(
-            thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
-            groupValue: closingCostOption,
-            children: const {
-              ClosingCosts.value: Text('Dollar Amount'),
-              ClosingCosts.percentage: Text('Percentage'),
-            },
-            onValueChanged: (ClosingCosts? newClosingCostOption) {
-              setState(() {
-                closingCostOption = newClosingCostOption!;
+      child: Form(
+        key: turnkeyFinanceKey,
+        child: ResponsiveLayout(
+          children: [
+            (MediaQuery.of(context).size.width > 640)
+                ? Row(
+                    children: [
+                      const Text('Financing Type'),
+                      const SizedBox(width: 8),
+                      Expanded(child: FinancingDropDown(value: value, ref: ref)),
+                    ],
+                  )
+                : Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text('Financing Type'),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                          width: MediaQuery.of(context).size.width,
+                          child: FinancingDropDown(value: value, ref: ref)),
+                    ],
+                  ),
+            PercentTextField(
+              labelText: 'Down Payment Percent *',
+              controller: downPaymentPercentController,
+              onChanged: (String newPercentage) {
+                newPercentage = newPercentage.replaceAll(',', '');
+                double? newValue = double.tryParse(newPercentage);
+                if (newValue != null) {
+                  double downPaymentPercentage = newValue / 100;
+                  ref
+                      .read(turnkeyProvider)
+                      .updateDownPaymentPercentage(downPaymentPercentage);
+                } else {
+                  ref.read(turnkeyProvider).updateDownPaymentPercentage(0.0);
+                }
+                ref.read(turnkeyProvider).calculateAllFinanceOptions();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Down Payment is required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Loan\nAmount'
+                    : 'Loan Amount',
+                loanAmountString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Down\nPayment'
+                    : 'Down Payment',
+                downPaymentString),
+            PercentTextField(
+              labelText: 'Interest Rate *',
+              controller: interestRateController,
+              onChanged: (String newPercentage) {
+                newPercentage = newPercentage.replaceAll(',', '');
+                double? newValue = double.tryParse(newPercentage);
+                if (newValue != null) {
+                  double interestRate = newValue / 100;
+                  ref.read(turnkeyProvider).updateInterestRate(interestRate);
+                } else {
+                  ref.read(turnkeyProvider).updateInterestRate(0);
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Interest rate is required';
+                }
+                return null;
+              },
+            ),
+            IntegerTextField(
+              labelText: 'Term in Years *',
+              controller: termController,
+              leftPadding: 8,
+              rightPadding: 8,
+              onChanged: (String newTerm) {
+                newTerm = newTerm.replaceAll(',', '');
+                int? newValue = int.tryParse(newTerm);
+                if (newValue != null) {
+                  ref.read(turnkeyProvider).updateTerm(newValue);
+                } else {
+                  ref.read(turnkeyProvider).updateTerm(0);
+                }
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Term is required';
+                }
+                return null;
+              },
+            ),
+            CupertinoSlidingSegmentedControl(
+              thumbColor: Theme.of(context).primaryColor.withOpacity(0.4),
+              groupValue: closingCostOption,
+              children: const {
+                ClosingCosts.value: Text('Dollar Amount'),
+                ClosingCosts.percentage: Text('Percentage'),
+              },
+              onValueChanged: (ClosingCosts? newClosingCostOption) {
+                setState(() {
+                  closingCostOption = newClosingCostOption!;
 
-                if(newClosingCostOption == ClosingCosts.value) {
-                  closingCostsController.text = kCurrencyFormat.format(ref.read(turnkeyProvider).closingCosts);
-                }
-                else {
-                  closingCostsPercentageController.text = ((ref.read(turnkeyProvider).closingCosts) / loanAmount * 100).toStringAsFixed(2);
-                }
-              });
-            },
-          ),
-          (closingCostOption == ClosingCosts.value)
-              ? MoneyTextField(
-                  labelText: 'Closing Costs',
-                  controller: closingCostsController,
-                  onChanged: (String newCost) {
-                    newCost = newCost.replaceAll(',', '');
-                    double? newValue = double.tryParse(newCost);
-                    if (newValue != null) {
-                      ref.read(turnkeyProvider).updateClosingCosts(newValue);
-                    } else {
-                      ref.read(turnkeyProvider).updateClosingCosts(0);
-                    }
-                  },
-                )
-              : Column(
-                  children: [
-                    PercentTextField(
-                      controller: closingCostsPercentageController,
-                      labelText: 'Closing Costs Percentage',
-                      onChanged: (String newPercentage) {
-                        newPercentage = newPercentage.replaceAll(',', '');
-                        double? newValue = double.tryParse(newPercentage);
-                        if (newValue != null) {
-                          double closingCostsPercentage = newValue / 100;
-                          double newClosingCosts = closingCostsPercentage * loanAmount;
-                          ref.read(turnkeyProvider).updateClosingCosts(newClosingCosts);
-                        } else {
-                          ref.read(turnkeyProvider).updateClosingCosts(0);
-                        }
-                        ref.read(turnkeyProvider).calculateAll();
-                      },
-                    ),
-                    MoneyListTile(
-                        'Closing Costs',
-                        kCurrencyFormat
-                            .format(ref.watch(turnkeyProvider).closingCosts)),
-                  ],
-                ),
-          MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Monthly\nPayment'
-                : 'Monthly Payment',
-            monthlyPaymentString,
-            subtitle: 'Principle and Interest Monthly',
-          ),
-        ],
+                  if(newClosingCostOption == ClosingCosts.value) {
+                    closingCostsController.text = kCurrencyFormat.format(ref.read(turnkeyProvider).closingCosts);
+                  }
+                  else {
+                    closingCostsPercentageController.text = ((ref.read(turnkeyProvider).closingCosts) / loanAmount * 100).toStringAsFixed(2);
+                  }
+                });
+              },
+            ),
+            (closingCostOption == ClosingCosts.value)
+                ? MoneyTextField(
+                    labelText: 'Closing Costs',
+                    controller: closingCostsController,
+                    onChanged: (String newCost) {
+                      newCost = newCost.replaceAll(',', '');
+                      double? newValue = double.tryParse(newCost);
+                      if (newValue != null) {
+                        ref.read(turnkeyProvider).updateClosingCosts(newValue);
+                      } else {
+                        ref.read(turnkeyProvider).updateClosingCosts(0);
+                      }
+                    },
+                  )
+                : Column(
+                    children: [
+                      PercentTextField(
+                        controller: closingCostsPercentageController,
+                        labelText: 'Closing Costs Percentage',
+                        onChanged: (String newPercentage) {
+                          newPercentage = newPercentage.replaceAll(',', '');
+                          double? newValue = double.tryParse(newPercentage);
+                          if (newValue != null) {
+                            double closingCostsPercentage = newValue / 100;
+                            double newClosingCosts = closingCostsPercentage * loanAmount;
+                            ref.read(turnkeyProvider).updateClosingCosts(newClosingCosts);
+                          } else {
+                            ref.read(turnkeyProvider).updateClosingCosts(0);
+                          }
+                          ref.read(turnkeyProvider).calculateAll();
+                        },
+                      ),
+                      MoneyListTile(
+                          'Closing Costs',
+                          kCurrencyFormat
+                              .format(ref.watch(turnkeyProvider).closingCosts)),
+                    ],
+                  ),
+            MoneyListTile(
+              (MediaQuery.of(context).size.width < 640)
+                  ? 'Monthly\nPayment'
+                  : 'Monthly Payment',
+              monthlyPaymentString,
+              subtitle: 'Principle and Interest Monthly',
+            ),
+          ],
+        ),
       ),
     );
   }

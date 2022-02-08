@@ -25,6 +25,7 @@ import 'package:calculators/models/turnkey_rental_type.dart';
 import 'package:calculators/outputs/fix_flip_statement.dart';
 import 'package:calculators/outputs/report.dart';
 import 'package:calculators/outputs/turnkey/report_turnkey_rental.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 
@@ -68,3 +69,8 @@ NumberFormat kCurrencyFormat = NumberFormat("#,##0.00", "en_US");
 NumberFormat kWholeNumber = NumberFormat("###.#", "en_US");
 
 String kGoogleAPIkey = 'AIzaSyD60flaZZs5lNOKU0uzCOiJ4uhYwmwHtuo';
+
+GlobalKey<FormState> turnkeyPropertyKey = GlobalKey<FormState>();
+GlobalKey<FormState> turnkeySquareFeetKey = GlobalKey<FormState>();
+GlobalKey<FormState> turnkeyPropertyCostsKey = GlobalKey<FormState>();
+GlobalKey<FormState> turnkeyIncomeKey = GlobalKey<FormState>();

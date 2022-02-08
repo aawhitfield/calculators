@@ -26,6 +26,8 @@ class _ExpensesInputState extends ConsumerState<TurnkeyRentalExpensesInput> {
   TextEditingController maintenanceController = TextEditingController();
   TextEditingController otherController = TextEditingController();
 
+  GlobalKey<FormState> turnkeyExpensesKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     double taxes = ref.read(turnkeyProvider).taxesYearly;
@@ -78,148 +80,165 @@ class _ExpensesInputState extends ConsumerState<TurnkeyRentalExpensesInput> {
         kCurrencyFormat.format(maintenanceMonthly);
     String otherExpensesMonthlyString = kCurrencyFormat.format(otherExpenses);
 
-    return MyInputPage(
-      imageUri: 'images/expenses.svg',
-      headerText: 'Expenses',
-      subheadText: '',
-      position: kTurnKeyRentalQuestions.indexOf(TurnkeyRentalExpensesInput) + 1,
-      totalQuestions: kTurnKeyRentalQuestions.length,
-      onBack: () {
-        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
-        bool shouldOverrideBackButton = savedCalculatorID != '';
-        if (shouldOverrideBackButton) {
-          Get.off(() => const TurnkeyRentalIncomeInput());
-        } else {
-          Get.back();
-        }
-      },
-      onSubmit: () {
-        Get.to(() => const TurnkeyRentalFinanceOptions());
-      },
-      child: ResponsiveLayout(
-        children: [
-          MoneyTextField(
-            labelText: 'Taxes (Yearly)',
-            controller: taxesController,
-            onChanged: (String newValue) {
-              newValue = newValue.replaceAll(',', '');
-              double? taxes = double.tryParse(newValue);
-              if (taxes != null) {
-                ref.read(turnkeyProvider).updateTaxes(taxes);
-              } else {
-                ref.read(turnkeyProvider).updateTaxes(0.0);
-              }
-              ref.read(turnkeyProvider).calculateAllExpenses();
-            },
-          ),
-          MoneyListTile('Taxes', taxesMonthlyString, subtitle: 'Monthly'),
-          MoneyTextField(
-            labelText: 'Insurance (Yearly)',
-            controller: insuranceController,
-            onChanged: (String newValue) {
-              newValue = newValue.replaceAll(',', '');
-              double? insurance = double.tryParse(newValue);
-              if (insurance != null) {
-                ref.read(turnkeyProvider).updateInsurance(insurance);
-              } else {
-                ref.read(turnkeyProvider).updateInsurance(0.0);
-              }
-              ref.read(turnkeyProvider).calculateAllExpenses();
-            },
-          ),
-          MoneyListTile('Insurance', insuranceMonthlyString,
-              subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Property Management',
-              controller: propertyManagementController,
+    return Form(
+      key: turnkeyExpensesKey,
+      child: MyInputPage(
+        imageUri: 'images/expenses.svg',
+        headerText: 'Expenses',
+        subheadText: '',
+        position: kTurnKeyRentalQuestions.indexOf(TurnkeyRentalExpensesInput) + 1,
+        totalQuestions: kTurnKeyRentalQuestions.length,
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            Get.off(() => const TurnkeyRentalIncomeInput());
+          } else {
+            Get.back();
+          }
+        },
+        onSubmit: () {
+          if (turnkeyExpensesKey.currentState?.validate() ?? false) {
+            Get.to(() => const TurnkeyRentalFinanceOptions());
+          }
+        },
+        child: ResponsiveLayout(
+          children: [
+            MoneyTextField(
+              labelText: 'Taxes (Yearly) *',
+              controller: taxesController,
               onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(turnkeyProvider).updatePropertyManagement(value);
+                newValue = newValue.replaceAll(',', '');
+                double? taxes = double.tryParse(newValue);
+                if (taxes != null) {
+                  ref.read(turnkeyProvider).updateTaxes(taxes);
                 } else {
-                  ref.read(turnkeyProvider).updatePropertyManagement(0);
+                  ref.read(turnkeyProvider).updateTaxes(0.0);
                 }
                 ref.read(turnkeyProvider).calculateAllExpenses();
-              }),
-          MoneyListTile((MediaQuery.of(context).size.width < 640)
-              ? 'Property\nManagement'
-              : 'Property Management', propertyManagementMonthlyString,
-              subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Vacancy',
-              controller: vacancyController,
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Taxes field is required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile('Taxes', taxesMonthlyString, subtitle: 'Monthly'),
+            MoneyTextField(
+              labelText: 'Insurance (Yearly) *',
+              controller: insuranceController,
               onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(turnkeyProvider).updateVacancy(value);
+                newValue = newValue.replaceAll(',', '');
+                double? insurance = double.tryParse(newValue);
+                if (insurance != null) {
+                  ref.read(turnkeyProvider).updateInsurance(insurance);
                 } else {
-                  ref.read(turnkeyProvider).updateVacancy(0);
+                  ref.read(turnkeyProvider).updateInsurance(0.0);
                 }
                 ref.read(turnkeyProvider).calculateAllExpenses();
-              }),
-          MoneyListTile('Vacancy', vacancyMonthlyString, subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Maintenance',
-              controller: maintenanceController,
-              onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(turnkeyProvider).updateMaintenance(value);
-                } else {
-                  ref.read(turnkeyProvider).updateMaintenance(0);
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Insurance is required';
                 }
-                ref.read(turnkeyProvider).calculateAllExpenses();
-              }),
-          MoneyListTile('Maintenance', maintenanceMonthlyString,
-              subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Other',
-              controller: otherController,
-              onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(turnkeyProvider).updateOther(value);
-                } else {
-                  ref.read(turnkeyProvider).updateOther(0);
-                }
-                ref.read(turnkeyProvider).calculateAllExpenses();
-              }),
-          MoneyListTile('Other Expenses', otherExpensesMonthlyString,
-              subtitle: 'Monthly'),
-          MoneyListTile(
-            'Total \nExpenses',
-            kCurrencyFormat
-                .format(ref.watch(turnkeyProvider).totalMonthlyExpenses)
-                .toString(),
-            subtitle: 'Monthly',
-          ),
-          MoneyListTile(
-            'Total \nExpenses',
-            kCurrencyFormat.format(double.parse(ref
-                .watch(turnkeyProvider)
-                .totalAnnualExpenses
-                .toStringAsFixed(2))),
-            subtitle: 'Yearly',
-          ),
-          MoneyListTile(
-            'NOI',
-            kCurrencyFormat
-                .format(ref.watch(turnkeyProvider).noiMonthly)
-                .toString(),
-            subtitle: 'Monthly',
-          ),
-          MoneyListTile(
-            'NOI',
-            kCurrencyFormat
-                .format(ref.watch(turnkeyProvider).noiAnnual)
-                .toString(),
-            subtitle: 'Yearly',
-          ),
-        ],
+                return null;
+              },
+            ),
+            MoneyListTile('Insurance', insuranceMonthlyString,
+                subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Property Management',
+                controller: propertyManagementController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(turnkeyProvider).updatePropertyManagement(value);
+                  } else {
+                    ref.read(turnkeyProvider).updatePropertyManagement(0);
+                  }
+                  ref.read(turnkeyProvider).calculateAllExpenses();
+                }),
+            MoneyListTile((MediaQuery.of(context).size.width < 640)
+                ? 'Property\nManagement'
+                : 'Property Management', propertyManagementMonthlyString,
+                subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Vacancy',
+                controller: vacancyController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(turnkeyProvider).updateVacancy(value);
+                  } else {
+                    ref.read(turnkeyProvider).updateVacancy(0);
+                  }
+                  ref.read(turnkeyProvider).calculateAllExpenses();
+                }),
+            MoneyListTile('Vacancy', vacancyMonthlyString, subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Maintenance',
+                controller: maintenanceController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(turnkeyProvider).updateMaintenance(value);
+                  } else {
+                    ref.read(turnkeyProvider).updateMaintenance(0);
+                  }
+                  ref.read(turnkeyProvider).calculateAllExpenses();
+                }),
+            MoneyListTile('Maintenance', maintenanceMonthlyString,
+                subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Other',
+                controller: otherController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(turnkeyProvider).updateOther(value);
+                  } else {
+                    ref.read(turnkeyProvider).updateOther(0);
+                  }
+                  ref.read(turnkeyProvider).calculateAllExpenses();
+                }),
+            MoneyListTile('Other Expenses', otherExpensesMonthlyString,
+                subtitle: 'Monthly'),
+            MoneyListTile(
+              'Total \nExpenses',
+              kCurrencyFormat
+                  .format(ref.watch(turnkeyProvider).totalMonthlyExpenses)
+                  .toString(),
+              subtitle: 'Monthly',
+            ),
+            MoneyListTile(
+              'Total \nExpenses',
+              kCurrencyFormat.format(double.parse(ref
+                  .watch(turnkeyProvider)
+                  .totalAnnualExpenses
+                  .toStringAsFixed(2))),
+              subtitle: 'Yearly',
+            ),
+            MoneyListTile(
+              'NOI',
+              kCurrencyFormat
+                  .format(ref.watch(turnkeyProvider).noiMonthly)
+                  .toString(),
+              subtitle: 'Monthly',
+            ),
+            MoneyListTile(
+              'NOI',
+              kCurrencyFormat
+                  .format(ref.watch(turnkeyProvider).noiAnnual)
+                  .toString(),
+              subtitle: 'Yearly',
+            ),
+          ],
+        ),
       ),
     );
   }

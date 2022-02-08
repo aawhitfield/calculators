@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class PercentSuffix extends StatelessWidget {
-  final TextField child;
+  final TextFormField child;
 
   const PercentSuffix({Key? key, required this.child}) : super(key: key);
 

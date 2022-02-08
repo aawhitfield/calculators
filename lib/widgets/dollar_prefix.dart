@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class DollarPrefix extends StatelessWidget {
-  final TextField child;
+  final TextFormField child;
 
   const DollarPrefix({Key? key, required this.child}) : super(key: key);
 

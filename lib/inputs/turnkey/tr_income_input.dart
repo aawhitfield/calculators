@@ -56,53 +56,65 @@ class _IncomeInputState extends ConsumerState<TurnkeyRentalIncomeInput> {
       },
         onSubmit: () {
           ref.read(turnkeyProvider).calculateTotalIncome();
-          Get.to(() => const TurnkeyRentalExpensesInput());
+          if (turnkeyIncomeKey.currentState?.validate() ?? false) {
+            Get.to(() => const TurnkeyRentalExpensesInput());
+          }
         },
         position: kTurnKeyRentalQuestions.indexOf(TurnkeyRentalIncomeInput) + 1,
         totalQuestions: kTurnKeyRentalQuestions.length,
-        child: ResponsiveLayout(
-          children: [
-            MoneyTextField(
-                labelText: 'Rent Per Month',
-                controller: rentController,
-                onChanged: (String newValue) {
-                  newValue = newValue.replaceAll(',', '');
-                  double? value = double.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(turnkeyProvider).updateRent(value);
-                    ref.read(turnkeyProvider).calculateTotalIncome();
-                    ref.read(turnkeyProvider).calculateYearlyIncome();
+        child: Form(
+          key: turnkeyIncomeKey,
+          child: ResponsiveLayout(
+            children: [
+              MoneyTextField(
+                  labelText: 'Rent Per Month *',
+                  controller: rentController,
+                  onChanged: (String newValue) {
+                    newValue = newValue.replaceAll(',', '');
+                    double? value = double.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(turnkeyProvider).updateRent(value);
+                      ref.read(turnkeyProvider).calculateTotalIncome();
+                      ref.read(turnkeyProvider).calculateYearlyIncome();
+                    }
+                    else {
+                      ref.read(turnkeyProvider).updateRent(0);
+                      ref.read(turnkeyProvider).calculateTotalIncome();
+                      ref.read(turnkeyProvider).calculateYearlyIncome();
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Rent per month is required';
                   }
-                  else {
-                    ref.read(turnkeyProvider).updateRent(0);
-                    ref.read(turnkeyProvider).calculateTotalIncome();
-                    ref.read(turnkeyProvider).calculateYearlyIncome();
-                  }
-                }),
-            MoneyTextField(
-                labelText: 'Other',
-                controller: otherController,
-                onChanged: (String newValue) {
-                  newValue = newValue.replaceAll(',', '');
-                  double? value = double.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(turnkeyProvider).updateOtherIncome(value);
-                    ref.read(turnkeyProvider).calculateTotalIncome();
-                    ref.read(turnkeyProvider).calculateYearlyIncome();
-                  }
-                  else {
-                    ref.read(turnkeyProvider).updateOtherIncome(0);
-                    ref.read(turnkeyProvider).calculateTotalIncome();
-                    ref.read(turnkeyProvider).calculateYearlyIncome();
-                  }
-                }),
-            MoneyListTile((MediaQuery.of(context).size.width < 640)
-                ? 'Total\nIncome'
-                : 'Total Income', totalIncomeString),
-            MoneyListTile((MediaQuery.of(context).size.width < 640)
-                ? 'Yearly\nIncome'
-                : 'Yearly Income', totalYearlyIncomeString),
-          ],
+                  return null;
+                },
+              ),
+              MoneyTextField(
+                  labelText: 'Other',
+                  controller: otherController,
+                  onChanged: (String newValue) {
+                    newValue = newValue.replaceAll(',', '');
+                    double? value = double.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(turnkeyProvider).updateOtherIncome(value);
+                      ref.read(turnkeyProvider).calculateTotalIncome();
+                      ref.read(turnkeyProvider).calculateYearlyIncome();
+                    }
+                    else {
+                      ref.read(turnkeyProvider).updateOtherIncome(0);
+                      ref.read(turnkeyProvider).calculateTotalIncome();
+                      ref.read(turnkeyProvider).calculateYearlyIncome();
+                    }
+                  }),
+              MoneyListTile((MediaQuery.of(context).size.width < 640)
+                  ? 'Total\nIncome'
+                  : 'Total Income', totalIncomeString),
+              MoneyListTile((MediaQuery.of(context).size.width < 640)
+                  ? 'Yearly\nIncome'
+                  : 'Yearly Income', totalYearlyIncomeString),
+            ],
+          ),
         ),
     );
   }

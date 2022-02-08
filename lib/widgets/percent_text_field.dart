@@ -7,11 +7,13 @@ class PercentTextField extends StatelessWidget {
   final String labelText;
   final Function onChanged;
   final TextEditingController? controller;
+  final FormFieldValidator<String>? validator;
 
   const PercentTextField({
     required this.labelText,
     required this.onChanged,
     this.controller,
+    this.validator,
     Key? key,
   }) : super(key: key);
 
@@ -20,7 +22,7 @@ class PercentTextField extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: PercentSuffix(
-        child: TextField(
+        child: TextFormField(
             controller: controller,
             decoration: InputDecoration(
               labelText: labelText,
@@ -29,7 +31,9 @@ class PercentTextField extends StatelessWidget {
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             onChanged: (String newTotal) {
               onChanged(newTotal);
-            }),
+            },
+          validator: validator,
+        ),
       ),
     );
   }

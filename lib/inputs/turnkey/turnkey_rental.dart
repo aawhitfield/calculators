@@ -37,7 +37,9 @@ class TurnkeyRentalInput extends ConsumerWidget {
       onSubmit: () {
         ref.read(turnkeyProvider).updateAddress(addressController.text);
 
-        Get.to(() => const TurnkeyRentalPropertyCosts());
+        if (turnkeyPropertyKey.currentState?.validate() ?? false) {
+          Get.to(() => const TurnkeyRentalPropertyCosts());
+        }
       },
       position: 1,
       totalQuestions: kTurnKeyRentalQuestions.length,

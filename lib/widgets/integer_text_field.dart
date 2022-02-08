@@ -8,6 +8,7 @@ class IntegerTextField extends StatelessWidget {
   final TextEditingController? controller;
   final int? leftPadding;
   final int? rightPadding;
+  final FormFieldValidator<String>? validator;
 
   const IntegerTextField({
     required this.labelText,
@@ -15,6 +16,7 @@ class IntegerTextField extends StatelessWidget {
     this.controller,
     this.leftPadding,
     this.rightPadding,
+    this.validator,
     Key? key,
   }) : super(key: key);
 
@@ -23,7 +25,7 @@ class IntegerTextField extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.fromLTRB(leftPadding?.toDouble() ?? 20, 8,
           rightPadding?.toDouble() ?? 8, 8),
-      child: TextField(
+      child: TextFormField(
           controller: controller,
           decoration: InputDecoration(
             labelText: labelText,
@@ -32,7 +34,9 @@ class IntegerTextField extends StatelessWidget {
           keyboardType: TextInputType.number,
           onChanged: (String newTotal) {
             onChanged(newTotal);
-          }),
+          },
+          validator: validator,
+      ),
     );
   }
 }

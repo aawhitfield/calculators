@@ -63,46 +63,73 @@ class PropertyCostsState extends ConsumerState<TurnkeyRentalPropertyCosts> {
         }
       },
         onSubmit: () {
-            Get.to(() => const TurnkeyRentalIncomeInput());
+            {
+              if (turnkeyPropertyCostsKey.currentState?.validate() ?? false) {
+                Get.to(() => const TurnkeyRentalIncomeInput());
+              }
+            }
         },
         position: kTurnKeyRentalQuestions.indexOf(TurnkeyRentalPropertyCosts) + 1,
         totalQuestions: kTurnKeyRentalQuestions.length,
-        child: ResponsiveLayout(
-          children: [
-            MoneyListTile(
-              'List Price',
-              listPriceString,
-            ),
-            MoneyTextField(
-                labelText: 'Purchase Price',
-                controller: purchasePriceController,
-                onChanged: (String newPrice) {
-                  newPrice = newPrice.replaceAll(',', '');
-                  double? price = double.tryParse(newPrice);
-                  if(price != null) {
-                    ref.read(turnkeyProvider).updatePurchasePrice(price);
+        child: Form(
+          key: turnkeyPropertyCostsKey,
+          child: ResponsiveLayout(
+            children: [
+              MoneyListTile(
+                'List Price',
+                listPriceString,
+              ),
+              MoneyTextField(
+                  labelText: 'Purchase Price * ',
+                  controller: purchasePriceController,
+                  onChanged: (String newPrice) {
+                    newPrice = newPrice.replaceAll(',', '');
+                    double? price = double.tryParse(newPrice);
+                    if(price != null) {
+                      ref.read(turnkeyProvider).updatePurchasePrice(price);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Purchase price is required';
                   }
-                }
-            ),
-            IntegerTextField(
-                labelText: 'Number of Units',
-                controller: unitsController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(turnkeyProvider).updateUnits(value);
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                  labelText: 'Number of Units *',
+                  controller: unitsController,
+                  onChanged: (String newValue) {
+                    int? value = int.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(turnkeyProvider).updateUnits(value);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Number of units is required';
                   }
-                }),
-            IntegerTextField(
-                labelText: 'Number of Investors',
-                controller: investorsController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(turnkeyProvider).updateInvestors(value);
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                  labelText: 'Number of Investors *',
+                  controller: investorsController,
+                  onChanged: (String newValue) {
+                    int? value = int.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(turnkeyProvider).updateInvestors(value);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Number of investors is required';
                   }
-                }),
-          ],),
+                  return null;
+                },
+              ),
+            ],),
+        ),
     );
   }
 }
