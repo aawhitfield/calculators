@@ -1,8 +1,10 @@
 import 'package:calculators/home.dart';
 import 'package:calculators/models/calculator.dart';
+import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/outputs/report.dart';
 import 'package:calculators/outputs/turnkey/report_turnkey_rental.dart';
 import 'package:calculators/providers.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -26,6 +28,10 @@ class NavigationBarHomeReport extends ConsumerWidget {
     }
 
     bool isNext(int buttonNumber) {
+      return buttonNumber == 1;
+    }
+
+    bool isSave(int buttonNumber) {
       return buttonNumber == 1;
     }
 
@@ -59,6 +65,47 @@ class NavigationBarHomeReport extends ConsumerWidget {
       }
     }
 
+    void onReportButtonPress(int buttonNumber) async {
+      if (isHome(buttonNumber)) {
+        goHome();
+      } else if (isSave(buttonNumber)) {
+        Calculator currentCalculator = ref.read(calculatorProvider).type;
+        Map<String, dynamic> data = {};
+        if(currentCalculator == Calculator.brrrr) {
+          data = ref.read(brrrrProvider).toJson();
+        }
+        else if(currentCalculator == Calculator.quickMaxOffer) {
+          data = ref.read(quickMaxProvider).toJson();
+        }
+        else if(currentCalculator == Calculator.fixAndFlip) {
+          data = ref.read(fixFlipProvider).toJson();
+        }
+        else if(currentCalculator == Calculator.turnkeyRental) {
+          data = ref.read(turnkeyProvider).toJson();
+        }
+
+        // get the document ID to update the record, otherwise create a new document
+        String docID = ref.read(savedCalculatorProvider).uid;
+        await DatabaseUtils.saveDataToDatabase(uid: FirebaseAuth.instance.currentUser!.uid, data: data, docID: (docID != '' ? docID : null));
+        resetAllData(ref);
+        Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: const [
+            Icon(Icons.check, color: Colors.white),
+            SizedBox(width: 4),
+            Text('Place saved!',),
+          ],
+        ), shape: const StadiumBorder(), behavior: SnackBarBehavior.floating,));
+      }
+    }
+
+    List<BottomNavigationBarItem> buttonsForReport = [
+      const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.save), label: 'Save'),
+    ];
+
     List<BottomNavigationBarItem> buttonsFromSaved = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
       const BottomNavigationBarItem(
@@ -72,31 +119,14 @@ class NavigationBarHomeReport extends ConsumerWidget {
           icon: Icon(Icons.arrow_forward), label: 'Next'),
     ];
 
-    FloatingActionButton homeButton = FloatingActionButton(
-      onPressed: goHome,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Spacer(),
-          Icon(Icons.home),
-          Text(
-            'Home',
-            style: TextStyle(fontSize: 12),
-          ),
-          Spacer(),
-        ],
-      ),
+    return BottomNavigationBar(
+      onTap: (isLastPage) ? onReportButtonPress : onButtonPress,
+      unselectedItemColor: Theme.of(context).indicatorColor,
+      items: (isLastPage)
+          ? buttonsForReport  // show a save button on the report page
+          : (isFromSaved) // only show report button if from a saved calculator
+              ? buttonsFromSaved
+              : buttonsForNew, // buttons if is a new calculator entry
     );
-
-    return isLastPage
-        ? homeButton
-        : BottomNavigationBar(
-            onTap: onButtonPress,
-            unselectedItemColor: Theme.of(context).indicatorColor,
-            items:
-                (isFromSaved) // only show report button if from a saved calculator
-                    ? buttonsFromSaved
-                    : buttonsForNew, // buttons if is a new calculator entry
-          );
   }
 }
