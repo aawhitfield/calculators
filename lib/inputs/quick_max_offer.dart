@@ -5,7 +5,6 @@ import 'package:calculators/home.dart';
 import 'package:calculators/models/calculator.dart';
 import 'package:calculators/models/database_utils.dart';
 import 'package:calculators/models/financing_type.dart';
-import 'package:calculators/outputs/final_options_buttons.dart';
 import 'package:calculators/providers.dart';
 import 'package:calculators/widgets/financing_type_drop_down.dart';
 import 'package:calculators/widgets/integer_text_field.dart';
@@ -14,7 +13,6 @@ import 'package:calculators/widgets/money_text_field.dart';
 import 'package:calculators/widgets/percent_text_field.dart';
 import 'package:calculators/widgets/responsive_layout.dart';
 import 'package:calculators/widgets/sign_out_button.dart';
-import 'package:finance/finance.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -36,8 +34,9 @@ class QuickMaxOffer extends ConsumerStatefulWidget {
 class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
   TextEditingController addressController = TextEditingController();
   TextEditingController arvController = TextEditingController();
-  TextEditingController downPaymentPercentageController =
-      TextEditingController();
+  TextEditingController purchasePriceController = TextEditingController();
+  TextEditingController rehabController = TextEditingController();
+  TextEditingController refinancePercentage = TextEditingController();
   TextEditingController interestRateController = TextEditingController();
   TextEditingController termInYearsController = TextEditingController();
   TextEditingController closingCostsController = TextEditingController();
@@ -66,7 +65,6 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
   int monthsOfHolding = 0;
 
   String equityString = '';
-  String maxOfferString = '';
   String taxesPerMonthString = '';
   String insurancePerMonthString = '';
 
@@ -84,11 +82,18 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
     if (arv != 0) {
       arvController.text = kCurrencyFormat.format(arv);
     }
+    if (ref.read(quickMaxProvider).purchasePrice != 0) {
+      purchasePriceController.text =
+          kCurrencyFormat.format(ref.read(quickMaxProvider).purchasePrice);
+    }
+    if (ref.read(quickMaxProvider).rehab != 0) {
+      rehabController.text =
+          kCurrencyFormat.format(ref.read(quickMaxProvider).rehab);
+    }
     financingType = ref.read(quickMaxProvider).financingType;
     downPaymentPercentage = ref.read(quickMaxProvider).downPaymentPercentage;
     if (downPaymentPercentage != 0) {
-      downPaymentPercentageController.text =
-          (downPaymentPercentage * 100).toString();
+      refinancePercentage.text = (downPaymentPercentage * 100).toString();
     }
     interestRate = ref.read(quickMaxProvider).interestRate;
     if (interestRate != 0) {
@@ -133,7 +138,6 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
       rehabCostsController.text = kCurrencyFormat.format(rehabCosts);
     }
     equityString = kCurrencyFormat.format(equity);
-    maxOfferString = kCurrencyFormat.format(maxOffer);
     super.initState();
   }
 
@@ -142,27 +146,6 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
     TextStyle? headline = context.isTablet
         ? Theme.of(context).textTheme.headline2
         : Theme.of(context).textTheme.headline3;
-
-    double loanAmount = (1 - downPaymentPercentage) * arv;
-    double downPayment = arv - loanAmount;
-    double principleInterestMonthly = Finance.pmt(
-            rate: interestRate / 12,
-            nper: termInYears * 12,
-            pv: -1 * loanAmount)
-        .toDouble();
-    double totalHoldingCosts = (taxesPerMonth +
-            insurancePerMonth +
-            utilitiesPerMonth +
-            principleInterestMonthly) *
-        monthsOfHolding;
-    double maxOffer = arv - totalHoldingCosts - rehabCosts - downPayment;
-
-    String loanAmountString = kCurrencyFormat.format(loanAmount);
-    String downPaymentString = kCurrencyFormat.format(downPayment);
-    String principleInterestMonthlyString =
-        kCurrencyFormat.format(principleInterestMonthly);
-    String totalHoldingCostsString = kCurrencyFormat.format(totalHoldingCosts);
-    maxOfferString = kCurrencyFormat.format(maxOffer);
 
     return Scaffold(
       appBar: AppBar(
@@ -231,32 +214,85 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                             ),
                           ),
                           MoneyTextField(
-                              labelText: 'ARV',
-                              controller: arvController,
-                              onChanged: (String newValue) {
-                                newValue = newValue.replaceAll(',', '');
-                                double? arvTemp = double.tryParse(newValue);
-                                if (arvTemp != null) {
-                                  ref
-                                      .read(quickMaxProvider)
-                                      .updateAfterRepairValue(arvTemp);
-                                  setState(() {
-                                    arv = arvTemp;
-                                  });
-                                } else {
-                                  ref
-                                      .read(quickMaxProvider)
-                                      .updateAfterRepairValue(0.0);
-                                  setState(() {
-                                    arv = 0;
-                                  });
-                                }
+                            labelText: 'ARV *',
+                            controller: arvController,
+                            onChanged: (String newValue) {
+                              newValue = newValue.replaceAll(',', '');
+                              double? arvTemp = double.tryParse(newValue);
+                              if (arvTemp != null) {
                                 ref
                                     .read(quickMaxProvider)
-                                    .calculateAllQuickMaxOffer();
-                              }),
-                          MoneyListTile(
-                              'Total Holding Costs', totalHoldingCostsString),
+                                    .updateAfterRepairValue(arvTemp);
+                                setState(() {
+                                  arv = arvTemp;
+                                });
+                              } else {
+                                ref
+                                    .read(quickMaxProvider)
+                                    .updateAfterRepairValue(0.0);
+                                setState(() {
+                                  arv = 0;
+                                });
+                              }
+                              ref
+                                  .read(quickMaxProvider)
+                                  .calculateAllQuickMaxOffer();
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'ARV is required';
+                              }
+                              return null;
+                            },
+                          ),
+                          MoneyTextField(
+                            labelText: 'Purchase Price *',
+                            controller: purchasePriceController,
+                            onChanged: (String newValue) {
+                              newValue = newValue.replaceAll(',', '');
+                              double? temp = double.tryParse(newValue);
+                              if (temp != null) {
+                                ref
+                                    .read(quickMaxProvider)
+                                    .updatePurchasePrice(temp);
+                              } else {
+                                ref
+                                    .read(quickMaxProvider)
+                                    .updatePurchasePrice(0.0);
+                              }
+                              ref
+                                  .read(quickMaxProvider)
+                                  .calculateAllQuickMaxOffer();
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Purchase price is required';
+                              }
+                              return null;
+                            },
+                          ),
+                          MoneyTextField(
+                            labelText: 'Estimated rehab costs *',
+                            controller: rehabController,
+                            onChanged: (String newValue) {
+                              newValue = newValue.replaceAll(',', '');
+                              double? temp = double.tryParse(newValue);
+                              if (temp != null) {
+                                ref.read(quickMaxProvider).updateRehab(temp);
+                              } else {
+                                ref.read(quickMaxProvider).updateRehab(0.0);
+                              }
+                              ref
+                                  .read(quickMaxProvider)
+                                  .calculateAllQuickMaxOffer();
+                            },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Rehab is required';
+                              }
+                              return null;
+                            },
+                          ),
                           Row(
                             children: [
                               const Text(
@@ -281,8 +317,8 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                             ],
                           ),
                           PercentTextField(
-                            labelText: 'Down Payment Percentage',
-                            controller: downPaymentPercentageController,
+                            labelText: 'Refinance Loan to Value % *',
+                            controller: refinancePercentage,
                             onChanged: (String newPercentage) {
                               newPercentage = newPercentage.replaceAll(',', '');
                               double? newValue = double.tryParse(newPercentage);
@@ -306,11 +342,26 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Percentage is required';
+                              }
+                              return null;
+                            },
                           ),
-                          MoneyListTile('Loan Amount', loanAmountString),
-                          MoneyListTile('Down Payment', downPaymentString),
+                          MoneyListTile(
+                            'Down Payment',
+                            kCurrencyFormat.format(
+                                ref.watch(quickMaxProvider).downPayment),
+                            subtitle: 'Equity',
+                          ),
+                          MoneyListTile(
+                            'Loan Amount',
+                            kCurrencyFormat
+                                .format(ref.watch(quickMaxProvider).loanAmount),
+                          ),
                           PercentTextField(
-                            labelText: 'Interest Rate',
+                            labelText: 'Interest Rate *',
                             controller: interestRateController,
                             onChanged: (String newPercentage) {
                               newPercentage = newPercentage.replaceAll(',', '');
@@ -334,9 +385,15 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Interest rate is required';
+                              }
+                              return null;
+                            },
                           ),
                           IntegerTextField(
-                            labelText: 'Term in Years',
+                            labelText: 'Term in Years *',
                             controller: termInYearsController,
                             onChanged: (String newTerm) {
                               newTerm = newTerm.replaceAll(',', '');
@@ -357,9 +414,15 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .calculateAllQuickMaxOffer();
                             },
                             leftPadding: 0,
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Term is required';
+                              }
+                              return null;
+                            },
                           ),
                           MoneyTextField(
-                            labelText: 'Closing Costs',
+                            labelText: 'Closing Costs *',
                             controller: closingCostsController,
                             onChanged: (String newValue) {
                               newValue = newValue.replaceAll(',', '');
@@ -383,9 +446,15 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Closing costs are required';
+                              }
+                              return null;
+                            },
                           ),
                           MoneyTextField(
-                            labelText: 'Taxes Per Year',
+                            labelText: 'Taxes Per Year *',
                             controller: taxesPerYearController,
                             onChanged: (String newValue) {
                               newValue = newValue.replaceAll(',', '');
@@ -415,10 +484,16 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Taxes are required';
+                              }
+                              return null;
+                            },
                           ),
                           MoneyListTile('Taxes Per Month', taxesPerMonthString),
                           MoneyTextField(
-                            labelText: 'Insurance Per Year',
+                            labelText: 'Insurance Per Year *',
                             controller: insurancePerYearController,
                             onChanged: (String newValue) {
                               newValue = newValue.replaceAll(',', '');
@@ -448,11 +523,17 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Insurance is required';
+                              }
+                              return null;
+                            },
                           ),
                           MoneyListTile(
                               'Insurance Per Month', insurancePerMonthString),
                           MoneyTextField(
-                            labelText: 'Utilities Per Month',
+                            labelText: 'Utilities Per Month *',
                             controller: utilitiesPerMonthController,
                             onChanged: (String newValue) {
                               newValue = newValue.replaceAll(',', '');
@@ -476,14 +557,37 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Utilities are required';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
+                          CupertinoSlidingSegmentedControl<PaymentType>(
+                            thumbColor:
+                                Theme.of(context).primaryColor.withOpacity(0.4),
+                            groupValue: ref.watch(quickMaxProvider).paymentType,
+                            children: const {
+                              PaymentType.principalAndInterest:
+                                  Text('Principal & Interest'),
+                              PaymentType.interestOnly: Text('Interest Only'),
+                            },
+                            onValueChanged: (PaymentType? newValue) {
+                              ref
+                                  .read(quickMaxProvider)
+                                  .updatePaymentType(newValue!);
+                              ref.read(quickMaxProvider).calculateAllQuickMaxOffer();
+                            },
                           ),
                           MoneyListTile(
-                            'Principle \n& Interest',
-                            principleInterestMonthlyString,
-                            subtitle: 'Monthly',
+                            'Monthly\nPayment',
+                            kCurrencyFormat.format(
+                                ref.watch(quickMaxProvider).monthlyPayment),
                           ),
                           IntegerTextField(
-                            labelText: 'Months of Holding',
+                            labelText: 'Months of Holding *',
                             controller: monthsOfHoldingController,
                             onChanged: (String newTerm) {
                               newTerm = newTerm.replaceAll(',', '');
@@ -507,45 +611,38 @@ class _QuickMaxOfferState extends ConsumerState<QuickMaxOffer> {
                                   .read(quickMaxProvider)
                                   .calculateAllQuickMaxOffer();
                             },
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return 'Months is required';
+                              }
+                              return null;
+                            },
                           ),
                           MoneyListTile(
-                              'Total Holding Costs', totalHoldingCostsString),
-                          MoneyTextField(
-                              labelText: 'Rehab Costs',
-                              controller: rehabCostsController,
-                              onChanged: (String newValue) {
-                                newValue = newValue.replaceAll(',', '');
-                                double? rehabTemp = double.tryParse(newValue);
-                                if (rehabTemp != null) {
-                                  ref
-                                      .read(quickMaxProvider)
-                                      .updateRehabCosts(rehabTemp);
-                                  setState(() {
-                                    rehabCosts = rehabTemp;
-                                  });
-                                } else {
-                                  ref
-                                      .read(quickMaxProvider)
-                                      .updateRehabCosts(0.0);
-                                  setState(() {
-                                    rehabCosts = 0;
-                                  });
-                                }
-                                ref
-                                    .read(quickMaxProvider)
-                                    .calculateAllQuickMaxOffer();
-                              }),
+                              'Total Holding Costs',
+                              kCurrencyFormat.format(ref
+                                  .watch(quickMaxProvider)
+                                  .totalHoldingCosts)),
                           MoneyListTile(
-                              'Equity / Down \nPayment', downPaymentString),
+                              'Equity / Down \nPayment',
+                              kCurrencyFormat.format(
+                                  ref.watch(quickMaxProvider).downPayment)),
                           MoneyListTile(
                               (MediaQuery.of(context).size.width < 640)
                                   ? 'Max\nOffer'
                                   : 'Max Offer',
-                              maxOfferString),
+                              kCurrencyFormat.format(
+                                  ref.watch(quickMaxProvider).maxOffer)),
+                          MoneyListTile(
+                            (MediaQuery.of(context).size.width < 640)
+                                ? 'Rehab\nFunds'
+                                : 'Rehab Funds',
+                            kCurrencyFormat
+                                .format(ref.watch(quickMaxProvider).rehabFunds),
+                            subtitle: 'Max Available',
+                          ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      const FinalOptionsButtons(),
                       const SizedBox(height: 16),
                     ],
                   ),
