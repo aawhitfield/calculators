@@ -71,39 +71,48 @@ class NavigationBarHomeReport extends ConsumerWidget {
       } else if (isSave(buttonNumber)) {
         Calculator currentCalculator = ref.read(calculatorProvider).type;
         Map<String, dynamic> data = {};
-        if(currentCalculator == Calculator.brrrr) {
+        if (currentCalculator == Calculator.brrrr) {
           data = ref.read(brrrrProvider).toJson();
-        }
-        else if(currentCalculator == Calculator.quickMaxOffer) {
+        } else if (currentCalculator == Calculator.quickMaxOffer) {
           data = ref.read(quickMaxProvider).toJson();
-        }
-        else if(currentCalculator == Calculator.fixAndFlip) {
+        } else if (currentCalculator == Calculator.fixAndFlip) {
           data = ref.read(fixFlipProvider).toJson();
-        }
-        else if(currentCalculator == Calculator.turnkeyRental) {
+        } else if (currentCalculator == Calculator.turnkeyRental) {
           data = ref.read(turnkeyProvider).toJson();
         }
 
         // get the document ID to update the record, otherwise create a new document
         String docID = ref.read(savedCalculatorProvider).uid;
-        await DatabaseUtils.saveDataToDatabase(uid: FirebaseAuth.instance.currentUser!.uid, data: data, docID: (docID != '' ? docID : null));
+        await DatabaseUtils.saveDataToDatabase(
+            uid: FirebaseAuth.instance.currentUser!.uid,
+            data: data,
+            docID: (docID != '' ? docID : null));
         resetAllData(ref);
-        Get.offAll(() => const MyHomePage(title: '', startingTab: 1,));
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(margin: const EdgeInsets.all(16), content: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: const [
-            Icon(Icons.check, color: Colors.white),
-            SizedBox(width: 4),
-            Text('Place saved!',),
-          ],
-        ), shape: const StadiumBorder(), behavior: SnackBarBehavior.floating,));
+        Get.offAll(() => const MyHomePage(
+              title: '',
+              startingTab: 1,
+            ));
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          margin: const EdgeInsets.all(16),
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              Icon(Icons.check, color: Colors.white),
+              SizedBox(width: 4),
+              Text(
+                'Place saved!',
+              ),
+            ],
+          ),
+          shape: const StadiumBorder(),
+          behavior: SnackBarBehavior.floating,
+        ));
       }
     }
 
     List<BottomNavigationBarItem> buttonsForReport = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-      const BottomNavigationBarItem(
-          icon: Icon(Icons.save), label: 'Save'),
+      const BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Save'),
     ];
 
     List<BottomNavigationBarItem> buttonsFromSaved = [
@@ -123,7 +132,7 @@ class NavigationBarHomeReport extends ConsumerWidget {
       onTap: (isLastPage) ? onReportButtonPress : onButtonPress,
       unselectedItemColor: Theme.of(context).indicatorColor,
       items: (isLastPage)
-          ? buttonsForReport  // show a save button on the report page
+          ? buttonsForReport // show a save button on the report page
           : (isFromSaved) // only show report button if from a saved calculator
               ? buttonsFromSaved
               : buttonsForNew, // buttons if is a new calculator entry
