@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
+enum ClosingCosts { value, percentage }
+
 class FixFlipExpensesInput extends ConsumerStatefulWidget {
   const FixFlipExpensesInput({Key? key}) : super(key: key);
 
@@ -20,6 +22,8 @@ class FixFlipExpensesInput extends ConsumerStatefulWidget {
 class _ExpensesInputState extends ConsumerState<FixFlipExpensesInput> {
   TextEditingController taxesController = TextEditingController();
   TextEditingController insuranceController = TextEditingController();
+
+  GlobalKey<FormState> ffExpensesKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -44,74 +48,91 @@ class _ExpensesInputState extends ConsumerState<FixFlipExpensesInput> {
     String taxesMonthlyString = kCurrencyFormat.format(taxesMonthly);
     String insuranceMonthlyString = kCurrencyFormat.format(insuranceMonthly);
 
-    return MyInputPage(
-      imageUri: 'images/expenses.svg',
-      headerText: 'Expenses',
-      subheadText: '',
-      position: kFixFlipQuestions.indexOf(FixFlipExpensesInput) + 1,
-      totalQuestions: kFixFlipQuestions.length,
-      onBack: () {
-        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
-        bool shouldOverrideBackButton = savedCalculatorID != '';
-        if (shouldOverrideBackButton) {
-          Get.off(() => const FixFlipPropertyCosts());
-        } else {
-          Get.back();
-        }
-      },
-      onSubmit: () {
-        Get.to(() => const FixFlipFinanceOptions());
-      },
-      child: ResponsiveLayout(
-        children: [
-          MoneyTextField(
-            labelText: 'Taxes (Yearly)',
-            controller: taxesController,
-            onChanged: (String newValue) {
-              newValue = newValue.replaceAll(',', '');
-              double? taxes = double.tryParse(newValue);
-              if (taxes != null) {
-                ref.read(fixFlipProvider).updateTaxes(taxes);
-              } else {
-                ref.read(fixFlipProvider).updateTaxes(0);
-              }
-              ref.read(fixFlipProvider).calculateAllExpenses();
-            },
-          ),
-          MoneyListTile('Taxes', taxesMonthlyString, subtitle: 'Monthly'),
-          MoneyTextField(
-            labelText: 'Insurance (Yearly)',
-            controller: insuranceController,
-            onChanged: (String newValue) {
-              newValue = newValue.replaceAll(',', '');
-              double? insurance = double.tryParse(newValue);
-              if (insurance != null) {
-                ref.read(fixFlipProvider).updateInsurance(insurance);
-              } else {
-                ref.read(fixFlipProvider).updateTaxes(0);
-              }
-              ref.read(fixFlipProvider).calculateAllExpenses();
-            },
-          ),
-          MoneyListTile('Insurance', insuranceMonthlyString,
-              subtitle: 'Monthly'),
+    return Form(
+      key: ffExpensesKey,
+      child: MyInputPage(
+        imageUri: 'images/expenses.svg',
+        headerText: 'Expenses',
+        subheadText: '',
+        position: kFixFlipQuestions.indexOf(FixFlipExpensesInput) + 1,
+        totalQuestions: kFixFlipQuestions.length,
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            Get.off(() => const FixFlipPropertyCosts());
+          } else {
+            Get.back();
+          }
+        },
+        onSubmit: () {
+          if (ffExpensesKey.currentState?.validate() ?? false) {
+            Get.to(() => const FixFlipFinanceOptions());
+          }
+        },
+        child: ResponsiveLayout(
+          children: [
+            MoneyTextField(
+              labelText: 'Taxes (Yearly) *',
+              controller: taxesController,
+              onChanged: (String newValue) {
+                newValue = newValue.replaceAll(',', '');
+                double? taxes = double.tryParse(newValue);
+                if (taxes != null) {
+                  ref.read(fixFlipProvider).updateTaxes(taxes);
+                } else {
+                  ref.read(fixFlipProvider).updateTaxes(0);
+                }
+                ref.read(fixFlipProvider).calculateAllExpenses();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Taxes are required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile('Taxes', taxesMonthlyString, subtitle: 'Monthly'),
+            MoneyTextField(
+              labelText: 'Insurance (Yearly) *',
+              controller: insuranceController,
+              onChanged: (String newValue) {
+                newValue = newValue.replaceAll(',', '');
+                double? insurance = double.tryParse(newValue);
+                if (insurance != null) {
+                  ref.read(fixFlipProvider).updateInsurance(insurance);
+                } else {
+                  ref.read(fixFlipProvider).updateTaxes(0);
+                }
+                ref.read(fixFlipProvider).calculateAllExpenses();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Insurance is required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile('Insurance', insuranceMonthlyString,
+                subtitle: 'Monthly'),
 
-          MoneyListTile(
-            'Total \nExpenses',
-            kCurrencyFormat
-                .format(ref.watch(fixFlipProvider).totalMonthlyExpenses)
-                .toString(),
-            subtitle: 'Monthly',
-          ),
-          MoneyListTile(
-            'Total \nExpenses',
-            kCurrencyFormat.format(double.parse(ref
-                .watch(fixFlipProvider)
-                .totalAnnualExpenses
-                .toStringAsFixed(2))),
-            subtitle: 'Annually',
-          ),
-        ],
+            MoneyListTile(
+              'Total \nExpenses',
+              kCurrencyFormat
+                  .format(ref.watch(fixFlipProvider).totalMonthlyExpenses)
+                  .toString(),
+              subtitle: 'Monthly',
+            ),
+            MoneyListTile(
+              'Total \nExpenses',
+              kCurrencyFormat.format(double.parse(ref
+                  .watch(fixFlipProvider)
+                  .totalAnnualExpenses
+                  .toStringAsFixed(2))),
+              subtitle: 'Annually',
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -29,6 +29,8 @@ class _FinanceOptionDownPaymentState
   TextEditingController termController = TextEditingController();
   TextEditingController amortizationController = TextEditingController();
 
+  GlobalKey<FormState> ffSellerKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     double loanPercent = ref.read(fixFlipProvider).sellerLoanPercentage * 100;
@@ -71,45 +73,76 @@ class _FinanceOptionDownPaymentState
     String loanAmountString = kCurrencyFormat.format(loanAmount);
     String monthlyPaymentString = kCurrencyFormat.format(monthlyPayment);
 
-    return MyInputPage(
-        imageUri: 'images/transfer.svg',
-        headerText: 'Finance Option',
-        subheadText: 'Seller Financed Loan',
-        onBack: () {
-          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
-          bool shouldOverrideBackButton = savedCalculatorID != '';
-          if (shouldOverrideBackButton) {
-            if(ref.read(fixFlipProvider).financingType == FinancingType.hardMoneyWithConstruction
-                || ref.read(fixFlipProvider).financingType == FinancingType.commercialWithConstruction) {
-              Get.off(() => const FixFlipFinanceConstruction());
+    return Form(
+      key: ffSellerKey,
+      child: MyInputPage(
+          imageUri: 'images/transfer.svg',
+          headerText: 'Finance Option',
+          subheadText: 'Seller Financed Loan',
+          onBack: () {
+            String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+            bool shouldOverrideBackButton = savedCalculatorID != '';
+            if (shouldOverrideBackButton) {
+              if(ref.read(fixFlipProvider).financingType == FinancingType.hardMoneyWithConstruction
+                  || ref.read(fixFlipProvider).financingType == FinancingType.commercialWithConstruction) {
+                Get.off(() => const FixFlipFinanceConstruction());
+              }
+              else {
+                Get.off(() => const FixFlipFinanceOptions());
+              }
             }
             else {
-              Get.off(() => const FixFlipFinanceOptions());
+              Get.back();
             }
-          }
-          else {
-            Get.back();
-          }
-        },
-        onSubmit: () {
-          ref.read(fixFlipProvider).updateSellerMonthlyPayment(monthlyPayment);
-          ref.read(fixFlipProvider).updateSellerLoanAmount(loanAmount);
+          },
+          onSubmit: () {
+            ref.read(fixFlipProvider).updateSellerMonthlyPayment(monthlyPayment);
+            ref.read(fixFlipProvider).updateSellerLoanAmount(loanAmount);
 
-          ref.read(fixFlipProvider).calculateAllHoldingCosts();
-          Get.to(() => const FixFlipHoldingCosts());
-        },
-        position: kFixFlipQuestions.indexOf(FixFlipFinanceSellerFinanced) + 1,
-        totalQuestions: kFixFlipQuestions.length,
-        child: ResponsiveLayout(
-          children: [
-            ((MediaQuery.of(context).size.width > 640))
-                ? Row(
-                    children: [
-                      const Text('Financing Type'),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: CupertinoSlidingSegmentedControl<
-                            SellerFinancingType>(
+            ref.read(fixFlipProvider).calculateAllHoldingCosts();
+            if (ffSellerKey.currentState?.validate() ?? false) {
+              Get.to(() => const FixFlipHoldingCosts());
+            }
+          },
+          position: kFixFlipQuestions.indexOf(FixFlipFinanceSellerFinanced) + 1,
+          totalQuestions: kFixFlipQuestions.length,
+          child: ResponsiveLayout(
+            children: [
+              ((MediaQuery.of(context).size.width > 640))
+                  ? Row(
+                      children: [
+                        const Text('Financing Type'),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: CupertinoSlidingSegmentedControl<
+                              SellerFinancingType>(
+                            thumbColor:
+                                Theme.of(context).primaryColor.withOpacity(0.4),
+                            groupValue:
+                                ref.watch(fixFlipProvider).sellerFinancingType,
+                            children: {
+                              SellerFinancingType.payment: Text(
+                                  SellerFinancingTypeUtils(
+                                          SellerFinancingType.payment)
+                                      .name),
+                              SellerFinancingType.interest: Text(
+                                  SellerFinancingTypeUtils(
+                                          SellerFinancingType.interest)
+                                      .name),
+                            },
+                            onValueChanged: (SellerFinancingType? newValue) => ref
+                                .read(fixFlipProvider)
+                                .updateSellerFinancingType(newValue!),
+                          ),
+                        )
+                      ],
+                    )
+                  : Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('Financing Type'),
+                        const SizedBox(height: 8),
+                        CupertinoSlidingSegmentedControl<SellerFinancingType>(
                           thumbColor:
                               Theme.of(context).primaryColor.withOpacity(0.4),
                           groupValue:
@@ -128,113 +161,111 @@ class _FinanceOptionDownPaymentState
                               .read(fixFlipProvider)
                               .updateSellerFinancingType(newValue!),
                         ),
-                      )
-                    ],
-                  )
-                : Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Text('Financing Type'),
-                      const SizedBox(height: 8),
-                      CupertinoSlidingSegmentedControl<SellerFinancingType>(
-                        thumbColor:
-                            Theme.of(context).primaryColor.withOpacity(0.4),
-                        groupValue:
-                            ref.watch(fixFlipProvider).sellerFinancingType,
-                        children: {
-                          SellerFinancingType.payment: Text(
-                              SellerFinancingTypeUtils(
-                                      SellerFinancingType.payment)
-                                  .name),
-                          SellerFinancingType.interest: Text(
-                              SellerFinancingTypeUtils(
-                                      SellerFinancingType.interest)
-                                  .name),
-                        },
-                        onValueChanged: (SellerFinancingType? newValue) => ref
-                            .read(fixFlipProvider)
-                            .updateSellerFinancingType(newValue!),
-                      ),
-                    ],
-                  ),
-            PercentTextField(
-              labelText: 'Loan Percent',
-              controller: loanPercentController,
-              onChanged: (String newPercentage) {
-                newPercentage = newPercentage.replaceAll(',', '');
-                double? newValue = double.tryParse(newPercentage);
-                if (newValue != null) {
-                  double sellerLoanPercentage = newValue / 100;
-                  ref
-                      .read(fixFlipProvider)
-                      .updateSellerLoanPercentage(sellerLoanPercentage);
-                } else {
-                  ref.read(fixFlipProvider).updateSellerLoanPercentage(0.0);
-                }
-                ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
-              },
-            ),
-            MoneyListTile(
-                (MediaQuery.of(context).size.width < 640)
-                    ? 'Loan\nAmount'
-                    : 'Loan Amount',
-                loanAmountString),
-            PercentTextField(
-              labelText: 'Interest Rate',
-              controller: interestRateController,
-              onChanged: (String newPercentage) {
-                newPercentage = newPercentage.replaceAll(',', '');
-                double? newValue = double.tryParse(newPercentage);
-                if (newValue != null) {
-                  double interestRate = newValue / 100;
-                  ref
-                      .read(fixFlipProvider)
-                      .updateSellerInterestRate(interestRate);
-                } else {
-                  ref.read(fixFlipProvider).updateSellerInterestRate(0.0);
-                }
-                ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
-              },
-            ),
-            IntegerTextField(
-              labelText: 'Amortization',
-              controller: amortizationController,
-              leftPadding: 8,
-              rightPadding: 8,
-              onChanged: (String newTerm) {
-                newTerm = newTerm.replaceAll(',', '');
-                int? newValue = int.tryParse(newTerm);
-                if (newValue != null) {
-                  ref.read(fixFlipProvider).updateAmortization(newValue);
-                } else {
-                  ref.read(fixFlipProvider).updateAmortization(0);
-                }
-                ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
-              },
-            ),
-            IntegerTextField(
-              labelText: 'Term',
-              controller: termController,
-              leftPadding: 8,
-              rightPadding: 8,
-              onChanged: (String newTerm) {
-                newTerm = newTerm.replaceAll(',', '');
-                int? newValue = int.tryParse(newTerm);
-                if (newValue != null) {
-                  ref.read(fixFlipProvider).updateSellerTerm(newValue);
-                } else {
-                  ref.read(fixFlipProvider).updateSellerTerm(0);
-                }
-                ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
-              },
-            ),
-            MoneyListTile(
-                (MediaQuery.of(context).size.width < 640)
-                    ? 'Monthly\nPayment'
-                    : 'Monthly Payment',
-                monthlyPaymentString),
-          ],
-        ));
+                      ],
+                    ),
+              PercentTextField(
+                labelText: 'Loan Percent *',
+                controller: loanPercentController,
+                onChanged: (String newPercentage) {
+                  newPercentage = newPercentage.replaceAll(',', '');
+                  double? newValue = double.tryParse(newPercentage);
+                  if (newValue != null) {
+                    double sellerLoanPercentage = newValue / 100;
+                    ref
+                        .read(fixFlipProvider)
+                        .updateSellerLoanPercentage(sellerLoanPercentage);
+                  } else {
+                    ref.read(fixFlipProvider).updateSellerLoanPercentage(0.0);
+                  }
+                  ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Loan percent is required';
+                  }
+                  return null;
+                },
+              ),
+              MoneyListTile(
+                  (MediaQuery.of(context).size.width < 640)
+                      ? 'Loan\nAmount'
+                      : 'Loan Amount',
+                  loanAmountString),
+              PercentTextField(
+                labelText: 'Interest Rate *',
+                controller: interestRateController,
+                onChanged: (String newPercentage) {
+                  newPercentage = newPercentage.replaceAll(',', '');
+                  double? newValue = double.tryParse(newPercentage);
+                  if (newValue != null) {
+                    double interestRate = newValue / 100;
+                    ref
+                        .read(fixFlipProvider)
+                        .updateSellerInterestRate(interestRate);
+                  } else {
+                    ref.read(fixFlipProvider).updateSellerInterestRate(0.0);
+                  }
+                  ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Interest rate is required';
+                  }
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                labelText: 'Amortization *',
+                controller: amortizationController,
+                leftPadding: 8,
+                rightPadding: 8,
+                onChanged: (String newTerm) {
+                  newTerm = newTerm.replaceAll(',', '');
+                  int? newValue = int.tryParse(newTerm);
+                  if (newValue != null) {
+                    ref.read(fixFlipProvider).updateAmortization(newValue);
+                  } else {
+                    ref.read(fixFlipProvider).updateAmortization(0);
+                  }
+                  ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Amortization is required';
+                  }
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                labelText: 'Term *',
+                controller: termController,
+                leftPadding: 8,
+                rightPadding: 8,
+                onChanged: (String newTerm) {
+                  newTerm = newTerm.replaceAll(',', '');
+                  int? newValue = int.tryParse(newTerm);
+                  if (newValue != null) {
+                    ref.read(fixFlipProvider).updateSellerTerm(newValue);
+                  } else {
+                    ref.read(fixFlipProvider).updateSellerTerm(0);
+                  }
+                  ref.read(fixFlipProvider).calculateSellerFinanceCalculations();
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Term is required';
+                  }
+                  return null;
+                },
+              ),
+              MoneyListTile(
+                  (MediaQuery.of(context).size.width < 640)
+                      ? 'Monthly\nPayment'
+                      : 'Monthly Payment',
+                  monthlyPaymentString),
+            ],
+          )),
+    );
   }
 }
 

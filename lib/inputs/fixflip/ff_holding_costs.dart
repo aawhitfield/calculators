@@ -21,8 +21,10 @@ class FixFlipHoldingCosts extends ConsumerStatefulWidget {
 }
 
 class _HoldingCostsState extends ConsumerState<FixFlipHoldingCosts> {
-
   TextEditingController utilitiesController = TextEditingController();
+  TextEditingController otherHoldingController = TextEditingController();
+
+  GlobalKey<FormState> ffHoldingCostsKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -43,57 +45,91 @@ class _HoldingCostsState extends ConsumerState<FixFlipHoldingCosts> {
     String insuranceTaxesString = kCurrencyFormat.format(insuranceTaxes);
     String totalHoldingCostsString = kCurrencyFormat.format(totalHoldingCosts);
 
-    return MyInputPage(
+    return Form(
+      key: ffHoldingCostsKey,
+      child: MyInputPage(
         imageUri: 'images/holdingCosts.svg',
         headerText: 'Holding Costs',
         subheadText: '',
         position: kFixFlipQuestions.indexOf(FixFlipHoldingCosts) + 1,
         totalQuestions: kFixFlipQuestions.length,
-      onBack: () {
-        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
-        bool shouldOverrideBackButton = savedCalculatorID != '';
-        if (shouldOverrideBackButton) {
-          if(ref.read(fixFlipProvider).financingType == FinancingType.sellerFinancing) {
-            Get.off(() => const FixFlipFinanceSellerFinanced());
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            if (ref.read(fixFlipProvider).financingType ==
+                FinancingType.sellerFinancing) {
+              Get.off(() => const FixFlipFinanceSellerFinanced());
+            } else if (ref.read(fixFlipProvider).financingType ==
+                    FinancingType.hardMoneyWithConstruction ||
+                ref.read(fixFlipProvider).financingType ==
+                    FinancingType.commercialWithConstruction) {
+              Get.off(() => const FixFlipFinanceConstruction());
+            } else {
+              Get.off(() => const FixFlipFinanceOptions());
+            }
+          } else {
+            Get.back();
           }
-          else if(ref.read(fixFlipProvider).financingType == FinancingType.hardMoneyWithConstruction
-              || ref.read(fixFlipProvider).financingType == FinancingType.commercialWithConstruction) {
-            Get.off(() => const FixFlipFinanceConstruction());
-          }
-          else {
-            Get.off(() => const FixFlipFinanceOptions());
-          }
-        }
-        else {
-          Get.back();
-        }
-      },
-        onSubmit: () {
-          Get.to(() => const FixAndFlipSellingCostsInput());
         },
-      child: ResponsiveLayout(
-        children: [
-          MoneyListTile('Debt Service', debtServiceString),
-          MoneyListTile((MediaQuery.of(context).size.width < 640)
-              ? 'Insurance\n& Taxes'
-              : 'Insurance and Taxes', insuranceTaxesString),
-          MoneyTextField(
+        onSubmit: () {
+          if (ffHoldingCostsKey.currentState?.validate() ?? false) {
+            Get.to(() => const FixAndFlipSellingCostsInput());
+          }
+        },
+        child: ResponsiveLayout(
+          children: [
+            MoneyListTile('Monthly\nDebt Service', debtServiceString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Insurance\n& Taxes'
+                    : 'Insurance and Taxes',
+                insuranceTaxesString),
+            MoneyTextField(
               controller: utilitiesController,
-              labelText: 'Utilities', onChanged: (String newValue) {
-            newValue = newValue.replaceAll(',', '');
-            double? value = double.tryParse(newValue);
-            if(value != null) {
-              ref.read(fixFlipProvider).updateHoldingCostsUtilities(value);
-            }
-            else {
-              ref.read(fixFlipProvider).updateHoldingCostsUtilities(0.0);
-            }
-            ref.read(fixFlipProvider).calculateAllHoldingCosts();
-          }),
-          MoneyListTile((MediaQuery.of(context).size.width < 640)
-              ? 'Holding\nCosts'
-              : 'Total\nHolding Costs', totalHoldingCostsString),
-        ],
+              labelText: 'Monthly Utilities *',
+              onChanged: (String newValue) {
+                newValue = newValue.replaceAll(',', '');
+                double? value = double.tryParse(newValue);
+                if (value != null) {
+                  ref.read(fixFlipProvider).updateHoldingCostsUtilities(value);
+                } else {
+                  ref.read(fixFlipProvider).updateHoldingCostsUtilities(0.0);
+                }
+                ref.read(fixFlipProvider).calculateAllHoldingCosts();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Utilities are required';
+                }
+                return null;
+              },
+            ),
+            MoneyTextField(
+              controller: otherHoldingController,
+              labelText: 'Monthly Other Holding Costs',
+              onChanged: (String newValue) {
+                newValue = newValue.replaceAll(',', '');
+                double? value = double.tryParse(newValue);
+                if (value != null) {
+                  ref.read(fixFlipProvider).updateHoldingCostsOther(value);
+                } else {
+                  ref.read(fixFlipProvider).updateHoldingCostsOther(0.0);
+                }
+                ref.read(fixFlipProvider).calculateAllHoldingCosts();
+              },
+            ),
+            MoneyListTile(
+                'Holding\nCosts',
+                kCurrencyFormat
+                    .format(ref.watch(fixFlipProvider).monthlyHoldingCosts), subtitle: 'Monthly',),
+            MoneyListTile(
+              'Holding\nCosts',
+              totalHoldingCostsString,
+              subtitle: 'Total',
+            ),
+          ],
+        ),
       ),
     );
   }

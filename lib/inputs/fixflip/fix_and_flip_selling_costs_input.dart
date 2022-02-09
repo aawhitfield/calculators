@@ -25,6 +25,8 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
   TextEditingController closingCostsController = TextEditingController();
   TextEditingController otherClosingCostsController = TextEditingController();
 
+  GlobalKey<FormState> ffSellingCostsKey = GlobalKey<FormState>();
+
   late double sellersClosingCosts;
   late double buyersClosingCosts;
 
@@ -64,109 +66,120 @@ class _FixAndFlipSellingCostsInputState extends ConsumerState<FixAndFlipSellingC
     String realtorsFeesString = kCurrencyFormat.format(realtorsFees);
     String totalString = kCurrencyFormat.format(total);
 
-    return MyInputPage(
-      imageUri: 'images/transfer.svg',
-      headerText: 'Fix and Flip',
-      subheadText: 'Selling Costs',
-      position:
-          kFixFlipQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
-      totalQuestions: kFixFlipQuestions.length,
-      onBack: () {
-        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
-        bool shouldOverrideBackButton = savedCalculatorID != '';
-        if (shouldOverrideBackButton) {
-          Get.off(() => const FixFlipHoldingCosts());
-        }
-        else {
-          Get.back();
-        }
-      },
-      onSubmit: () {
-        Get.to(() => const FixFlipStatement());
-      },
-      child: ResponsiveLayout(
-        children: [
-          PercentTextField(
-            labelText: 'Realtor\'s Fees',
-            controller: realtorsFeesController,
-            onChanged: (String newPercentage) {
-              newPercentage = newPercentage.replaceAll(',', '');
-              double? newValue = double.tryParse(newPercentage);
-              if (newValue != null) {
-                double realtorFeesPercentage = newValue / 100;
-                ref
-                    .read(fixFlipProvider)
-                    .updateRealtorFeesPercentage(realtorFeesPercentage);
-              } else {
-                ref.read(fixFlipProvider).updateRealtorFeesPercentage(0.0);
-                ref.read(fixFlipProvider).updateRealtorFees(0);
-              }
-              ref.read(fixFlipProvider).calculateAllSellingCosts();
-            },
-          ),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Realtor\'s\nFees'
-                  : 'Realtor\'s Fees',
-              realtorsFeesString),
-          MoneyListTile('Taxes', taxesString),
-          MoneyTextField(
-            labelText: 'Seller\'s Closing Costs',
-            controller: sellersClosingCostsController,
-            onChanged: (String newCost) {
-              newCost = newCost.replaceAll(',', '');
-              double? newValue = double.tryParse(newCost);
-              if (newValue != null) {
-                ref
-                    .read(fixFlipProvider)
-                    .updateSellersClosingCosts(newValue);
-              } else {
-                ref.read(fixFlipProvider).updateSellersClosingCosts(0.0);
-              }
-              ref.read(fixFlipProvider).calculateAllSellingCosts();
-            },
-          ),
-          MoneyTextField(
-            labelText: 'Buyer\'s Closing Costs',
-            controller: buyersClosingCostsController,
-            onChanged: (String newCost) {
-              newCost = newCost.replaceAll(',', '');
-              double? newValue = double.tryParse(newCost);
-              if (newValue != null) {
-                ref
-                    .read(fixFlipProvider)
-                    .updateBuyersClosingCosts(newValue);
-              } else {
-                ref.read(fixFlipProvider).updateBuyersClosingCosts(0.0);
-              }
-              ref.read(fixFlipProvider).calculateAllSellingCosts();
-            },
-          ),
-          MoneyTextField(
-            labelText: 'Other Closing Costs',
-            controller: otherClosingCostsController,
-            onChanged: (String newCost) {
-              newCost = newCost.replaceAll(',', '');
-              double? newValue = double.tryParse(newCost);
-              if (newValue != null) {
-                ref.read(fixFlipProvider).updateOtherClosingCosts(newValue);
-              } else {
-                ref.read(fixFlipProvider).updateOtherClosingCosts(0.0);
-              }
-              ref.read(fixFlipProvider).calculateAllSellingCosts();
-            },
-          ),
-          const SizedBox(height: 8),
-          const Divider(),
-          const SizedBox(height: 8),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Total'
-                  : context.isTablet
-                      ? 'Total Closing Costs'
-                      : 'Total \nClosing Costs',
-              totalString),
-        ],
+    return Form(
+      key: ffSellingCostsKey,
+      child: MyInputPage(
+        imageUri: 'images/transfer.svg',
+        headerText: 'Fix and Flip',
+        subheadText: 'Selling Costs',
+        position:
+            kFixFlipQuestions.indexOf(FixAndFlipSellingCostsInput) + 1,
+        totalQuestions: kFixFlipQuestions.length,
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            Get.off(() => const FixFlipHoldingCosts());
+          }
+          else {
+            Get.back();
+          }
+        },
+        onSubmit: () {
+          if (ffSellingCostsKey.currentState?.validate() ?? false) {
+            Get.to(() => const FixFlipStatement());
+          }
+        },
+        child: ResponsiveLayout(
+          children: [
+            PercentTextField(
+              labelText: 'Realtor\'s Fees',
+              controller: realtorsFeesController,
+              onChanged: (String newPercentage) {
+                newPercentage = newPercentage.replaceAll(',', '');
+                double? newValue = double.tryParse(newPercentage);
+                if (newValue != null) {
+                  double realtorFeesPercentage = newValue / 100;
+                  ref
+                      .read(fixFlipProvider)
+                      .updateRealtorFeesPercentage(realtorFeesPercentage);
+                } else {
+                  ref.read(fixFlipProvider).updateRealtorFeesPercentage(0.0);
+                  ref.read(fixFlipProvider).updateRealtorFees(0);
+                }
+                ref.read(fixFlipProvider).calculateAllSellingCosts();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Realtor\'s fees are required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Realtor\'s\nFees'
+                    : 'Realtor\'s Fees',
+                realtorsFeesString),
+            MoneyListTile('Taxes', taxesString),
+            MoneyTextField(
+              labelText: 'Seller\'s Closing Costs',
+              controller: sellersClosingCostsController,
+              onChanged: (String newCost) {
+                newCost = newCost.replaceAll(',', '');
+                double? newValue = double.tryParse(newCost);
+                if (newValue != null) {
+                  ref
+                      .read(fixFlipProvider)
+                      .updateSellersClosingCosts(newValue);
+                } else {
+                  ref.read(fixFlipProvider).updateSellersClosingCosts(0.0);
+                }
+                ref.read(fixFlipProvider).calculateAllSellingCosts();
+              },
+            ),
+            MoneyTextField(
+              labelText: 'Buyer\'s Closing Costs',
+              controller: buyersClosingCostsController,
+              onChanged: (String newCost) {
+                newCost = newCost.replaceAll(',', '');
+                double? newValue = double.tryParse(newCost);
+                if (newValue != null) {
+                  ref
+                      .read(fixFlipProvider)
+                      .updateBuyersClosingCosts(newValue);
+                } else {
+                  ref.read(fixFlipProvider).updateBuyersClosingCosts(0.0);
+                }
+                ref.read(fixFlipProvider).calculateAllSellingCosts();
+              },
+            ),
+            MoneyTextField(
+              labelText: 'Other Closing Costs',
+              controller: otherClosingCostsController,
+              onChanged: (String newCost) {
+                newCost = newCost.replaceAll(',', '');
+                double? newValue = double.tryParse(newCost);
+                if (newValue != null) {
+                  ref.read(fixFlipProvider).updateOtherClosingCosts(newValue);
+                } else {
+                  ref.read(fixFlipProvider).updateOtherClosingCosts(0.0);
+                }
+                ref.read(fixFlipProvider).calculateAllSellingCosts();
+              },
+            ),
+            const SizedBox(height: 8),
+            const Divider(),
+            const SizedBox(height: 8),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Total'
+                    : context.isTablet
+                        ? 'Total Closing Costs'
+                        : 'Total \nClosing Costs',
+                totalString),
+          ],
+        ),
       ),
     );
   }

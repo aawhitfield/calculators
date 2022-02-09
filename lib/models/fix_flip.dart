@@ -17,7 +17,7 @@ class FixFlipFields {
     taxes, insurance,
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType,
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm, constructionPaymentType,
-    holdingCostsUtilities,
+    holdingCostsUtilities, otherHoldingCosts,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
     realtorsFeesPercentage, sellersClosingCosts, buyersClosingCosts, otherClosingCosts,
   ];
@@ -70,6 +70,7 @@ class FixFlipFields {
   static const String constructionTerm = 'constructionTerm';
   static const String constructionPaymentType = 'constructionPaymentType';
   static const String holdingCostsUtilities = 'holdingCostsUtilities';
+  static const String otherHoldingCosts = 'otherHoldingCosts';
   static const String sellerFinancingType = 'sellerFinancingType';
   static const String sellerLoanPercent = 'sellerLoanPercent';
   static const String sellerInterestRate = 'sellerInterestRate';
@@ -142,6 +143,8 @@ class FixFlip extends ChangeNotifier{
   double debtService;
   double insuranceAndTaxes;
   double holdingCostsUtilities;
+  double otherHoldingCosts;
+  double monthlyHoldingCosts;
   double totalHoldingCosts;
   SellerFinancingType sellerFinancingType;
   double sellerLoanPercentage;
@@ -178,7 +181,7 @@ class FixFlip extends ChangeNotifier{
     this.constructionDownPaymentPercentage = 0, this.constructionLoanAmount = 0, this.constructionDownPaymentAmount = 0,
     this.constructionInterestRate = 0, this.constructionTerm = 0, this.constructionPaymentType = PaymentType.principalAndInterest, this.constructionMonthlyPayment = 0,
     this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
-    this.totalHoldingCosts = 0,
+    this.totalHoldingCosts = 0, this.otherHoldingCosts = 0, this.monthlyHoldingCosts = 0,
     this.sellerFinancingType = SellerFinancingType.payment,
     this.sellerLoanPercentage = 0, this.sellerLoanAmount = 0,
     this.sellerInterestRate = 0, this.amortization = 0, this.sellerTerm = 0, this.sellerMonthlyPayment = 0,
@@ -231,6 +234,7 @@ class FixFlip extends ChangeNotifier{
     FixFlipFields.constructionTerm: constructionTerm,
     FixFlipFields.constructionPaymentType: PaymentTypeUtils(constructionPaymentType).name,
     FixFlipFields.holdingCostsUtilities: holdingCostsUtilities,
+    FixFlipFields.otherHoldingCosts: otherHoldingCosts,
     FixFlipFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
     FixFlipFields.sellerLoanPercent: sellerLoanPercentage,
     FixFlipFields.sellerInterestRate: sellerInterestRate,
@@ -289,6 +293,7 @@ class FixFlip extends ChangeNotifier{
           ? PaymentTypeUtils.getPaymentType(json[FixFlipFields.constructionPaymentType] as String)
           : PaymentType.principalAndInterest,
       holdingCostsUtilities: json[FixFlipFields.holdingCostsUtilities] as double,
+      otherHoldingCosts: (json.containsKey('otherHoldingCosts')) ? (json[FixFlipFields.otherHoldingCosts] as double) : 0,
       sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[FixFlipFields.financingType] as String),
       sellerLoanPercentage: json[FixFlipFields.sellerLoanPercent] as double,
       sellerInterestRate: json[FixFlipFields.sellerInterestRate] as double,
@@ -361,6 +366,7 @@ class FixFlip extends ChangeNotifier{
     debtService = data.debtService;
     insuranceAndTaxes = data.insuranceAndTaxes;
     holdingCostsUtilities = data.holdingCostsUtilities;
+    otherHoldingCosts = data.otherHoldingCosts;
     totalHoldingCosts = data.totalHoldingCosts;
     sellerFinancingType = data.sellerFinancingType;
     sellerLoanPercentage = data.sellerLoanPercentage;
@@ -850,13 +856,19 @@ class FixFlip extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateHoldingCostsOther(double newValue) {
+    otherHoldingCosts = newValue;
+    notifyListeners();
+  }
+
   void calculateAllHoldingCosts() {
 
     debtService =
         (monthlyPayment * monthsToRehabRent) + constructionMonthlyPayment;
 
     insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
-    totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities) * monthsToRehabRent;
+    monthlyHoldingCosts = debtService + insuranceAndTaxes + holdingCostsUtilities + otherHoldingCosts;
+    totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities + otherHoldingCosts) * monthsToRehabRent;
     notifyListeners();
   }
 
@@ -975,7 +987,7 @@ class FixFlip extends ChangeNotifier{
     id = null;
     foundation = roof = airConditioner = paintingPatching = kitchen = windows
     = plumbing = flooring = bathrooms = appliances = electrical = yard
-    = cleaning = baseboards = exterior = totalRenovations = 0;
+    = cleaning = baseboards = exterior = otherRenovations = totalRenovations = 0;
     rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
       = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
     taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly = 0;
@@ -1008,6 +1020,8 @@ class FixFlip extends ChangeNotifier{
     otherClosingCosts = 0;
     totalClosingCosts = 0;
     holdingCostsUtilities = 0;
+    otherHoldingCosts = 0;
+    monthlyHoldingCosts = 0;
     notifyListeners();
   }
 }

@@ -25,6 +25,8 @@ class PropertyCostsState extends ConsumerState<FixFlipPropertyCosts> {
   TextEditingController purchasePriceController = TextEditingController();
   TextEditingController unitsController = TextEditingController();
   TextEditingController investorsController = TextEditingController();
+  
+  GlobalKey<FormState> ffPropertyKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -54,76 +56,107 @@ class PropertyCostsState extends ConsumerState<FixFlipPropertyCosts> {
     String listPriceString = kCurrencyFormat.format(listPrice);
     String renovationsString = kCurrencyFormat.format(renovations);
 
-    return MyInputPage(
-        imageUri: 'images/property.svg',
-        headerText: 'Property Costs',
-        subheadText: 'Now let\'s get some information about costs associated '
-            'with this property.',
-      onBack: () {
-        String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
-        bool shouldOverrideBackButton = savedCalculatorID != '';
-        if (shouldOverrideBackButton) {
-          Get.off(() => const FixFlipRenovationsCalculator());
-        } else {
-          Get.back();
-        }
-      },
-        onSubmit: () {
-            Get.to(() => const FixFlipExpensesInput());
+    return Form(
+      key: ffPropertyKey,
+      child: MyInputPage(
+          imageUri: 'images/property.svg',
+          headerText: 'Property Costs',
+          subheadText: 'Now let\'s get some information about costs associated '
+              'with this property.',
+        onBack: () {
+          String savedCalculatorID = ref.read(savedCalculatorProvider).uid;
+          bool shouldOverrideBackButton = savedCalculatorID != '';
+          if (shouldOverrideBackButton) {
+            Get.off(() => const FixFlipRenovationsCalculator());
+          } else {
+            Get.back();
+          }
         },
-        position: kFixFlipQuestions.indexOf(FixFlipPropertyCosts) + 1,
-        totalQuestions: kFixFlipQuestions.length,
-        child: ResponsiveLayout(
-          children: [
-            MoneyListTile(
-                'List Price',
-                listPriceString,
-            ),
-            MoneyListTile(
-                'Rehab',
-                renovationsString,
-            ),
-            MoneyTextField(
-                labelText: 'After Repair Value',
-                controller: afterRepairController,
-                onChanged: (String newPrice) {
-                  newPrice = newPrice.replaceAll(',', '');
-                  double? price = double.tryParse(newPrice);
-                  if(price != null) {
-                    ref.read(fixFlipProvider).updateAfterRepairValue(price);
+          onSubmit: () {
+              if (ffPropertyKey.currentState?.validate() ?? false) {
+                Get.to(() => const FixFlipExpensesInput());
+              }
+          },
+          position: kFixFlipQuestions.indexOf(FixFlipPropertyCosts) + 1,
+          totalQuestions: kFixFlipQuestions.length,
+          child: ResponsiveLayout(
+            children: [
+              MoneyListTile(
+                  'List Price',
+                  listPriceString,
+              ),
+              MoneyListTile(
+                  'Rehab',
+                  renovationsString,
+              ),
+              MoneyTextField(
+                  labelText: 'After Repair Value *',
+                  controller: afterRepairController,
+                  onChanged: (String newPrice) {
+                    newPrice = newPrice.replaceAll(',', '');
+                    double? price = double.tryParse(newPrice);
+                    if(price != null) {
+                      ref.read(fixFlipProvider).updateAfterRepairValue(price);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'After repair value is required';
                   }
-                }
-            ),
-            MoneyTextField(
-                labelText: 'Purchase Price',
-                controller: purchasePriceController,
-                onChanged: (String newPrice) {
-                  newPrice = newPrice.replaceAll(',', '');
-                  double? price = double.tryParse(newPrice);
-                  if(price != null) {
-                    ref.read(fixFlipProvider).updatePurchasePrice(price);
+                  return null;
+                },
+              ),
+              MoneyTextField(
+                  labelText: 'Purchase Price *',
+                  controller: purchasePriceController,
+                  onChanged: (String newPrice) {
+                    newPrice = newPrice.replaceAll(',', '');
+                    double? price = double.tryParse(newPrice);
+                    if(price != null) {
+                      ref.read(fixFlipProvider).updatePurchasePrice(price);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Purchase price is required';
                   }
-                }
-            ),
-            IntegerTextField(
-                labelText: 'Number of Units',
-                controller: unitsController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(fixFlipProvider).updateUnits(value);
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                  labelText: 'Number of Units *',
+                  controller: unitsController,
+                  onChanged: (String newValue) {
+                    int? value = int.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(fixFlipProvider).updateUnits(value);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Number of units is required';
                   }
-                }),
-            IntegerTextField(
-                labelText: 'Number of Investors',
-                controller: investorsController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(fixFlipProvider).updateInvestors(value);
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                  labelText: 'Number of Investors *',
+                  controller: investorsController,
+                  onChanged: (String newValue) {
+                    int? value = int.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(fixFlipProvider).updateInvestors(value);
+                    }
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Investors is required';
                   }
-                }),
-          ],),
+                  return null;
+                },
+              ),
+            ],),
+      ),
     );
   }
 }
