@@ -27,18 +27,19 @@ class _ReportRefinanceState extends ConsumerState<ReportRefinance> {
   @override
   void initState() {
     arv = ref.read(brrrrProvider).afterRepairValue;
-    if(arv != 0) {
+    if (arv != 0) {
       arvController.text = kCurrencyFormat.format(arv);
     }
     refinanceClosingCosts = ref.read(brrrrProvider).refinancingClosingCosts;
-    if(refinanceClosingCosts != 0) {
-      closingCostsController.text = kCurrencyFormat.format(refinanceClosingCosts);
+    if (refinanceClosingCosts != 0) {
+      closingCostsController.text =
+          kCurrencyFormat.format(refinanceClosingCosts);
     }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     double arvLoan = ref.watch(brrrrProvider).refinancingLoanAmount;
     double originalAmount = ref.watch(brrrrProvider).loanAmount +
         ref.watch(brrrrProvider).sellerLoanAmount;
@@ -91,15 +92,16 @@ class _ReportRefinanceState extends ConsumerState<ReportRefinance> {
         const SizedBox(height: 16),
         MoneyTextField(
             controller: arvController,
-            labelText: 'ARV', onChanged: (String newValue) {
-          double? value = double.tryParse(newValue);
-          if (value != null) {
-            ref.read(brrrrProvider).updateAfterRepairValue(value);
-          } else {
-            ref.read(brrrrProvider).updateAfterRepairValue(0.0);
-          }
-          ref.read(brrrrProvider).calculateAll();
-        }),
+            labelText: 'ARV',
+            onChanged: (String newValue) {
+              double? value = double.tryParse(newValue);
+              if (value != null) {
+                ref.read(brrrrProvider).updateAfterRepairValue(value);
+              } else {
+                ref.read(brrrrProvider).updateAfterRepairValue(0.0);
+              }
+              ref.read(brrrrProvider).calculateAll();
+            }),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'ARV\nLoan'
@@ -158,12 +160,15 @@ class _ReportRefinanceState extends ConsumerState<ReportRefinance> {
           valueString: afterRefinanceString,
           subtitle: (MediaQuery.of(context).size.width < 640) ? '0 IN' : '',
         ),
-        ColoredMoneyListTile(
-            value: perInvestorAfterRefinance,
-            smallScreenTitle: 'Per\nInvestor',
-            largeScreenTitle: 'Per Investor', valueString: perInvestorAfterRefinanceString,
-            subtitle: 'After Refinance 0 IN',
-        ),
+        (ref.read(brrrrProvider).investors > 1)
+            ? ColoredMoneyListTile(
+                value: perInvestorAfterRefinance,
+                smallScreenTitle: 'Per\nInvestor',
+                largeScreenTitle: 'Per Investor',
+                valueString: perInvestorAfterRefinanceString,
+                subtitle: 'After Refinance 0 IN',
+              )
+            : Container(),
         const SizedBox(height: 16),
       ],
     );

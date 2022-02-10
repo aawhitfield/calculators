@@ -30,6 +30,8 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
   TextEditingController termController = TextEditingController();
   TextEditingController closingCostsController = TextEditingController();
 
+  GlobalKey<FormState> brrrrRefinanceKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     double loanPercent = ref.read(brrrrProvider).refinancingLoanToValue * 100;
@@ -93,121 +95,150 @@ class _RefinanceInputState extends ConsumerState<RefinanceInput> {
       },
       onSubmit: () {
         ref.read(brrrrProvider).calculateAll();
-        Get.to(() => const HoldingCosts());
+        if (brrrrRefinanceKey.currentState?.validate() ?? false) {
+          Get.to(() => const HoldingCosts());
+        }
       },
       position: kBRRRRQuestions.indexOf(RefinanceInput) + 1,
       totalQuestions: kBRRRRQuestions.length,
-      child: ResponsiveLayout(
-        children: [
-          Row(
-            children: [
-              const Text('Financing Type'),
-              const SizedBox(width: 8),
-              Expanded(
-                child: DropdownButton<Refinancing>(
-                  value: refinancingMethod,
-                  items: Refinancing.values
-                      .map((Refinancing refinancingMethod) =>
-                          DropdownMenuItem<Refinancing>(
-                              value: refinancingMethod,
-                              child: Text(
-                                  RefinancingUtils(refinancingMethod).name)))
-                      .toList(),
-                  onChanged: (Refinancing? newValue) {
-                    ref.read(brrrrProvider).updateRefinancingType(newValue!);
-                  },
-                ),
-              )
-            ],
-          ),
-          PercentTextField(
-            labelText: 'Loan to Value',
-            controller: loanPercentController,
-            onChanged: (String newPercentage) {
-              newPercentage = newPercentage.replaceAll(',', '');
-              double? newValue = double.tryParse(newPercentage);
-              if (newValue != null) {
-                double loanPercentage = newValue / 100;
-                ref
-                    .read(brrrrProvider)
-                    .updateRefinancingLoanToValue(loanPercentage);
-                double afterRepairValue =
-                    ref.read(brrrrProvider).afterRepairValue;
-                double loanAmount = afterRepairValue * loanPercentage;
+      child: Form(
+        key: brrrrRefinanceKey,
+        child: ResponsiveLayout(
+          children: [
+            Row(
+              children: [
+                const Text('Financing Type'),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: DropdownButton<Refinancing>(
+                    value: refinancingMethod,
+                    items: Refinancing.values
+                        .map((Refinancing refinancingMethod) =>
+                            DropdownMenuItem<Refinancing>(
+                                value: refinancingMethod,
+                                child: Text(
+                                    RefinancingUtils(refinancingMethod).name)))
+                        .toList(),
+                    onChanged: (Refinancing? newValue) {
+                      ref.read(brrrrProvider).updateRefinancingType(newValue!);
+                    },
+                  ),
+                )
+              ],
+            ),
+            PercentTextField(
+              labelText: 'Loan to Value *',
+              controller: loanPercentController,
+              onChanged: (String newPercentage) {
+                newPercentage = newPercentage.replaceAll(',', '');
+                double? newValue = double.tryParse(newPercentage);
+                if (newValue != null) {
+                  double loanPercentage = newValue / 100;
+                  ref
+                      .read(brrrrProvider)
+                      .updateRefinancingLoanToValue(loanPercentage);
+                  double afterRepairValue =
+                      ref.read(brrrrProvider).afterRepairValue;
+                  double loanAmount = afterRepairValue * loanPercentage;
 
-                ref.read(brrrrProvider).updateRefinancingLoanAmount(loanAmount);
+                  ref.read(brrrrProvider).updateRefinancingLoanAmount(loanAmount);
 
-                double downPayment = afterRepairValue - loanAmount;
-                ref.read(brrrrProvider).updateRefinancingDownPayment(downPayment);
-              }
-              else {
-                ref.read(brrrrProvider).updateRefinancingLoanToValue(0.0);
-              }
-              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
-            },
-          ),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Loan\nAmount'
-                  : 'Loan Amount',
-              loanAmountString),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Down\nPayment'
-                  : 'Down Payment',
-              downPaymentString),
-          PercentTextField(
-            labelText: 'Interest Rate',
-            controller: interestRateController,
-            onChanged: (String newPercentage) {
-              newPercentage = newPercentage.replaceAll(',', '');
-              double? newValue = double.tryParse(newPercentage);
-              if (newValue != null) {
-                double interestRate = newValue / 100;
-                ref.read(brrrrProvider).updateRefinancingInterestRate(interestRate);
-              }
-              else {
-                ref.read(brrrrProvider).updateRefinancingInterestRate(0.0);
-              }
-              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
-            },
-          ),
-          IntegerTextField(
-            labelText: 'Term',
-            controller: termController,
-            leftPadding: 8,
-            rightPadding: 8,
-            onChanged: (String newTerm) {
-              newTerm = newTerm.replaceAll(',', '');
-              int? newValue = int.tryParse(newTerm);
-              if (newValue != null) {
-                ref.read(brrrrProvider).updateRefinancingTerm(newValue);
-              }
-              else {
-                ref.read(brrrrProvider).updateRefinancingTerm(0);
-              }
-              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
-            },
-          ),
-          MoneyTextField(
-            labelText: 'Closing Costs',
-            controller: closingCostsController,
-            onChanged: (String newCost) {
-              newCost = newCost.replaceAll(',', '');
-              double? newValue = double.tryParse(newCost);
-              if (newValue != null) {
-                ref.read(brrrrProvider).updateRefinancingClosingCosts(newValue);
-              }
-              else {
-                ref.read(brrrrProvider).updateRefinancingClosingCosts(0.0);
-              }
-              ref.read(brrrrProvider).calculateAllRefinanceCalculations();
-            },
-          ),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Monthly\nPayment':'Monthly Payment', monthlyPaymentString),
-        ],
+                  double downPayment = afterRepairValue - loanAmount;
+                  ref.read(brrrrProvider).updateRefinancingDownPayment(downPayment);
+                }
+                else {
+                  ref.read(brrrrProvider).updateRefinancingLoanToValue(0.0);
+                }
+                ref.read(brrrrProvider).calculateAllRefinanceCalculations();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Loan to value is required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Loan\nAmount'
+                    : 'Loan Amount',
+                loanAmountString),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Down\nPayment'
+                    : 'Down Payment',
+                downPaymentString),
+            PercentTextField(
+              labelText: 'Interest Rate *',
+              controller: interestRateController,
+              onChanged: (String newPercentage) {
+                newPercentage = newPercentage.replaceAll(',', '');
+                double? newValue = double.tryParse(newPercentage);
+                if (newValue != null) {
+                  double interestRate = newValue / 100;
+                  ref.read(brrrrProvider).updateRefinancingInterestRate(interestRate);
+                }
+                else {
+                  ref.read(brrrrProvider).updateRefinancingInterestRate(0.0);
+                }
+                ref.read(brrrrProvider).calculateAllRefinanceCalculations();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Interest rate is required';
+                }
+                return null;
+              },
+            ),
+            IntegerTextField(
+              labelText: 'Term *',
+              controller: termController,
+              leftPadding: 8,
+              rightPadding: 8,
+              onChanged: (String newTerm) {
+                newTerm = newTerm.replaceAll(',', '');
+                int? newValue = int.tryParse(newTerm);
+                if (newValue != null) {
+                  ref.read(brrrrProvider).updateRefinancingTerm(newValue);
+                }
+                else {
+                  ref.read(brrrrProvider).updateRefinancingTerm(0);
+                }
+                ref.read(brrrrProvider).calculateAllRefinanceCalculations();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Term is required';
+                }
+                return null;
+              },
+            ),
+            MoneyTextField(
+              labelText: 'Closing Costs *',
+              controller: closingCostsController,
+              onChanged: (String newCost) {
+                newCost = newCost.replaceAll(',', '');
+                double? newValue = double.tryParse(newCost);
+                if (newValue != null) {
+                  ref.read(brrrrProvider).updateRefinancingClosingCosts(newValue);
+                }
+                else {
+                  ref.read(brrrrProvider).updateRefinancingClosingCosts(0.0);
+                }
+                ref.read(brrrrProvider).calculateAllRefinanceCalculations();
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Closing costs are required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Monthly\nPayment':'Monthly Payment', monthlyPaymentString),
+          ],
+        ),
       ),
     );
   }

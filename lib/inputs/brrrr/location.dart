@@ -38,7 +38,9 @@ class Location extends ConsumerWidget {
       onSubmit: () {
         ref.read(brrrrProvider).updateAddress(addressController.text);
 
-        Get.to(() => const RenovationsCalculator());
+        if (brrrrAddressKey.currentState?.validate() ?? false) {
+          Get.to(() => const RenovationsCalculator());
+        }
       },
       position: 1,
       totalQuestions: kBRRRRQuestions.length,

@@ -28,6 +28,8 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
   TextEditingController unitsController = TextEditingController();
   TextEditingController investorsController = TextEditingController();
 
+  GlobalKey<FormState> brrrrPropertyKey = GlobalKey<FormState>();
+
   @override
   void initState() {
     double afterRepairValue = ref.read(brrrrProvider).afterRepairValue;
@@ -72,66 +74,112 @@ class PropertyCostsState extends ConsumerState<PropertyCosts> {
       },
         onSubmit: () {
           Calculator calculatorType = ref.read(calculatorProvider).type;
-          if (calculatorType == Calculator.brrrr) {
-            Get.to(() => const IncomeInput());
-          }
-          else {
-            Get.to(() => const ExpensesInput());
+          if (brrrrPropertyKey.currentState?.validate() ?? false) {
+            if (calculatorType == Calculator.brrrr) {
+              Get.to(() => const IncomeInput());
+            }
+            else {
+              Get.to(() => const ExpensesInput());
+            }
           }
         },
         position: kBRRRRQuestions.indexOf(PropertyCosts) + 1,
         totalQuestions: kBRRRRQuestions.length,
-        child: ResponsiveLayout(
-          children: [
-            MoneyListTile(
-              'List Price',
-              listPriceString,
-            ),
-            MoneyListTile(
-              'Rehab',
-              renovationsString,
-            ),
-            MoneyTextField(
-                labelText: 'After Repair Value',
-                controller: afterRepairController,
-                onChanged: (String newPrice) {
-                  newPrice = newPrice.replaceAll(',', '');
-                  double? price = double.tryParse(newPrice);
-                  if(price != null) {
-                    ref.read(brrrrProvider).updateAfterRepairValue(price);
+        child: Form(
+          key: brrrrPropertyKey,
+          child: ResponsiveLayout(
+            children: [
+              MoneyListTile(
+                'List Price',
+                listPriceString,
+              ),
+              MoneyListTile(
+                'Rehab',
+                renovationsString,
+              ),
+              MoneyTextField(
+                  labelText: 'After Repair Value *',
+                  controller: afterRepairController,
+                  onChanged: (String newPrice) {
+                    newPrice = newPrice.replaceAll(',', '');
+                    double? price = double.tryParse(newPrice);
+                    if(price != null) {
+                      ref.read(brrrrProvider).updateAfterRepairValue(price);
+                    }
+                    else {
+                      ref.read(brrrrProvider).updateAfterRepairValue(0.0);
+                    }
+                    ref.read(brrrrProvider).calculateAll();
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'After repair value is required';
                   }
-                }
-            ),
-            MoneyTextField(
-                labelText: 'Purchase Price',
-                controller: purchasePriceController,
-                onChanged: (String newPrice) {
-                  newPrice = newPrice.replaceAll(',', '');
-                  double? price = double.tryParse(newPrice);
-                  if(price != null) {
-                    ref.read(brrrrProvider).updatePurchasePrice(price);
+                  return null;
+                },
+              ),
+              MoneyTextField(
+                  labelText: 'Purchase Price *',
+                  controller: purchasePriceController,
+                  onChanged: (String newPrice) {
+                    newPrice = newPrice.replaceAll(',', '');
+                    double? price = double.tryParse(newPrice);
+                    if(price != null) {
+                      ref.read(brrrrProvider).updatePurchasePrice(price);
+                    }else {
+                      ref.read(brrrrProvider).updatePurchasePrice(0.0);
+                    }
+                    ref.read(brrrrProvider).calculateAll();
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Purchase price is required';
                   }
-                }
-            ),
-            IntegerTextField(
-                labelText: 'Number of Units',
-                controller: unitsController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(brrrrProvider).updateUnits(value);
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                  labelText: 'Number of Units *',
+                  controller: unitsController,
+                  onChanged: (String newValue) {
+                    int? value = int.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(brrrrProvider).updateUnits(value);
+                    }
+                    else {
+                      ref.read(brrrrProvider).updateUnits(0);
+                    }
+                    ref.read(brrrrProvider).calculateAll();
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Number of units is required';
                   }
-                }),
-            IntegerTextField(
-                labelText: 'Number of Investors',
-                controller: investorsController,
-                onChanged: (String newValue) {
-                  int? value = int.tryParse(newValue);
-                  if(value != null) {
-                    ref.read(brrrrProvider).updateInvestors(value);
+                  return null;
+                },
+              ),
+              IntegerTextField(
+                  labelText: 'Number of Investors *',
+                  controller: investorsController,
+                  onChanged: (String newValue) {
+                    int? value = int.tryParse(newValue);
+                    if(value != null) {
+                      ref.read(brrrrProvider).updateInvestors(value);
+                    }
+                    else {
+                      ref.read(brrrrProvider).updateInvestors(0);
+                    }
+                    ref.read(brrrrProvider).calculateAll();
+                  },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Number of investors is required';
                   }
-                }),
-          ],),
+                  return null;
+                },
+              ),
+            ],),
+        ),
     );
   }
 }

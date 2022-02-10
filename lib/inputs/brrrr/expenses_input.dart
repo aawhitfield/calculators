@@ -25,6 +25,8 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
   TextEditingController vacancyController = TextEditingController();
   TextEditingController maintenanceController = TextEditingController();
   TextEditingController otherController = TextEditingController();
+  
+  GlobalKey<FormState> brrrrExpensesKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -94,161 +96,178 @@ class _ExpensesInputState extends ConsumerState<ExpensesInput> {
         }
       },
       onSubmit: () {
-        Get.to(() => const FinanceOptions());
+        if (brrrrExpensesKey.currentState?.validate()  ?? false) {
+          Get.to(() => const FinanceOptions());
+        }
       },
-      child: ResponsiveLayout(
-        children: [
-          MoneyTextField(
-            labelText: 'Taxes (Yearly)',
-            controller: taxesController,
-            onChanged: (String newValue) {
-              newValue = newValue.replaceAll(',', '');
-              double? taxes = double.tryParse(newValue);
-              if (taxes != null) {
-                ref.read(brrrrProvider).updateTaxes(taxes);
-              } else {
-                ref.read(brrrrProvider).updateTaxes(0.0);
-              }
-              ref.read(brrrrProvider).calculateAllExpenses();
-            },
-          ),
-          MoneyListTile('Taxes', taxesMonthlyString, subtitle: 'Monthly'),
-          MoneyTextField(
-            labelText: 'Insurance (Yearly)',
-            controller: insuranceController,
-            onChanged: (String newValue) {
-              newValue = newValue.replaceAll(',', '');
-              double? insurance = double.tryParse(newValue);
-              if (insurance != null) {
-                ref.read(brrrrProvider).updateInsurance(insurance);
-              } else {
-                ref.read(brrrrProvider).updateInsurance(0.0);
-              }
-              ref.read(brrrrProvider).calculateAllExpenses();
-            },
-          ),
-          MoneyListTile('Insurance', insuranceMonthlyString,
-              subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Property Management',
-              controller: propertyManagementController,
+      child: Form(
+        key: brrrrExpensesKey,
+        child: ResponsiveLayout(
+          children: [
+            MoneyTextField(
+              labelText: 'Taxes (Yearly) *',
+              controller: taxesController,
               onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(brrrrProvider).updatePropertyManagement(value);
+                newValue = newValue.replaceAll(',', '');
+                double? taxes = double.tryParse(newValue);
+                if (taxes != null) {
+                  ref.read(brrrrProvider).updateTaxes(taxes);
                 } else {
-                  ref.read(brrrrProvider).updatePropertyManagement(0);
+                  ref.read(brrrrProvider).updateTaxes(0.0);
                 }
                 ref.read(brrrrProvider).calculateAllExpenses();
-              }),
-          MoneyListTile((MediaQuery.of(context).size.width < 640)
-              ? 'Property\nManagement'
-              : 'Property Management', propertyManagementMonthlyString,
-              subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Vacancy',
-              controller: vacancyController,
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Taxes are required';
+                }
+                return null;
+              },
+            ),
+            MoneyListTile('Taxes', taxesMonthlyString, subtitle: 'Monthly'),
+            MoneyTextField(
+              labelText: 'Insurance (Yearly) *',
+              controller: insuranceController,
               onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(brrrrProvider).updateVacancy(value);
+                newValue = newValue.replaceAll(',', '');
+                double? insurance = double.tryParse(newValue);
+                if (insurance != null) {
+                  ref.read(brrrrProvider).updateInsurance(insurance);
                 } else {
-                  ref.read(brrrrProvider).updateVacancy(0);
+                  ref.read(brrrrProvider).updateInsurance(0.0);
                 }
                 ref.read(brrrrProvider).calculateAllExpenses();
-              }),
-          MoneyListTile('Vacancy', vacancyMonthlyString, subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Maintenance',
-              controller: maintenanceController,
-              onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(brrrrProvider).updateMaintenance(value);
-                } else {
-                  ref.read(brrrrProvider).updateMaintenance(0);
+              },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Insurance is required';
                 }
-                ref.read(brrrrProvider).calculateAllExpenses();
-              }),
-          MoneyListTile('Maintenance', maintenanceMonthlyString,
-              subtitle: 'Monthly'),
-          PercentTextField(
-              labelText: 'Other',
-              controller: otherController,
-              onChanged: (String newValue) {
-                double? value = double.tryParse(newValue);
-                if (value != null) {
-                  value = value / 100; // convert to decimal from %
-                  ref.read(brrrrProvider).updateOther(value);
-                } else {
-                  ref.read(brrrrProvider).updateOther(0);
-                }
-                ref.read(brrrrProvider).calculateAllExpenses();
-              }),
-          MoneyListTile('Other Expenses', otherExpensesMonthlyString,
-              subtitle: 'Monthly'),
-          MoneyListTile(
-            'Total \nExpenses',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).totalMonthlyExpenses)
-                .toString(),
-            subtitle: 'Monthly',
-          ),
-          MoneyListTile(
-            'Total \nExpenses',
-            kCurrencyFormat.format(double.parse(ref
-                .watch(brrrrProvider)
-                .totalAnnualExpenses
-                .toStringAsFixed(2))),
-            subtitle: 'Annually',
-          ),
-          MoneyListTile(
-            'NOI',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).noiMonthly)
-                .toString(),
-            subtitle: 'Monthly',
-          ),
-          MoneyListTile(
-            'NOI',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).noiAnnual)
-                .toString(),
-            subtitle: 'Annually',
-          ),
+                return null;
+              },
+            ),
+            MoneyListTile('Insurance', insuranceMonthlyString,
+                subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Property Management',
+                controller: propertyManagementController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(brrrrProvider).updatePropertyManagement(value);
+                  } else {
+                    ref.read(brrrrProvider).updatePropertyManagement(0);
+                  }
+                  ref.read(brrrrProvider).calculateAllExpenses();
+                }),
+            MoneyListTile((MediaQuery.of(context).size.width < 640)
+                ? 'Property\nManagement'
+                : 'Property Management', propertyManagementMonthlyString,
+                subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Vacancy',
+                controller: vacancyController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(brrrrProvider).updateVacancy(value);
+                  } else {
+                    ref.read(brrrrProvider).updateVacancy(0);
+                  }
+                  ref.read(brrrrProvider).calculateAllExpenses();
+                }),
+            MoneyListTile('Vacancy', vacancyMonthlyString, subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Maintenance',
+                controller: maintenanceController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(brrrrProvider).updateMaintenance(value);
+                  } else {
+                    ref.read(brrrrProvider).updateMaintenance(0);
+                  }
+                  ref.read(brrrrProvider).calculateAllExpenses();
+                }),
+            MoneyListTile('Maintenance', maintenanceMonthlyString,
+                subtitle: 'Monthly'),
+            PercentTextField(
+                labelText: 'Other',
+                controller: otherController,
+                onChanged: (String newValue) {
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    value = value / 100; // convert to decimal from %
+                    ref.read(brrrrProvider).updateOther(value);
+                  } else {
+                    ref.read(brrrrProvider).updateOther(0);
+                  }
+                  ref.read(brrrrProvider).calculateAllExpenses();
+                }),
+            MoneyListTile('Other Expenses', otherExpensesMonthlyString,
+                subtitle: 'Monthly'),
+            MoneyListTile(
+              'Total \nExpenses',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).totalMonthlyExpenses)
+                  .toString(),
+              subtitle: 'Monthly',
+            ),
+            MoneyListTile(
+              'Total \nExpenses',
+              kCurrencyFormat.format(double.parse(ref
+                  .watch(brrrrProvider)
+                  .totalAnnualExpenses
+                  .toStringAsFixed(2))),
+              subtitle: 'Annually',
+            ),
+            MoneyListTile(
+              'NOI',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).noiMonthly)
+                  .toString(),
+              subtitle: 'Monthly',
+            ),
+            MoneyListTile(
+              'NOI',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).noiAnnual)
+                  .toString(),
+              subtitle: 'Annually',
+            ),
 
-          MoneyListTile(
-            'After\nRepair',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).totalMonthlyExpenses)
-                .toString(),
-            subtitle: 'Total Expenses Monthly',
-          ),
-          MoneyListTile(
-            'After\nRepair',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).totalAnnualExpenses)
-                .toString(),
-            subtitle: 'Total Expenses Yearly',
-          ),
-          MoneyListTile(
-            'After\nRepair',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).afterRepairNOIMonthly)
-                .toString(),
-            subtitle: 'NOI Monthly',
-          ),
-          MoneyListTile(
-            'After\nRepair',
-            kCurrencyFormat
-                .format(ref.watch(brrrrProvider).afterRepairNOIYearly)
-                .toString(),
-            subtitle: 'NOI Yearly',
-          ),
-        ],
+            MoneyListTile(
+              'After\nRepair',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).totalMonthlyExpenses)
+                  .toString(),
+              subtitle: 'Total Expenses Monthly',
+            ),
+            MoneyListTile(
+              'After\nRepair',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).totalAnnualExpenses)
+                  .toString(),
+              subtitle: 'Total Expenses Yearly',
+            ),
+            MoneyListTile(
+              'After\nRepair',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).afterRepairNOIMonthly)
+                  .toString(),
+              subtitle: 'NOI Monthly',
+            ),
+            MoneyListTile(
+              'After\nRepair',
+              kCurrencyFormat
+                  .format(ref.watch(brrrrProvider).afterRepairNOIYearly)
+                  .toString(),
+              subtitle: 'NOI Yearly',
+            ),
+          ],
+        ),
       ),
     );
   }

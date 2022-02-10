@@ -28,7 +28,8 @@ class _ReportInitialPurchaseState extends ConsumerState<ReportInitialPurchase> {
     }
     double constructionAmount = ref.read(brrrrProvider).totalRenovations;
     if (constructionAmount != 0) {
-      constructionAmountController.text = kCurrencyFormat.format(constructionAmount);
+      constructionAmountController.text =
+          kCurrencyFormat.format(constructionAmount);
     }
     double closingCosts = ref.read(brrrrProvider).closingCosts;
     if (closingCosts != 0) {
@@ -36,6 +37,7 @@ class _ReportInitialPurchaseState extends ConsumerState<ReportInitialPurchase> {
     }
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     double loanAmount = ref.watch(brrrrProvider).loanAmount;
@@ -69,25 +71,24 @@ class _ReportInitialPurchaseState extends ConsumerState<ReportInitialPurchase> {
             onChanged: (String newPrice) {
               newPrice = newPrice.replaceAll(',', '');
               double? price = double.tryParse(newPrice);
-              if(price != null) {
+              if (price != null) {
                 ref.read(brrrrProvider).updatePurchasePrice(price);
               } else {
                 ref.read(brrrrProvider).updatePurchasePrice(0.0);
               }
               ref.read(brrrrProvider).calculateAll();
-            }
-        ),
+            }),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'Loan\nAmount'
                 : 'Loan Amount',
             loanAmountString),
         MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Loan\nDP'
-                : 'Loan \nDown Payment',
-            loanDownPaymentString,
-        subtitle: 'Down Payment',
+          (MediaQuery.of(context).size.width < 640)
+              ? 'Loan\nDP'
+              : 'Loan \nDown Payment',
+          loanDownPaymentString,
+          subtitle: 'Down Payment',
         ),
         MoneyTextField(
             labelText: 'Construction Amount',
@@ -95,19 +96,18 @@ class _ReportInitialPurchaseState extends ConsumerState<ReportInitialPurchase> {
             onChanged: (String newPrice) {
               newPrice = newPrice.replaceAll(',', '');
               double? price = double.tryParse(newPrice);
-              if(price != null) {
+              if (price != null) {
                 ref.read(brrrrProvider).updateTotalRenovations(price);
               } else {
                 ref.read(brrrrProvider).updateTotalRenovations(0.0);
               }
               ref.read(brrrrProvider).calculateAll();
-            }
-        ),
+            }),
         MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Construct\nDP'
-                : 'Construction \nDown Payment',
-            constructionDownPaymentString,
+          (MediaQuery.of(context).size.width < 640)
+              ? 'Construct\nDP'
+              : 'Construction \nDown Payment',
+          constructionDownPaymentString,
           subtitle: 'Construction Down Payment',
         ),
         MoneyListTile(
@@ -121,38 +121,38 @@ class _ReportInitialPurchaseState extends ConsumerState<ReportInitialPurchase> {
             onChanged: (String newPrice) {
               newPrice = newPrice.replaceAll(',', '');
               double? price = double.tryParse(newPrice);
-              if(price != null) {
+              if (price != null) {
                 ref.read(brrrrProvider).updateClosingCosts(price);
               } else {
                 ref.read(brrrrProvider).updateClosingCosts(0.0);
               }
               ref.read(brrrrProvider).calculateAll();
-            }
-        ),
+            }),
         MoneyTextField(
             labelText: 'Rehab',
             controller: constructionAmountController,
             onChanged: (String newPrice) {
               newPrice = newPrice.replaceAll(',', '');
               double? price = double.tryParse(newPrice);
-              if(price != null) {
+              if (price != null) {
                 ref.read(brrrrProvider).updateTotalRenovations(price);
               } else {
                 ref.read(brrrrProvider).updateTotalRenovations(0.0);
               }
               ref.read(brrrrProvider).calculateAll();
-            }
-        ),
+            }),
         MoneyListTile(
             (MediaQuery.of(context).size.width < 640)
                 ? 'Initial\nCash'
                 : 'Initial \nCash Investment',
             initialCashInvestmentString),
-        MoneyListTile(
-            (MediaQuery.of(context).size.width < 640)
-                ? 'Cost per\ninvestor'
-                : 'Cost per investor',
-            costPerInvestorString),
+        (ref.read(brrrrProvider).investors > 1)
+            ? MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Cost per\ninvestor'
+                    : 'Cost per investor',
+                costPerInvestorString)
+            : Container(),
       ],
     );
   }

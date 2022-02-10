@@ -23,6 +23,9 @@ class HoldingCosts extends ConsumerStatefulWidget {
 
 class _HoldingCostsState extends ConsumerState<HoldingCosts> {
   TextEditingController utilitiesController = TextEditingController();
+  TextEditingController otherController = TextEditingController();
+
+  GlobalKey<FormState> brrrrHoldingKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -30,16 +33,17 @@ class _HoldingCostsState extends ConsumerState<HoldingCosts> {
     if (utilities != 0) {
       utilitiesController.text = kCurrencyFormat.format(utilities);
     }
+    if(ref.read(brrrrProvider).holdingCostsOther != 0) {
+      otherController.text = kCurrencyFormat.format(ref.read(brrrrProvider).holdingCostsOther);
+    }
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    double debtService = ref.watch(brrrrProvider).debtService;
     double insuranceTaxes = ref.watch(brrrrProvider).insuranceAndTaxes;
     double totalHoldingCosts = ref.watch(brrrrProvider).totalHoldingCosts;
 
-    String debtServiceString = kCurrencyFormat.format(debtService);
     String insuranceTaxesString = kCurrencyFormat.format(insuranceTaxes);
     String totalHoldingCostsString = kCurrencyFormat.format(totalHoldingCosts);
 
@@ -72,35 +76,71 @@ class _HoldingCostsState extends ConsumerState<HoldingCosts> {
         }
       },
       onSubmit: () {
-        Get.to(() => const Report());
+        if (brrrrHoldingKey.currentState?.validate() ?? false) {
+          Get.to(() => const Report());
+        }
       },
-      child: ResponsiveLayout(
-        children: [
-          MoneyListTile('Debt Service', debtServiceString),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Insurance\n& Taxes'
-                  : 'Insurance and Taxes',
-              insuranceTaxesString),
-          MoneyTextField(
-              controller: utilitiesController,
-              labelText: 'Utilities',
+      child: Form(
+        key: brrrrHoldingKey,
+        child: ResponsiveLayout(
+          children: [
+            MoneyListTile('Debt Service',
+              kCurrencyFormat.format(ref.watch(brrrrProvider).debtService), subtitle: 'Monthly',),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Insurance\n& Taxes'
+                    : 'Insurance and Taxes',
+                insuranceTaxesString, subtitle: 'Monthly',),
+            MoneyTextField(
+                controller: utilitiesController,
+                labelText: 'Monthly Utilities *',
+                onChanged: (String newValue) {
+                  newValue = newValue.replaceAll(',', '');
+                  double? value = double.tryParse(newValue);
+                  if (value != null) {
+                    ref.read(brrrrProvider).updateHoldingCostsUtilities(value);
+                  } else {
+                    ref.read(brrrrProvider).updateHoldingCostsUtilities(0.0);
+                  }
+                  ref.read(brrrrProvider).calculateAllHoldingCosts();
+                },
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Monthly utilities are required';
+                }
+                return null;
+              },
+            ),
+            MoneyTextField(
+              controller: otherController,
+              labelText: 'Monthly Other Holding Costs',
               onChanged: (String newValue) {
                 newValue = newValue.replaceAll(',', '');
                 double? value = double.tryParse(newValue);
                 if (value != null) {
-                  ref.read(brrrrProvider).updateHoldingCostsUtilities(value);
+                  ref.read(brrrrProvider).updateHoldingCostsOther(value);
                 } else {
-                  ref.read(brrrrProvider).updateHoldingCostsUtilities(0.0);
+                  ref.read(brrrrProvider).updateHoldingCostsOther(0.0);
                 }
                 ref.read(brrrrProvider).calculateAllHoldingCosts();
-              }),
-          MoneyListTile(
-              (MediaQuery.of(context).size.width < 640)
-                  ? 'Holding\nCosts'
-                  : 'Total\nHolding Costs',
-              totalHoldingCostsString),
-        ],
+              },
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Holding\nCosts'
+                    : 'Total\nHolding Costs',
+                kCurrencyFormat.format(ref.watch(brrrrProvider).holdingCostsMonthly),
+              subtitle: 'Monthly',
+            ),
+            MoneyListTile(
+                (MediaQuery.of(context).size.width < 640)
+                    ? 'Holding\nCosts'
+                    : 'Total\nHolding Costs',
+                totalHoldingCostsString,
+              subtitle: 'Total',
+            ),
+          ],
+        ),
       ),
     );
   }

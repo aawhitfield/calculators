@@ -124,7 +124,7 @@ class _ExpensesExpansionTileState extends ConsumerState<ExpensesExpansionTile> {
             }),
         MoneyListTile(
             'Property\nManagement', kCurrencyFormat.format(propertyManagement)),
-        MoneyTextField(
+        PercentTextField(
             labelText: 'Vacancy Percentage',
             controller: vacancyController,
             onChanged: (String newValue) {
@@ -138,7 +138,7 @@ class _ExpensesExpansionTileState extends ConsumerState<ExpensesExpansionTile> {
               ref.read(brrrrProvider).calculateAll();
             }),
         MoneyListTile('Vacancy', kCurrencyFormat.format(vacancy)),
-        MoneyTextField(
+        PercentTextField(
             labelText: 'Maintenance Percentage',
             controller: maintenanceController,
             onChanged: (String newValue) {
@@ -152,7 +152,7 @@ class _ExpensesExpansionTileState extends ConsumerState<ExpensesExpansionTile> {
               ref.read(brrrrProvider).calculateAll();
             }),
         MoneyListTile('Maintenance', kCurrencyFormat.format(maintenance)),
-        MoneyTextField(
+        PercentTextField(
             labelText: 'Other Percentage',
             controller: otherController,
             onChanged: (String newValue) {

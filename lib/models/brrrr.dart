@@ -19,7 +19,7 @@ class BRRRRFields {
     otherExpensesPercentage,
     financingType, downPaymentPercent, interestRate, term, closingCosts, paymentTypeType, wantsToRefinance,
     constructionDownPaymentPercentage, constructionInterestRate, constructionTerm, constructionPaymentType,
-    holdingCostsUtilities,
+    holdingCostsUtilities, holdingCostsOther,
     sellerFinancingType, sellerLoanPercent, sellerInterestRate, amortization, sellerTerm,
     refinancingType, refinancingLoanToValue, refinancingInterestRate, refinancingTerm, refinancingClosingCosts,
   ];
@@ -77,6 +77,7 @@ class BRRRRFields {
   static const String constructionTerm = 'constructionTerm';
   static const String constructionPaymentType = 'constructionPaymentType';
   static const String holdingCostsUtilities = 'holdingCostsUtilities';
+  static const String holdingCostsOther = 'holdingCostsOther';
   static const String sellerFinancingType = 'sellerFinancingType';
   static const String sellerLoanPercent = 'sellerLoanPercent';
   static const String sellerInterestRate = 'sellerInterestRate';
@@ -114,6 +115,7 @@ class BRRRR extends ChangeNotifier{
   double cleaning;
   double baseboards;
   double exterior;
+  double otherRenovations;
   double totalRenovations;
   double rent;
   double otherIncome;
@@ -164,6 +166,8 @@ class BRRRR extends ChangeNotifier{
   double debtService;
   double insuranceAndTaxes;
   double holdingCostsUtilities;
+  double holdingCostsOther;
+  double holdingCostsMonthly;
   double totalHoldingCosts;
   SellerFinancingType sellerFinancingType;
   double sellerLoanPercentage;
@@ -188,7 +192,7 @@ class BRRRR extends ChangeNotifier{
     this.paintingPatching = 0, this.kitchen = 0, this.windows = 0,
     this. plumbing = 0, this.flooring = 0, this.bathrooms = 0,
     this.appliances = 0, this.electrical = 0, this.yard = 0, this.cleaning = 0,
-    this.baseboards = 0, this.exterior = 0,
+    this.baseboards = 0, this.exterior = 0, this.otherRenovations = 0,
     this.totalRenovations = 0,
     this.rent = 0, this.otherIncome = 0, this.totalIncome = 0,
     this.yearlyIncome = 0, this.afterRepairRentPerMonth = 0, this.afterRepairOtherIncome = 0,
@@ -209,7 +213,7 @@ class BRRRR extends ChangeNotifier{
     this.constructionInterestRate = 0, this.constructionTerm = 0,
     this.constructionPaymentType = PaymentType.principalAndInterest, this.constructionMonthlyPayment = 0,
     this.debtService = 0, this.insuranceAndTaxes = 0, this.holdingCostsUtilities = 0,
-    this.totalHoldingCosts = 0,
+    this.holdingCostsOther = 0, this.holdingCostsMonthly = 0, this.totalHoldingCosts = 0,
     this.sellerFinancingType = SellerFinancingType.payment,
     this.sellerLoanPercentage = 0, this.sellerLoanAmount = 0,
     this.sellerInterestRate = 0, this.amortization = 0, this.sellerTerm = 0, this.sellerMonthlyPayment = 0,
@@ -244,6 +248,7 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.cleaning: cleaning,
     BRRRRFields.baseboards: baseboards,
     BRRRRFields.exterior: exterior,
+    BRRRRFields.otherRenovations: otherRenovations,
     BRRRRFields.totalRenovations: totalRenovations,
     BRRRRFields.rent: rent,
     BRRRRFields.otherIncome: otherIncome,
@@ -267,6 +272,7 @@ class BRRRR extends ChangeNotifier{
     BRRRRFields.constructionTerm: constructionTerm,
     BRRRRFields.constructionPaymentType : PaymentTypeUtils(constructionPaymentType).name,
     BRRRRFields.holdingCostsUtilities: holdingCostsUtilities,
+    BRRRRFields.holdingCostsOther: holdingCostsOther,
     BRRRRFields.sellerFinancingType: SellerFinancingTypeUtils(sellerFinancingType).name,
     BRRRRFields.sellerLoanPercent: sellerLoanPercentage,
     BRRRRFields.sellerInterestRate: sellerInterestRate,
@@ -330,6 +336,9 @@ class BRRRR extends ChangeNotifier{
         ? PaymentTypeUtils.getPaymentType(json[BRRRRFields.constructionPaymentType] as String)
         : PaymentType.principalAndInterest,
       holdingCostsUtilities: json[BRRRRFields.holdingCostsUtilities] as double,
+      holdingCostsOther: (json.containsKey(BRRRRFields.holdingCostsOther))
+          ? (json[BRRRRFields.holdingCostsOther] as double)
+          : 0.0,
       sellerFinancingType: SellerFinancingTypeUtils.getFinancingType(json[BRRRRFields.financingType] as String),
       sellerLoanPercentage: json[BRRRRFields.sellerLoanPercent] as double,
       sellerInterestRate: json[BRRRRFields.sellerInterestRate] as double,
@@ -367,6 +376,7 @@ class BRRRR extends ChangeNotifier{
     cleaning = data.cleaning;
     baseboards = data.baseboards;
     exterior = data.exterior;
+    otherRenovations = data.otherRenovations;
     totalRenovations = data.totalRenovations;
     rent = data.rent;
     otherIncome = data.otherIncome;
@@ -417,6 +427,7 @@ class BRRRR extends ChangeNotifier{
     debtService = data.debtService;
     insuranceAndTaxes = data.insuranceAndTaxes;
     holdingCostsUtilities = data.holdingCostsUtilities;
+    holdingCostsOther = data.holdingCostsOther;
     totalHoldingCosts = data.totalHoldingCosts;
     sellerFinancingType = data.sellerFinancingType;
     sellerLoanPercentage = data.sellerLoanPercentage;
@@ -528,7 +539,7 @@ class BRRRR extends ChangeNotifier{
   double calculateTotalRenovations() {
     totalRenovations = foundation + roof + airConditioner + paintingPatching + kitchen
         + windows + plumbing + flooring + bathrooms + appliances + electrical
-        + yard + cleaning + baseboards + exterior;
+        + yard + cleaning + baseboards + exterior + otherRenovations;
     notifyListeners();
     return totalRenovations;
   }
@@ -623,6 +634,12 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateOtherRenovations(double newValue) {
+    otherRenovations = newValue;
+    calculateTotalRenovations();
+    notifyListeners();
+  }
+
   void updateRenovation(BRRRR newRenovation) {
     foundation = newRenovation.foundation;
     roof = newRenovation.roof;
@@ -639,6 +656,7 @@ class BRRRR extends ChangeNotifier{
     cleaning = newRenovation.cleaning;
     baseboards = newRenovation.baseboards;
     exterior = newRenovation.exterior;
+    otherRenovations = newRenovation.otherRenovations;
     totalRenovations = newRenovation.totalRenovations;
     notifyListeners();
   }
@@ -1110,12 +1128,18 @@ class BRRRR extends ChangeNotifier{
     notifyListeners();
   }
 
+  void updateHoldingCostsOther(newValue) {
+    holdingCostsOther = newValue;
+    notifyListeners();
+  }
+
   void calculateAllHoldingCosts() {
         debtService =
-        (monthlyPayment + sellerMonthlyPayment + constructionMonthlyPayment) * monthsToRehabRent;
+        (monthlyPayment + sellerMonthlyPayment + constructionMonthlyPayment);
 
-    insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
-    totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities) * monthsToRehabRent;
+    insuranceAndTaxes = (taxesMonthly + insuranceMonthly);
+    holdingCostsMonthly = (debtService + insuranceAndTaxes + holdingCostsUtilities + holdingCostsOther);
+    totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities + holdingCostsOther) * monthsToRehabRent;
     notifyListeners();
   }
 
@@ -1237,7 +1261,7 @@ class BRRRR extends ChangeNotifier{
     id = null;
     foundation = roof = airConditioner = paintingPatching = kitchen = windows
     = plumbing = flooring = bathrooms = appliances = electrical = yard
-    = cleaning = baseboards = exterior = totalRenovations = 0;
+    = cleaning = baseboards = exterior = otherRenovations = totalRenovations = 0;
     rent = otherIncome = totalIncome = yearlyIncome = afterRepairRentPerMonth
       = afterRepairOtherIncome = totalIncomeAfterRepair = yearlyIncomeAfterRepair = 0;
     taxesYearly = taxesMonthly = insuranceMonthly = insuranceYearly =
@@ -1272,6 +1296,7 @@ class BRRRR extends ChangeNotifier{
     refinancingInterestRate = 0;
     refinancingTerm = 0;
     refinancingClosingCosts = refinancingMonthlyPayment = 0;
+    holdingCostsOther = 0; holdingCostsUtilities = 0; totalHoldingCosts = 0;
     notifyListeners();
   }
 }

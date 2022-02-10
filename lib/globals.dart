@@ -76,3 +76,4 @@ GlobalKey<FormState> turnkeyPropertyCostsKey = GlobalKey<FormState>();
 GlobalKey<FormState> turnkeyIncomeKey = GlobalKey<FormState>();
 GlobalKey<FormState> ffAddressKey = GlobalKey<FormState>();
 GlobalKey<FormState> quickMaxOfferKey = GlobalKey<FormState>();
+GlobalKey<FormState> brrrrAddressKey = GlobalKey<FormState>();

@@ -227,6 +227,7 @@ class _FinanceOptionsState extends ConsumerState<TurnkeyRentalFinanceOptions> {
                       } else {
                         ref.read(turnkeyProvider).updateClosingCosts(0);
                       }
+                      ref.read(turnkeyProvider).calculateAll();
                     },
                   )
                 : Column(
