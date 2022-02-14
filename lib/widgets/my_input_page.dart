@@ -1,6 +1,5 @@
 import 'package:calculators/widgets/navigation_bar_home_report.dart';
 import 'package:calculators/widgets/sign_out_button.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -64,18 +63,7 @@ class MyInputPage extends ConsumerWidget {
         iconTheme: const IconThemeData(
           color: Colors.black,
         ),
-        leading: (shouldShowBackButton != null)
-            ? (shouldShowBackButton!)
-                ? null
-                : Container()
-            : (position != 1)
-                ? IconButton(
-                    icon: Icon(GetPlatform.isAndroid
-                        ? Icons.arrow_back
-                        : CupertinoIcons.back),
-                    onPressed: onBack ?? () => Get.back(),
-                  )
-                : Container(),
+        leading: Container(),
         systemOverlayStyle: SystemUiOverlayStyle(
           systemNavigationBarColor: Colors.transparent,
           statusBarColor: Theme.of(context).primaryColor,
@@ -136,6 +124,7 @@ class MyInputPage extends ConsumerWidget {
               NavigationBarHomeReport(
                 position: position,
                 totalQuestions: totalQuestions,
+                goBack: onBack ?? () => Get.back(),
                 onSubmit: onSubmit,
               ),
             ],

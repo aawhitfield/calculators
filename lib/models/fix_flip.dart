@@ -864,9 +864,9 @@ class FixFlip extends ChangeNotifier{
   void calculateAllHoldingCosts() {
 
     debtService =
-        (monthlyPayment * monthsToRehabRent) + constructionMonthlyPayment;
+        (monthlyPayment + constructionMonthlyPayment);
 
-    insuranceAndTaxes = (taxesMonthly + insuranceMonthly) * monthsToRehabRent;
+    insuranceAndTaxes = (taxesMonthly + insuranceMonthly);
     monthlyHoldingCosts = debtService + insuranceAndTaxes + holdingCostsUtilities + otherHoldingCosts;
     totalHoldingCosts = (debtService + insuranceAndTaxes + holdingCostsUtilities + otherHoldingCosts) * monthsToRehabRent;
     notifyListeners();

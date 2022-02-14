@@ -12,11 +12,13 @@ import 'package:get/get.dart';
 class NavigationBarHomeReport extends ConsumerWidget {
   final int position;
   final int totalQuestions;
+  final VoidCallback goBack;
   final VoidCallback onSubmit;
   const NavigationBarHomeReport({
     Key? key,
     required this.position,
     required this.totalQuestions,
+    required this.goBack,
     required this.onSubmit,
   }) : super(key: key);
 
@@ -27,12 +29,16 @@ class NavigationBarHomeReport extends ConsumerWidget {
       return buttonNumber == 0;
     }
 
-    bool isNext(int buttonNumber) {
+    bool isBack(int buttonNumber) {
       return buttonNumber == 1;
     }
 
+    bool isNext(int buttonNumber) {
+      return buttonNumber == 2;
+    }
+
     bool isSave(int buttonNumber) {
-      return buttonNumber == 1;
+      return buttonNumber == 2;
     }
 
     // determines if it is the report page of a calculator entry
@@ -58,9 +64,12 @@ class NavigationBarHomeReport extends ConsumerWidget {
     void onButtonPress(int buttonNumber) {
       if (isHome(buttonNumber)) {
         goHome();
-      } else if (isNext(buttonNumber)) {
+      } else if(isBack(buttonNumber)) {
+        goBack();
+      }
+      else if (isNext(buttonNumber)) {
         onSubmit();
-      } else if (buttonNumber == 2) {
+      } else if (buttonNumber == 3) {
         goToReport();
       }
     }
@@ -68,7 +77,10 @@ class NavigationBarHomeReport extends ConsumerWidget {
     void onReportButtonPress(int buttonNumber) async {
       if (isHome(buttonNumber)) {
         goHome();
-      } else if (isSave(buttonNumber)) {
+      } else if(isBack(buttonNumber))
+        {
+          goBack();
+        }else if (isSave(buttonNumber)) {
         Calculator currentCalculator = ref.read(calculatorProvider).type;
         Map<String, dynamic> data = {};
         if (currentCalculator == Calculator.brrrr) {
@@ -112,11 +124,13 @@ class NavigationBarHomeReport extends ConsumerWidget {
 
     List<BottomNavigationBarItem> buttonsForReport = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      const BottomNavigationBarItem(icon: Icon(Icons.arrow_back), label: 'Back'),
       const BottomNavigationBarItem(icon: Icon(Icons.save), label: 'Save'),
     ];
 
     List<BottomNavigationBarItem> buttonsFromSaved = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      const BottomNavigationBarItem(icon: Icon(Icons.arrow_back), label: 'Back'),
       const BottomNavigationBarItem(
           icon: Icon(Icons.arrow_forward), label: 'Next'),
       const BottomNavigationBarItem(icon: Icon(Icons.article), label: 'Report'),
@@ -124,11 +138,13 @@ class NavigationBarHomeReport extends ConsumerWidget {
 
     List<BottomNavigationBarItem> buttonsForNew = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+      const BottomNavigationBarItem(icon: Icon(Icons.arrow_back), label: 'Back'),
       const BottomNavigationBarItem(
           icon: Icon(Icons.arrow_forward), label: 'Next'),
     ];
 
     return BottomNavigationBar(
+      type: BottomNavigationBarType.fixed,
       onTap: (isLastPage) ? onReportButtonPress : onButtonPress,
       unselectedItemColor: Theme.of(context).indicatorColor,
       items: (isLastPage)

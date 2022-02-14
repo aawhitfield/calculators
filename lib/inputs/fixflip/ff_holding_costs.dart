@@ -38,7 +38,7 @@ class _HoldingCostsState extends ConsumerState<FixFlipHoldingCosts> {
   @override
   Widget build(BuildContext context) {
     double debtService = ref.watch(fixFlipProvider).debtService;
-    double insuranceTaxes = ref.watch(fixFlipProvider).insuranceAndTaxes;
+    double insuranceTaxes = ref.watch(fixFlipProvider).insuranceAndTaxes ;  // wants MONTHLY insurance and taxes
     double totalHoldingCosts = ref.watch(fixFlipProvider).totalHoldingCosts;
 
     String debtServiceString = kCurrencyFormat.format(debtService);
@@ -84,7 +84,7 @@ class _HoldingCostsState extends ConsumerState<FixFlipHoldingCosts> {
                 (MediaQuery.of(context).size.width < 640)
                     ? 'Insurance\n& Taxes'
                     : 'Insurance and Taxes',
-                insuranceTaxesString),
+                insuranceTaxesString, subtitle: 'Monthly',),
             MoneyTextField(
               controller: utilitiesController,
               labelText: 'Monthly Utilities *',
